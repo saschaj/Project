@@ -61,6 +61,7 @@ Veränderungen:	1.0
                     <div class="sidebar_container_user">
                         <div class="sidebar_user">
                             <div class="sidebar_item_user">
+                                <%-- Dynmaische JSP & Button neuer Vertrag --%>
                                 <p><span>&nbsp;</span><input class="submit" type="submit" name="search_text" value="Neuen Vertrag anlegen" /></p>
                                 <%@include file="contract_dynamic.jsp"%>
                             </div><!--close sidebar_item--> 
