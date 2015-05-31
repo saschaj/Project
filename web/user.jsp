@@ -68,16 +68,22 @@ Veränderungen:	1.0
                     </div>
                     
                     <div id="form_settings">
-                        <span>Vertrag suchen: </span><p><input class="search_text" type="text" name="search" value="" />
-                        <span>&nbsp;</span><input class="submit" type="submit" name="search_text" value="Suchen" /></p>
+                        <%-- Formular der Vertragssuche --%>
+                        <form method="POST" action="" >
+                            <span>Vertrag suchen: </span><p><input class="search_text" type="text" name="search" value="" />
+                            <span>&nbsp;</span><input class="submit" type="submit" name="search_text" value="Suchen" /></p>
+                        </form>
                     </div>
                     
                     <div id="form_settings">
-                        <span>Vertrag via Kategorie suchen: </span>
-                        <p><span>&nbsp;</span><input class="submit" type="submit" name="search_cat" value="Strom" /></p>
-                        <p><span>&nbsp;</span><input class="submit" type="submit" name="search_cat" value="Gas" /></p>
-                        <p><span>&nbsp;</span><input class="submit" type="submit" name="search_cat" value="Festnetz/DSL" /></p>
-                        <p><span>&nbsp;</span><input class="submit" type="submit" name="search_cat" value="Zeitschriften" /></p>
+                        <%-- Formular der Vertragssuche über Kategorien --%>
+                        <form method="POST" action="">
+                            <span>Vertrag via Kategorie suchen: </span>
+                            <p><span>&nbsp;</span><input class="submit" type="submit" name="search_cat" value="Strom" /></p>
+                            <p><span>&nbsp;</span><input class="submit" type="submit" name="search_cat" value="Gas" /></p>
+                            <p><span>&nbsp;</span><input class="submit" type="submit" name="search_cat" value="Festnetz/DSL" /></p>
+                            <p><span>&nbsp;</span><input class="submit" type="submit" name="search_cat" value="Zeitschriften" /></p>
+                        </form>
                     </div>
                     
                 </div>
