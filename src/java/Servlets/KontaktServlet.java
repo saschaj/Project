@@ -1,7 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Ersteller:       Sascha Jungenkrüger
+ * Erstelldatum:    31.05.2015
+ * Dokument:        KontaktServlet
+ * Version:         1.0
+ * Veränderungen:   1.0 (Sascha Jungenkrüger)
+ *                  - Überprüfung der Verlinkungen mit passender Ausgabe 
+ *                    eingebunden
  */
 package Servlets;
 
@@ -12,10 +16,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author Sascha
- */
 public class KontaktServlet extends HttpServlet {
 
     /**
@@ -29,7 +29,9 @@ public class KontaktServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Automatisch generiert
         response.setContentType("text/html;charset=UTF-8");
+        
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");

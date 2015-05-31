@@ -4,7 +4,7 @@ Ersteller:	Sascha Jungenkrüger
 Erstelldatum:   25.05.2015
 Dokument:	user.jsp
 Version:	1.0
-Veränderungen:	1.0
+Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Template an Entwurf angepasst
 		- Button für die Suche und Textsuche in Content eingefügt
                 - Button "Neuen Vertrag anlegen" und JSP zur Ergebnisanzeige

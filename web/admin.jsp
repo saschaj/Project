@@ -4,7 +4,7 @@ Ersteller:	Sascha Jungenkrüger
 Erstelldatum:   25.05.2015
 Dokument:	admin.jsp
 Version:	1.0
-Veränderungen:	1.0
+Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Template an Entwurf angepasst
 		- Textsuche und Button für Statistiken eingefügt
                 - JSP zur Ergebnisanzeige eingefügt

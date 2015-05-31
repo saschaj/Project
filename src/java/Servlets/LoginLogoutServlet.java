@@ -1,7 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Ersteller:       Sascha Jungenkrüger
+ * Erstelldatum:    31.05.2015
+ * Dokument:        LoginLogoutServlet
+ * Version:         1.0
+ * Veränderungen:   1.0 (Sascha Jungenkrüger)
+ *                  - Überprüfung der Verlinkungen mit passender Ausgabe 
+ *                    eingebunden
  */
 package Servlets;
 
@@ -13,10 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-/**
- *
- * @author Sascha
- */
 public class LoginLogoutServlet extends HttpServlet {
 
     /**
@@ -32,6 +32,7 @@ public class LoginLogoutServlet extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession();
+        // Deklaration des Ausgabestring für den HTML-Code
         String ausgabe;
         // Initialisierung der verschiedenen Verlinkungen
         String login = request.getParameter("login");
@@ -39,7 +40,7 @@ public class LoginLogoutServlet extends HttpServlet {
         String getPassword = request.getParameter("get_pw");
         String logout = request.getParameter("logout");
         
-        // ÜBerprüfung, welcher Button gedrückt wurde
+        // Überprüfung, welcher Button gedrückt wurde
         if (login != null) {
             ausgabe = "Sie wurden erfolgreich angemeldet und werden automatisch weitergeleitet!";
         } else if (register != null) {
@@ -52,6 +53,7 @@ public class LoginLogoutServlet extends HttpServlet {
             ausgabe = "Irgendwas wurde nicht richtig programmiert!";
         }
         
+        // Automatisch generiert
         response.setContentType("text/html;charset=UTF-8");
         
         try (PrintWriter out = response.getWriter()) {

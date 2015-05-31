@@ -1,7 +1,12 @@
-<%-- 
-    Document   : Index
-    Created on : 25.05.2015, 20:11:23
-    Author     : Sascha Jungenkrüger
+<%--
+
+Ersteller:	Sascha Jungenkrüger
+Erstelldatum:   30.05.2015
+Dokument:	admin_dynamic.jsp
+Version:	1.0
+Veränderungen:	1.0 (Sascha Jungenkrüger)
+                - Erstellung der Seite mit Musterausgabe
+
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
