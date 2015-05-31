@@ -30,43 +30,31 @@ public class LoginLogoutServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         HttpSession session = request.getSession();
-        String button_test1 = request.getParameter("login");
-        String button_test2 = request.getParameter("register");
-        String button_test3 = request.getParameter("get_pw");
+        String ausgabe;
+        // Initialisierung der verschiedenen Verlinkungen
+        String login = request.getParameter("login");
+        String register = request.getParameter("register");
+        String getPassword = request.getParameter("get_pw");
+        String logout = request.getParameter("logout");
+        
+        // ÜBerprüfung, welcher Button gedrückt wurde
+        if (login != null) {
+            ausgabe = "Sie wurden erfolgreich angemeldet und werden automatisch weitergeleitet!";
+        } else if (register != null) {
+            ausgabe = "Sie wurden erfolgreich registriert und werden automatisch weitergeleitet!";
+        } else if (getPassword != null) {
+            ausgabe = "Ihnen wurde ein neues Passwort zugeschickt und werden automatisch weitergeleitet!";
+        } else if (logout != null) {
+            ausgabe = "Sie wurden erfolgreich ausgeloggt und werden automatisch auf die Startseite weitergeleitet!";
+        } else {
+            ausgabe = "Irgendwas wurde nicht richtig programmiert!";
+        }
         
         response.setContentType("text/html;charset=UTF-8");
-
-        if (button_test1 != null) {
-            try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");  
-            out.println("<meta http-equiv='refresh' content='5; URL=user.jsp'>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Sie wurden erfolgreich angemeldet und werden automatisch weitergeleitet</h1>");
-            out.println("</body>");
-            out.println("</html>");
-            }
-        } else if (button_test2 != null) {
-            try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet LoginServlet</title>");  
-            out.println("<meta http-equiv='refresh' content='5; URL=login_register.jsp'>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Sie wurden erfolgreich registriert und werden automatisch weitergeleitet</h1>");
-            out.println("</body>");
-            out.println("</html>");
-            }
-        } else if (button_test3 != null) {
-            try (PrintWriter out = response.getWriter()) {
+        
+        try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
@@ -75,14 +63,10 @@ public class LoginLogoutServlet extends HttpServlet {
             out.println("<meta http-equiv='refresh' content='5; URL=index.jsp'>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Ihnen wurde ein neues Passwort zugeschickt und werden automatisch weitergeleitet</h1>");
+            out.println("<h1>"+ ausgabe +"</h1>");
             out.println("</body>");
             out.println("</html>");
-            }
-        }
-        
-        
-        
+            }        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

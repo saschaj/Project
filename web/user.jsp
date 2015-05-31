@@ -1,7 +1,15 @@
-<%-- 
-    Document   : Index
-    Created on : 25.05.2015, 20:11:23
-    Author     : Sascha Jungenkrüger
+<%--
+
+Ersteller:	Sascha Jungenkrüger
+Erstelldatum:   25.05.2015
+Dokument:	user.jsp
+Version:	1.0
+Veränderungen:	1.0
+                - Template an Entwurf angepasst
+		- Button für die Suche und Textsuche in Content eingefügt
+                - Button "Neuen Vertrag anlegen" und JSP zur Ergebnisanzeige
+                  eingefügt
+
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -24,10 +32,18 @@
                     
                     <nav>
                         <ul id="nav">
-                            <li class="current"><a href="user.jsp">Vertragsübersicht</a></li>
-                            <li><a href="contact.jsp">Kontakt</a></li>
-                            <li><a href="user_account.jsp">Account verwalten</a></li>
-                            <li><a href="LoginLogoutServlet">Abmelden</a></li>
+                            <li class="current">
+                                <a href="user.jsp">Vertragsübersicht</a>
+                            </li>
+                            <li>
+                                <a href="contact.jsp">Kontakt</a>
+                            </li>
+                            <li>
+                                <a href="user_account.jsp">Account verwalten</a>
+                            </li>
+                            <li>
+                                <a href="LoginLogoutServlet?logout=true">Abmelden</a>
+                            </li>
                             <%-- Testseiten.. Werden später wieder entfernt --%>
                             <li><a href="index.jsp">Startseite</a></li>
                             <li><a href="admin.jsp">Admin</a></li>
