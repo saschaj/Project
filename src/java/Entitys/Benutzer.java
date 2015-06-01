@@ -1,5 +1,7 @@
 package Entitys;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import javax.persistence.*;
 
@@ -13,7 +15,7 @@ import javax.persistence.*;
 public class Benutzer implements java.io.Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int benutzerId;
 
     @ManyToOne
@@ -86,5 +88,27 @@ public class Benutzer implements java.io.Serializable {
         }
         return true;
     }
-    
+
+    public static String createHash(String text) {
+        MessageDigest md5;
+        StringBuffer sb = new StringBuffer();
+        try {
+
+            md5 = MessageDigest.getInstance("MD5");
+            byte[] hash = md5.digest(text.getBytes());
+
+            for (int i = 0; i < hash.length; i++) {
+                sb.append(Integer.toHexString(
+                        (hash[i] & 0xFF) | 0x100
+                ).toLowerCase().substring(1, 3)
+                );
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return sb.toString();
+        }
+    }
+
 }
