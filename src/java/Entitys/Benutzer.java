@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Benutzer implements java.io.Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int benutzerId;
 
     @ManyToOne

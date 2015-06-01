@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class Vertrag_Status implements Serializable {
     
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int vertragStatusId;
     
     private String name;
