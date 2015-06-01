@@ -11,7 +11,7 @@ import javax.persistence.*;
 public class Vertrag_Art implements Serializable{
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name="VERTRAG_ART_ID")
     private int vertragArtId;
     

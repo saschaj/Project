@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Benutzer_Status implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name="BENUTZER_STATUS_ID")
     private int benutzerStatusId;
 

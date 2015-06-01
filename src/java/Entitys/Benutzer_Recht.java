@@ -12,7 +12,7 @@ import java.util.Collection;
 public class Benutzer_Recht implements Serializable {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name="BENUTZER_RECHT_ID")
     private int benutzerRechtId;
     
