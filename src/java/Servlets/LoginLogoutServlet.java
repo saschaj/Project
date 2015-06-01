@@ -2,10 +2,12 @@
  * Ersteller:       Sascha Jungenkrüger
  * Erstelldatum:    31.05.2015
  * Dokument:        LoginLogoutServlet
- * Version:         1.0
+ * Version:         1.1
  * Veränderungen:   1.0 (Sascha Jungenkrüger)
  *                  - Überprüfung der Verlinkungen mit passender Ausgabe 
  *                    eingebunden
+ *                  1.1 (Sascha Jungenkrüger) 01.06.2015
+ *                  - Registrierung eingefügt
  */
 package Servlets;
 

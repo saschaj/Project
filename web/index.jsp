@@ -9,16 +9,6 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 
 --%>
 
-<%@page import="Manager.DatenZugriffsObjekt"%>
-<%
-    HttpSession formular;
-    if (request.getSession().isNew()) {
-        formular = request.getSession(true);
-    } else {
-        request.getSession(false).invalidate();
-        formular = request.getSession(true);
-    }
-%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -70,10 +60,6 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                     <%-- Überschrift --%>
                     <h1>Willkommen in unserer Vertragsverwaltung</h1>
                     <p>Das ist unsere Applikation für das Softwareprojekt im Sommersemester 2015.</p>
-
-                    <%  //DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
-                        //dao.beispiel();
-                    %>
 
                 </div><!--close content-->                  
             </div><!--close site_content-->

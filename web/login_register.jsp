@@ -3,10 +3,13 @@
 Ersteller:	Sascha Jungenkrüger
 Erstelldatum:   25.05.2015
 Dokument:	login_register.jsp
-Version:	1.0
+Version:	1.1
 Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Template an Entwurf angepasst
                 - Formular für die Registrierung und Anmeldung eingefügt
+                1.1 (Sascha Jungenkrüger) 02.05.2015
+                - Formular angepasst,damit der Nutzer eingegebene Daten nicht
+                  nochmal eingeben muss.
 
 --%>
 <% String fehler[]; %>
