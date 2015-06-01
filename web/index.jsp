@@ -61,8 +61,8 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                     <h1>Willkommen in unserer Vertragsverwaltung</h1>
                     <p>Das ist unsere Applikation für das Softwareprojekt im Sommersemester 2015.</p>
                     <%
-                        //DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
-                        //dao.beispiel();
+                        DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+                        dao.beispiel();
                     %>
                     
                 </div><!--close content-->                  
