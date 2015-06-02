@@ -10,6 +10,11 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Einfügen der Formulardaten
 
 --%>
+<%@page import="java.sql.Date"%>
+<%@page import="Hilfsklassen.Konstanten"%>
+<% Benutzer ben = (Benutzer)session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
+   Kunde k = (Kunde)session.getAttribute(Konstanten.SESSION_ATTR_KUNDE); %>
+
 <%@page import="Entitys.Benutzer"%>
 <%@page import="Entitys.Kunde"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -60,26 +65,58 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                     <form method="POST" action="">
                     <div id="form_settings">
                         <h2>Kundendaten:</h2>
-                        <p><span>Vorname:</span><input type="text" name="vorname" value="Testvorname" ></p>
-                        <p><span>Nachname:</span><input type="text" name="name" value="Testname" ></p>
+                        <% if (k != null && !k.getVorname().equals("")) { %>
+                        <p><span>Vorname:</span><input type="text" name="acc_vname" value="<%= k.getVorname() %>" ></p>    
+                        <% } else { %>
+                        <p><span>Vorname:</span><input type="text" name="acc_vname" value="" ></p>
+                        <% } %>
+                        <% if (k != null && !k.getNachname().equals("")) { %>
+                        <p><span>Nachname:</span><input type="text" name="acc_name" value="<%= k.getNachname() %>" ></p>   
+                        <% } else { %>
+                        <p><span>Nachname:</span><input type="text" name="acc_name" value="" ></p>
+                        <% } %>
+                        
                         <p><span>Strasse & Hausnummer:</span>
-                            <input type="text" name="strasse" value="Testname" >
-                            <input type="text" name="hnr" value="00" >
-                        </p>
-                        <p><span>PLZ:</span><input type="text" name="plz" value="00000"></p>
-                        <p><span>Ort:</span><input type="text" name="ort" value="Testort"></p>
-                        <p><span>Geburtsdatum:</span><input type="date" name="name" value=""></p>
+                            <% if (k != null && !k.getStrasse().equals("")) { %>
+                            <input type="text" name="acc_strasse" value="<%= k.getStrasse() %>" >
+                            <% } else { %>
+                            <input type="text" name="acc_strasse" value="" >
+                            <% } %>
+                            
+                            <% if (k != null && !k.getHausnummer().equals("")) { %>
+                            <input type="text" name="acc_hnr" value="<%= k.getHausnummer() %>" >
+                            <% } else { %>
+                            <input type="text" name="acc_hnr" value="" >
+                            <% } %>                            
+                        </p>                        
+                        
+                        <% if (k != null && !k.getPLZ().equals("")) { %>
+                        <p><span>PLZ:</span><input type="text" name="acc_plz" value="<%= k.getPLZ() %>"></p>  
+                        <% } else { %>
+                        <p><span>PLZ:</span><input type="text" name="acc_plz" value=""></p>
+                        <% } %>                         
+                        <% if (k != null && !k.getOrt().equals("")) { %>
+                        <p><span>Ort:</span><input type="text" name="acc_ort" value="<%= k.getOrt() %>"></p>  
+                        <% } else { %>
+                        <p><span>Ort:</span><input type="text" name="acc_ort" value=""></p>
+                        <% } %>
+                        <% if (k != null && !k.getGeburtsdatum().equals("")) { %>
+                        <p><span>Geburtsdatum:</span><input type="text" name="acc_gebdat" value="<%= k.getGeburtsdatum() %>"></p> 
+                        <% } else { %>
+                        <p><span>Geburtsdatum:</span><input type="text" name="acc_gebdat" value=""></p>
+                        <% } %>                        
                     </div>
                     
                     <div id="form_settings">
                         <h2>Benutzerdaten</h2>
+                        <p>Wenn Sie Ihre Benutzerdaten ändern wollen, müssen Sie alle Felder ausfüllen!</p>
                         <p>
                             <span>E-Mail:</span>
-                            <input type="text" name="e-mail" value="Testmail">
+                            <input type="text" name="e-mail" value="">
                         </p>
                         <p>
                             <span>Neue E-Mail wiederholen:</span>
-                            <input type="text" name="e-mail_n" value="Testname">
+                            <input type="text" name="e-mail_n" value="">
                         </p>
                         <p>
                             <span>Passwort:</span>

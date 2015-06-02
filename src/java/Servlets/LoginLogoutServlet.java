@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class LoginLogoutServlet extends HttpServlet {
-    
+
     private final String LOGINFEHLER_TEXT = "Login fehlgeschlagen! Überprüfen Sie ihre Login-Daten!";
 
     /**
@@ -38,14 +38,9 @@ public class LoginLogoutServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        HttpSession session = request.getSession();
         // Deklaration des Hilfsvariablen für die demenstprechenden Funktionen
-        DatenZugriffsObjekt dao;
-        Benutzer ben = new Benutzer();
-        String fehler[], meta = "", ausgabe = "", vname,
-                name, email1, email2, pw1, pw2;
-        Boolean vnameIsTrue = false, nameIsTrue = false, isRegister = false,
-                emailIsTrue = false, pwIsTrue = false, eMailIsAvailable = false;
+        String meta = "", ausgabe = "";
+
         // Initialisierung der verschiedenen Verlinkungen
         String login = request.getParameter("login");
         String register = request.getParameter("register");
@@ -54,126 +49,14 @@ public class LoginLogoutServlet extends HttpServlet {
 
         // Überprüfung, welcher Button gedrückt wurde
         if (register != null) {
-            // Benutzerregistrierung
-            // Formulardaten in Variablen speichern
-            vname = request.getParameter("reg_vname");
-            name = request.getParameter("reg_name");
-            email1 = request.getParameter("reg_email");
-            email2 = request.getParameter("reg_email2");
-            pw1 = request.getParameter("reg_pw");
-            pw2 = request.getParameter("reg_pw2");
-
-            // Überprüfung, ob der Vorname leer ist
-            if (vname.equals("")) {
-                // Fehlermeldung in Variable ausgabe gespeichert
-                ausgabe = "Bitte geben Sie Ihren Vornamen ein!";
-            } else {
-                // Vorname wurde eingetragen und wird also true gespeichert
-                vnameIsTrue = true;
-            }
-            // Überprüfung, ob der Nachname leer ist
-            if (name.equals("")) {
-                // Fehlermeldung in Variable ausgabe gespeichert
-                ausgabe = ausgabe + "\n Bitte geben Sie Ihren Nachnamen ein!";
-            } else {
-                // Nachname wurde eingetragen und wird also true gespeichert
-                nameIsTrue = true;
-            }
-            // Überprüfung, ob die E-Mail-Adresse leer ist
-            if (email1.equals("") && email2.equals("")) {
-                // Fehlermeldung in Variable ausgabe gespeichert
-                ausgabe = ausgabe + "Bitte geben Sie Ihre E-Mail-Adresse ein!";
-                // Überprüfung, ob die E-Mail-Adressen gleich sind
-            } else if (!email1.equals(email2)) {
-                // Fehlermeldung in Variable ausgabe gespeichert
-                ausgabe = ausgabe + "\n E-Mail-Adressen stimmen nicht überein. "
-                        + "Bitte überprüfen Sie Ihre Eingabe!";
-            } else {
-                // Überprüfung, ob die E-Mail-Adressen konform sind
-                if (!email1.matches("[a-zA-Z0-9].+@[a-zA-Z0-9\\.-]+[a-zA-Z]{2,4}")) {
-                    // Fehlermeldung in Variable ausgabe gespeichert
-                    ausgabe = ausgabe
-                            + "\n E-Mail-Adresse ist nicht konform. "
-                            + "Bitte überprüfen Sie Ihre Eingabe!";
-                } else {
-                    // E-Mail-Adressen stimmen überein 
-                    // und werden als true gespeichert
-                    emailIsTrue = true;
-                }
-            }
-            // Überprüfung, ob die Passwörter nicht leer sind
-            if (pw1.equals("") && pw2.equals("")) {
-                // Fehlermeldung in Variable ausgabe gespeichert
-                ausgabe = ausgabe + "\n Bitte geben Sie ein Passwort ein!";
-                // Überprüfung, ob die Passwörter gleich sind
-            } else if (!pw1.equals(pw2)) {
-                // Fehlermeldung in Variable ausgabe gespeichert
-                ausgabe = ausgabe
-                        + "\n Passwörter stimmen nicht überein. "
-                        + "Bitte überprüfen Sie Ihre Eingabe!";
-            } else {
-                // Überprüfung, ob das Passwort weniger als 6 Zeichen hat
-                if (pw1.length() < 6) {
-                    // Fehlermeldung in Variable ausgabe gespeichert
-                    ausgabe = ausgabe
-                            + "\n Das Passwort muss länger als 6 Zeichen sein!";
-                } else {
-                    // Passwörter stimmen überein 
-                    // und werden als true gespeichert
-                    pwIsTrue = true;
-                }
-            }
-
-            // Überprüfung, ob alle Daten des Formulars korrekt sind
-            if (vnameIsTrue && nameIsTrue && emailIsTrue && pwIsTrue) {
-                // Initialisierung des DAO
-                dao = new DatenZugriffsObjekt();
-                eMailIsAvailable = dao.isEmailAvailable(email1);
-                if (eMailIsAvailable) {
-                    // Registrierung wird durchgeführt
-                    // Boolscher Rückgabewert wird in isRegister gespeichert
-                    isRegister = dao.register(vname, name, email1, ben.createHash(pw1));
-                    // Überprüfung, ob die Registrierung erfolgreich war
-                    if (isRegister) {
-                        meta
-                                = "<meta http-equiv='refresh' content='2; URL=index.jsp'>";
-                        ausgabe = "Ihre Registrierung war erfolgreich!";
-                        // Zurücksetzen der Session
-                        session.invalidate();
-                        // DAO-Verbindung wird geschlossen
-                        dao.close();
-                    }
-                } else {
-                    ausgabe = "Ihre E-Mail-Adresse ist schon vorhanden!";
-                    // Fehlermeldung wird gesplittet und im Array gespeichert
-                    // und auf der login_register.jsp ausgegeben.
-                    fehler = ausgabe.split("!");
-                    // Setzen der Fehler in den Request                    
-                    request.setAttribute("fehler", fehler);
-                    // Da es Fehler im Formular gibt stellt man dem Besucher seine
-                    // eingegebenen Daten zur Verfügung, damit er sie
-                    // überarbeiten bzw. ergänzen kann.
-                    request.getRequestDispatcher("/login_register.jsp")
-                            .forward(request, response);
-                }
-            } else {
-                // Fehlermeldung wird gesplittet und im Array gespeichert
-                // und auf der login_register.jsp ausgegeben.
-                fehler = ausgabe.split("!");
-                // Setzen der Fehler in den Request
-                request.setAttribute("fehler", fehler);
-                // Da es Fehler im Formular gibt stellt man dem Besucher seine
-                // eingegebenen Daten zur Verfügung, damit er sie
-                // überarbeiten bzw. ergänzen kann.
-                request.getRequestDispatcher("/login_register.jsp")
-                        .forward(request, response);
-            }
+            // Registrierung durchführen
+            this.register(request, response);
 
         } else if (login != null) {
-            
+
             //LogIn durchführen
             this.logIn(request, response);
-            
+
         } else if (getPassword != null) {
             ausgabe = "Ihnen wurde ein neues Passwort zugeschickt und werden automatisch weitergeleitet!";
         } else if (logout != null) {
@@ -199,59 +82,210 @@ public class LoginLogoutServlet extends HttpServlet {
             out.println("</html>");
         }
     }
-    
+
     /**
-     * Ersteller:	René Kanzenbach
-     * Erstelldatum:    02.06.2015
-     * Methode:         logIn
-     * Version:         1.0
+     * Ersteller:	Sascha Jungenkrüger 
+     * Erstelldatum:    01.06.2015 
+     * Methode:         register
+     * Version:         1.0 
      * Änderungen:      -
-     * 
+     *
      * @param request
      * @param response
      * @throws ServletException
-     * @throws IOException 
+     * @throws IOException
+     */
+    private void register(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+        Benutzer ben = new Benutzer();
+        String fehler[];
+        String ausgabe = "", meta = "", vname, name, email1, email2, pw1, pw2;
+        boolean vnameIsTrue = false, nameIsTrue = false, isRegister = false,
+                emailIsTrue = false, pwIsTrue = false, eMailIsAvailable = false;
+        // Benutzerregistrierung
+        // Formulardaten in Variablen speichern
+        vname = request.getParameter("reg_vname");
+        name = request.getParameter("reg_name");
+        email1 = request.getParameter("reg_email");
+        email2 = request.getParameter("reg_email2");
+        pw1 = request.getParameter("reg_pw");
+        pw2 = request.getParameter("reg_pw2");
+
+        // Überprüfung, ob der Vorname leer ist
+        if (vname.equals("")) {
+            // Fehlermeldung in Variable ausgabe gespeichert
+            ausgabe = "Bitte geben Sie Ihren Vornamen ein!";
+        } else {
+            // Vorname wurde eingetragen und wird also true gespeichert
+            vnameIsTrue = true;
+        }
+        // Überprüfung, ob der Nachname leer ist
+        if (name.equals("")) {
+            // Fehlermeldung in Variable ausgabe gespeichert
+            ausgabe = ausgabe + "\n Bitte geben Sie Ihren Nachnamen ein!";
+        } else {
+            // Nachname wurde eingetragen und wird also true gespeichert
+            nameIsTrue = true;
+        }
+        // Überprüfung, ob die E-Mail-Adresse leer ist
+        if (email1.equals("") && email2.equals("")) {
+            // Fehlermeldung in Variable ausgabe gespeichert
+            ausgabe = ausgabe + "Bitte geben Sie Ihre E-Mail-Adresse ein!";
+            // Überprüfung, ob die E-Mail-Adressen gleich sind
+        } else if (!email1.equals(email2)) {
+            // Fehlermeldung in Variable ausgabe gespeichert
+            ausgabe = ausgabe + "\n E-Mail-Adressen stimmen nicht überein. "
+                    + "Bitte überprüfen Sie Ihre Eingabe!";
+        } else {
+            // Überprüfung, ob die E-Mail-Adressen konform sind
+            if (!email1.matches("[a-zA-Z0-9].+@[a-zA-Z0-9\\.-]+[a-zA-Z]{2,4}")) {
+                // Fehlermeldung in Variable ausgabe gespeichert
+                ausgabe = ausgabe
+                        + "\n E-Mail-Adresse ist nicht konform. "
+                        + "Bitte überprüfen Sie Ihre Eingabe!";
+            } else {
+                // E-Mail-Adressen stimmen überein 
+                // und werden als true gespeichert
+                emailIsTrue = true;
+            }
+        }
+        // Überprüfung, ob die Passwörter nicht leer sind
+        if (pw1.equals("") && pw2.equals("")) {
+            // Fehlermeldung in Variable ausgabe gespeichert
+            ausgabe = ausgabe + "\n Bitte geben Sie ein Passwort ein!";
+            // Überprüfung, ob die Passwörter gleich sind
+        } else if (!pw1.equals(pw2)) {
+            // Fehlermeldung in Variable ausgabe gespeichert
+            ausgabe = ausgabe
+                    + "\n Passwörter stimmen nicht überein. "
+                    + "Bitte überprüfen Sie Ihre Eingabe!";
+        } else {
+            // Überprüfung, ob das Passwort weniger als 6 Zeichen hat
+            if (pw1.length() < 6) {
+                // Fehlermeldung in Variable ausgabe gespeichert
+                ausgabe = ausgabe
+                        + "\n Das Passwort muss länger als 6 Zeichen sein!";
+            } else {
+                // Passwörter stimmen überein 
+                // und werden als true gespeichert
+                pwIsTrue = true;
+            }
+        }
+
+        // Überprüfung, ob alle Daten des Formulars korrekt sind
+        if (vnameIsTrue && nameIsTrue && emailIsTrue && pwIsTrue) {
+            // Initialisierung des DAO
+            dao = new DatenZugriffsObjekt();
+            eMailIsAvailable = dao.isEmailAvailable(email1);
+            if (eMailIsAvailable) {
+                // Registrierung wird durchgeführt
+                // Boolscher Rückgabewert wird in isRegister gespeichert
+                isRegister = dao.register(vname, name, email1, ben.createHash(pw1));
+                // Überprüfung, ob die Registrierung erfolgreich war
+                if (isRegister) {
+                    meta = "<meta http-equiv='refresh' content='2; URL=index.jsp'>";
+                    ausgabe = "Ihre Registrierung war erfolgreich!";
+                    // Zurücksetzen der Session
+                    session.invalidate();
+
+                    response.setContentType("text/html;charset=UTF-8");
+
+                    try (PrintWriter out = response.getWriter()) {
+                        /* TODO output your page here. You may use following sample code. */
+                        out.println("<!DOCTYPE html>");
+                        out.println("<html>");
+                        out.println("<head>");
+                        out.println("<title>Servlet LoginServlet</title>");
+                        out.println(meta);
+                        out.println("</head>");
+                        out.println("<body>");
+                        out.println(ausgabe);
+                        out.println("</body>");
+                        out.println("</html>");
+                    }
+                }
+            } else {
+                ausgabe = "Ihre E-Mail-Adresse ist schon vorhanden!";
+                // Fehlermeldung wird gesplittet und im Array gespeichert
+                // und auf der login_register.jsp ausgegeben.
+                fehler = ausgabe.split("!");
+                // Setzen der Fehler in den Request                    
+                request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, fehler);
+                // Da es Fehler im Formular gibt stellt man dem Besucher seine
+                // eingegebenen Daten zur Verfügung, damit er sie
+                // überarbeiten bzw. ergänzen kann.
+                request.getRequestDispatcher("/login_register.jsp")
+                        .forward(request, response);
+            }
+            // DAO-Verbindung wird geschlossen
+            dao.close();
+        } else {
+            // Fehlermeldung wird gesplittet und im Array gespeichert
+            // und auf der login_register.jsp ausgegeben.
+            fehler = ausgabe.split("!");
+            // Setzen der Fehler in den Request
+            request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, fehler);
+            // Da es Fehler im Formular gibt stellt man dem Besucher seine
+            // eingegebenen Daten zur Verfügung, damit er sie
+            // überarbeiten bzw. ergänzen kann.
+            request.getRequestDispatcher("/login_register.jsp")
+                    .forward(request, response);
+        }
+    }
+
+    /**
+     * Ersteller:	René Kanzenbach 
+     * Erstelldatum:    02.06.2015 
+     * Methode:         logIn
+     * Version:         1.0 
+     * Änderungen:      -
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
      */
     private void logIn(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         Benutzer benutzer;
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
         HttpSession session = request.getSession();
-        
-        
+
         String loginEmail;
         String loginPasswort;
         String fehlerText[] = {this.LOGINFEHLER_TEXT};
-        
+
         //Eingegebene Benutzer-Email auslesen
         loginEmail = request.getParameter("login_email");
         //Eingegebenes Passwort auslesen
         loginPasswort = request.getParameter("login_passwort");
-        
+
         //BenutzerObjekt mit Hilfe der Email laden
         benutzer = dao.getBenutzer(loginEmail);
-        
+
         //Prüfen ob Benutzer gefunden wurde und das Passwort korrekt ist
-        if(benutzer != null 
+        if (benutzer != null
                 && benutzer.pruefePasswort(loginPasswort)) {//Falls LogIn erfolgreich
-            
+
             //BenutzerObjekt in Session laden
             session.setAttribute(Konstanten.SESSION_ATTR_BENUTZER, benutzer);
             //Weiterleitung auf Benutzerstartseite
             request.getRequestDispatcher("/user.jsp")
-                        .forward(request, response);
-            
-        }else { //Falls LogIn nicht erfolgreich
-            
+                    .forward(request, response);
+
+        } else { //Falls LogIn nicht erfolgreich
+
             //Übergabe des Fehlertextes
             request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, fehlerText);
-            
+
             //Weiterleitung auf login_register.jsp
             request.getRequestDispatcher("/login_register.jsp")
-                        .forward(request, response);
+                    .forward(request, response);
         }
-        
+
         //DatenZugriffsObjekt schließen
         dao.close();
     }

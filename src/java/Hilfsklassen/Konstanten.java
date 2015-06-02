@@ -17,6 +17,11 @@ public class Konstanten {
     public static final String SESSION_ATTR_BENUTZER = "BENUTZER";
     
     /**
+     * Attributname für einen Kunde_Entity in einem HttpSession Objekt.
+     */
+    public static final String SESSION_ATTR_KUNDE = "KUNDE";
+    
+    /**
      * Attributname für einen Fehlertext in einem HttpRequest Objekt. 
      */
     public static final String REQUEST_ATTR_FEHLER = "fehler";

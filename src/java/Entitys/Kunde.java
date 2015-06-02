@@ -22,6 +22,7 @@ public class Kunde extends Benutzer{
     private String nachname; 
     private String strasse;
     private String hausnummer;
+    private String plz;
     private String ort;
     private String telefonnummer;
 
@@ -66,6 +67,14 @@ public class Kunde extends Benutzer{
 
     public void setHausnummer(String hausnummer) {
         this.hausnummer = hausnummer;
+    }
+    
+    public String getPLZ() {
+        return this.plz;
+    }
+    
+    public void setPLZ(String plz) {
+        this.plz = plz;
     }
 
     public String getOrt() {
