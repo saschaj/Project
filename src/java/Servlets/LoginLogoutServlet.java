@@ -12,6 +12,7 @@
 package Servlets;
 
 import Entitys.Benutzer;
+import Hilfsklassen.Konstanten;
 import Manager.DatenZugriffsObjekt;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class LoginLogoutServlet extends HttpServlet {
+    
+    private final String LOGINFEHLER_TEXT = "Login fehlgeschlagen! Überprüfen Sie ihre Login-Daten!";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -167,7 +170,10 @@ public class LoginLogoutServlet extends HttpServlet {
             }
 
         } else if (login != null) {
-            ausgabe = "Sie wurden erfolgreich angemeldet und werden automatisch weitergeleitet!";
+            
+            //LogIn durchführen
+            this.logIn(request, response);
+            
         } else if (getPassword != null) {
             ausgabe = "Ihnen wurde ein neues Passwort zugeschickt und werden automatisch weitergeleitet!";
         } else if (logout != null) {
@@ -192,6 +198,62 @@ public class LoginLogoutServlet extends HttpServlet {
             out.println("</body>");
             out.println("</html>");
         }
+    }
+    
+    /**
+     * Ersteller:	René Kanzenbach
+     * Erstelldatum:    02.06.2015
+     * Methode:         logIn
+     * Version:         1.0
+     * Änderungen:      -
+     * 
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException 
+     */
+    private void logIn(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        
+        Benutzer benutzer;
+        DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+        HttpSession session = request.getSession();
+        
+        
+        String loginEmail;
+        String loginPasswort;
+        String fehlerText[] = {this.LOGINFEHLER_TEXT};
+        
+        //Eingegebene Benutzer-Email auslesen
+        loginEmail = request.getParameter("login_email");
+        //Eingegebenes Passwort auslesen
+        loginPasswort = request.getParameter("login_passwort");
+        
+        //BenutzerObjekt mit Hilfe der Email laden
+        benutzer = dao.getBenutzer(loginEmail);
+        
+        //Prüfen ob Benutzer gefunden wurde und das Passwort korrekt ist
+        if(benutzer != null 
+                && benutzer.pruefePasswort(loginPasswort)) {//Falls LogIn erfolgreich
+            
+            //BenutzerObjekt in Session laden
+            session.setAttribute(Konstanten.SESSION_ATTR_BENUTZER, benutzer);
+            //Weiterleitung auf Benutzerstartseite
+            request.getRequestDispatcher("/user.jsp")
+                        .forward(request, response);
+            
+        }else { //Falls LogIn nicht erfolgreich
+            
+            //Übergabe des Fehlertextes
+            request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, fehlerText);
+            
+            //Weiterleitung auf login_register.jsp
+            request.getRequestDispatcher("/login_register.jsp")
+                        .forward(request, response);
+        }
+        
+        //DatenZugriffsObjekt schließen
+        dao.close();
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

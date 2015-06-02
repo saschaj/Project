@@ -2,11 +2,8 @@ package Manager;
 
 import javax.persistence.*;
 import Entitys.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -91,6 +88,40 @@ public class DatenZugriffsObjekt {
         }
 
         return isRegister;
+    }
+    
+    /**
+     * Ersteller:	René Kanzenbach
+     * Erstelldatum:    02.06.2015
+     * Methode:         getBenutzer
+     * Version:         1.0
+     * Änderungen:      -
+     * 
+     * Sucht einen Benutzer anhand der übergebenen E-Mail aus der Datenbank und
+     * gibt diesen zurück. Wird kein Benutzer mit der gesuchten E-Mail gefunden
+     * gibt die Methode eine NULL-Referenz zurück.
+     * 
+     * Diese Methode setzt vorraus, dass eine E-Mail nur einmal in der 
+     * Datenbank abgespeichert ist.
+     * 
+     * @param eMail EMail-Adresse des gesuchten Benutzers.
+     * 
+     * @return Benutzer Falls ein Benutzer gefunden wurde, wird eine 
+     * BenutzerEntity zurückgegeben. Wird kein Benutzer gefunden wird NULL 
+     * zurückgegeben.
+     */
+    public Benutzer getBenutzer(String eMail) {
+        
+        List<Benutzer> benutzerListe;
+        
+        //Benutzer mit gleicher EMail-Adresse suchen
+        benutzerListe = this.entityManager.createQuery( ""
+                + "SELECT ben "
+                + "FROM Benutzer ben "
+                + "WHERE ben.email LIKE '" + eMail + "' ").getResultList();
+        
+        //Den ersten gefundenen Benutzer zurückgeben
+        return (Benutzer) benutzerListe.get(0);
     }
 
     /**

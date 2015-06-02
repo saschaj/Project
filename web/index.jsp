@@ -13,7 +13,6 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 <!DOCTYPE html>
 <html>
     <head>
-        <%@ page import="javax.persistence.*" %>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="css/style.css" />
         <title>SWP SS 2015</title>

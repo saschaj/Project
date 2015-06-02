@@ -62,6 +62,25 @@ public class Benutzer implements java.io.Serializable {
     public String getPasswort() {
         return passwort;
     }
+    
+    /**
+     * Ersteller:	René Kanzenbach
+     * Erstelldatum:    02.06.2015
+     * Methode:         pruefePasswort
+     * Version:         1.0
+     * Änderungen:      -
+     * 
+     * Gleicht das übergebene Klartext Passwort mit dem Passwort des Benutzers
+     * ab und gibt TRUE zurück falls diese identisch sind.
+     * 
+     * Diese Methode nutzt die Benutzer.createHash() Methode.
+     * 
+     * @param passwort Passwort in Klartext.
+     * @return TRUE falls die Passwörter identisch sind und FALSE falls nicht.
+     */
+    public boolean pruefePasswort(String passwort) {
+        return this.passwort.equals(Benutzer.createHash(passwort));
+    }
 
     public void setPasswort(String passwort) {
         this.passwort = passwort;
