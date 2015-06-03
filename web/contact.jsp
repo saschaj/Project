@@ -70,7 +70,8 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                     <%-- Kontaktformular --%>
                     <div id="content_item">
                         <div id="form_settings">
-                            <form method="POST" action="TestServlet">
+                            <!--Der Sascha ist voll doof -->
+                            <form method="POST" action="KontaktServlet">
                                 <p><span>Name:</span><input class="contact" type="text" name="your_name" value="" /></p>
                                 <p><span>Email Adresse*:</span><input class="contact" type="text" name="your_email" value="" /></p>
                                 <p><span>Mitteilung*:</span><textarea class="contact textarea" rows="4" cols="50" name="your_message"></textarea></p>
