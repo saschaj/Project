@@ -62,7 +62,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                 
                 <div id="content">
                     <h1>Benutzer-Account Verwaltung</h1>
-                    <form method="POST" action="">
+                    <form method="POST" action="KontaktServlet">
                     <div id="form_settings">
                         <h2>Kundendaten:</h2>
                         <% if (k != null && !k.getVorname().equals("")) { %>
@@ -127,7 +127,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                             <input type="password" name="pw_n" value="">
                         </p>
                     </div>
-                        <input type="submit" name="Speichern" value="save" >
+                        <input type="submit" name="Speichern" value="Änderungen speichern" >
                     </form>
                     
                 </div><!--close content-->
