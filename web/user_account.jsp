@@ -62,7 +62,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                 
                 <div id="content">
                     <h1>Benutzer-Account Verwaltung</h1>
-                    <form method="POST" action="KontaktServlet">
+                    <form method="POST" action="BenutzerServlet">
                     <div id="form_settings">
                         <h2>Kundendaten:</h2>
                         <% if (k != null && !k.getVorname().equals("")) { %>
