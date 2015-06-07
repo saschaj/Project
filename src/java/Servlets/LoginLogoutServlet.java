@@ -8,6 +8,8 @@
  *                    eingebunden
  *                  1.1 (Sascha Jungenkrüger) 01.06.2015
  *                  - Registrierung eingefügt
+ *                  1.2 (René Kanzenbach) 02.06.2015
+ *                  -logIn-Methode hinzugefügt
  */
 package Servlets;
 

@@ -3,12 +3,14 @@
 Ersteller:	Sascha Jungenkrüger
 Erstelldatum:   25.05.2015
 Dokument:	user.jsp
-Version:	1.0
+Version:	1.1
 Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Template an Entwurf angepasst
 		- Button für die Suche und Textsuche in Content eingefügt
                 - Button "Neuen Vertrag anlegen" und JSP zur Ergebnisanzeige
                   eingefügt
+                1.1 (René Kanzenbach) 07.06.2015
+                - Navigationsbereich ausgelagert
 
 --%>
 
@@ -30,25 +32,10 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                         <h2>SWP SS 2015</h2>
                     </div>
                     
-                    <nav>
-                        <ul id="nav">
-                            <li class="current">
-                                <a href="user.jsp">Vertragsübersicht</a>
-                            </li>
-                            <li>
-                                <a href="contact.jsp">Kontakt</a>
-                            </li>
-                            <li>
-                                <a href="user_account.jsp">Account verwalten</a>
-                            </li>
-                            <li>
-                                <a href="LoginLogoutServlet?logout=true">Abmelden</a>
-                            </li>
-                            <%-- Testseiten.. Werden später wieder entfernt --%>
-                            <li><a href="index.jsp">Startseite</a></li>
-                            <li><a href="admin.jsp">Admin</a></li>
-                        </ul>
-                    </nav>
+                    <%-- Navigationsbereich --%>
+                    <jsp:include page="navigation.jsp">
+                        <jsp:param name="HIGHLIGHT_LINK" value="BENUTZER" />
+                    </jsp:include>
                     
                 </div>
             </header>

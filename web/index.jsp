@@ -3,12 +3,15 @@
 Ersteller:	Sascha Jungenkrüger
 Erstelldatum:   25.05.2015
 Dokument:	index.jsp
-Version:	1.0
+Version:	1.1
 Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Template an Entwurf angepasst
+                1.1 (René Kanzenbach) 07.06.2015
+                - Navigationsbereich ausgelagert
 
 --%>
 
+<%@page import="Hilfsklassen.Konstanten"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -30,24 +33,10 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                         <h2>SWP SS 2015</h2>
                     </div>
 
-                    <%-- Verlinkungen --%>
-                    <nav>
-                        <ul id="nav">
-                            <li class="current">
-                                <a href="index.jsp">Startseite</a>
-                            </li>
-                            <li>
-                                <a href="contact.jsp">Kontakt</a>
-                            </li>
-                            <li>
-                                <a href="login_register.jsp">
-                                    Anmelden & Registrieren</a>
-                            </li>
-                            <%-- Testseiten.. Werden später wieder entfernt --%>
-                            <li><a href="admin.jsp">Admin</a></li>
-                            <li><a href="user.jsp">Benutzer</a></li>
-                        </ul><!--close nav-->
-                    </nav>
+                    <%-- Navigationsbereich --%>
+                    <jsp:include page="navigation.jsp">
+                        <jsp:param name="HIGHLIGHT_LINK" value="STARTSEITE" />
+                    </jsp:include>
 
                 </div><!--close header_section-->
             </header>

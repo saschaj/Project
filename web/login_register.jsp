@@ -3,13 +3,15 @@
 Ersteller:	Sascha Jungenkrüger
 Erstelldatum:   25.05.2015
 Dokument:	login_register.jsp
-Version:	1.1
+Version:	1.2
 Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Template an Entwurf angepasst
                 - Formular für die Registrierung und Anmeldung eingefügt
                 1.1 (Sascha Jungenkrüger) 02.05.2015
                 - Formular angepasst,damit der Nutzer eingegebene Daten nicht
                   nochmal eingeben muss.
+                1.2 (René Kanzenbach) 07.06.2015
+                - Navigationsbereich ausgelagert
 
 --%>
 <% String fehler[]; %>
@@ -33,24 +35,10 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                         <h2>SWP SS 2015</h2>
                     </div>
 
-                    <%-- Verlinkungen --%>
-                    <nav>
-                        <ul id="nav">
-                            <li>
-                                <a href="index.jsp">Startseite</a>
-                            </li>
-                            <li>
-                                <a href="contact.jsp">Kontakt</a>
-                            </li>
-                            <li class="current">
-                                <a href="login_register.jsp">
-                                    Anmelden & Registrieren</a>
-                            </li>
-                            <%-- Testseiten.. Werden später wieder entfernt --%>
-                            <li><a href="admin.jsp">Admin</a></li>
-                            <li><a href="user.jsp">Benutzer</a></li>
-                        </ul><!--close nav-->
-                    </nav>
+                    <%-- Navigationsbereich --%>
+                    <jsp:include page="navigation.jsp">
+                        <jsp:param name="HIGHLIGHT_LINK" value="LOGIN" />
+                    </jsp:include>
 
                 </div><!--close header_section-->
             </header>

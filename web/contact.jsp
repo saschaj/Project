@@ -7,6 +7,9 @@ Version:	1.0
 Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Template an Entwurf angepasst
                 - Kontakformular erstellt und eingefügt
+                1.1 (René Kanzenbach) 07.06.2015
+                - Navigationsbereich ausgelagert
+                
 
 --%>
 
@@ -32,29 +35,10 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                         <h2>SWP SS 2015</h2>
                     </div>
 
-                    <%-- Verlinkungen --%>
-                    <nav>
-                        <ul id="nav">
-                            <li>
-                                <a href="index.jsp">Startseite</a>
-                            </li>
-                            <li class="current">
-                                <a href="contact.jsp">Kontakt</a>
-                            </li>
-                            <li>
-                                <% if (session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER) != null) {%>
-                                <a href="LoginLogoutServlet?logout=true">Abmelden</a>
-                                <% } else { %>
-                                <a href="login_register.jsp">
-                                    Anmelden & Registrieren</a>
-                                <% } %>
-                                
-                            </li>
-                            <%-- Testseiten.. Werden später wieder entfernt --%>
-                            <li><a href="admin.jsp">Admin</a></li>
-                            <li><a href="user.jsp">Benutzer</a></li>
-                        </ul><!--close nav-->
-                    </nav>
+                    <%-- Navigationsbereich --%>
+                    <jsp:include page="navigation.jsp">
+                        <jsp:param name="HIGHLIGHT_LINK" value="KONTAKT" />
+                    </jsp:include>
 
                 </div>
             </header>

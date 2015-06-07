@@ -3,11 +3,13 @@
 Ersteller:	Sascha Jungenkrüger
 Erstelldatum:   25.05.2015
 Dokument:	admin.jsp
-Version:	1.0
+Version:	1.1
 Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Template an Entwurf angepasst
 		- Textsuche und Button für Statistiken eingefügt
                 - JSP zur Ergebnisanzeige eingefügt
+                1.1 (René Kanzenbach) 07.06.2015
+                - Navigationsbereich ausgelagert
 
 --%>
 
@@ -31,23 +33,10 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                         <h2>SWP SS 2015</h2>
                     </div>
                     
-                    <%-- Verlinkungen --%>                    
-                    <nav> 
-                        <ul id="nav">
-                            <li class="current">
-                                <a href="admin.jsp">Administratorfunktionen</a>
-                            </li>
-                            <li>
-                                <a href="contact.jsp">Kontakt</a>
-                            </li>
-                            <li>
-                                <a href="LoginLogoutServlet?logout=true">Abmelden</a>
-                            </li>
-                            <%-- Testseiten.. Werden später wieder entfernt --%>
-                            <li><a href="index.jsp">Startseite</a></li>
-                            <li><a href="user.jsp">Benutzer</a></li>
-                        </ul><!--close nav-->
-                    </nav>             
+                    <%-- Navigationsbereich --%>
+                    <jsp:include page="navigation.jsp">
+                        <jsp:param name="HIGHLIGHT_LINK" value="ADMIN" />
+                    </jsp:include>           
                             
                 </div><!--close header_section-->                 
             </header>
