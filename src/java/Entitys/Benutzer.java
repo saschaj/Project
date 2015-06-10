@@ -25,7 +25,10 @@ public class Benutzer implements java.io.Serializable {
     @JoinTable(name = "BENUTZER_RECHT_ZUORDNUNG")
     private Collection<Benutzer_Recht> rechte;
 
+    @Column (name="EMAIL")
     private String email;
+    
+    @Column (name="PASSWORT")
     private String passwort;
 
     public Benutzer() {

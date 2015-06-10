@@ -11,7 +11,10 @@ import javax.persistence.*;
 public class Festnetzvertrag extends Vertrag implements Serializable{
     
     private String tarifname;
-    private String empfangstyp;
+    
+    @ManyToOne
+    @JoinColumn (name="EMPFANGSTYP")
+    private Netztyp empfangstyp;
 
     public Festnetzvertrag() {
     }
@@ -24,11 +27,11 @@ public class Festnetzvertrag extends Vertrag implements Serializable{
         this.tarifname = tarifname;
     }
 
-    public String getEmpfangstyp() {
+    public Netztyp getEmpfangstyp() {
         return empfangstyp;
     }
 
-    public void setEmpfangstyp(String empfangstyp) {
+    public void setEmpfangstyp(Netztyp empfangstyp) {
         this.empfangstyp = empfangstyp;
     }
     

@@ -12,10 +12,13 @@ public class Gasvertrag extends Vertrag implements Serializable {
     
     @Column (name="GASZAEHLER_NR")
     private String gaszaehlerNr;
+    
     @Column (name="GASZAEHLER_STAND")
     private int gaszaehlerStand;
+    
     @Column (name="PREIS_PRO_KWH")
-    private int preisProKhw;
+    private float preisProKhw;
+    
     @Column (name="VERBRAUCH_PRO_JAHR")
     private int verbrauchProJahr;
 
@@ -38,11 +41,11 @@ public class Gasvertrag extends Vertrag implements Serializable {
         this.gaszaehlerStand = gaszaehlerStand;
     }
 
-    public int getPreisProKhw() {
+    public float getPreisProKhw() {
         return preisProKhw;
     }
 
-    public void setPreisProKhw(int preisProKhw) {
+    public void setPreisProKhw(float preisProKhw) {
         this.preisProKhw = preisProKhw;
     }
 
