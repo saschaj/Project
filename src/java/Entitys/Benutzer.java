@@ -3,6 +3,7 @@ package Entitys;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
+import java.util.HashSet;
 import javax.persistence.*;
 
 /**
@@ -15,20 +16,20 @@ import javax.persistence.*;
 public class Benutzer implements java.io.Serializable {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int benutzerId;
 
     @ManyToOne
     private Benutzer_Status status;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinTable(name = "BENUTZER_RECHT_ZUORDNUNG")
     private Collection<Benutzer_Recht> rechte;
 
-    @Column (name="EMAIL")
+    @Column(name = "EMAIL")
     private String email;
-    
-    @Column (name="PASSWORT")
+
+    @Column(name = "PASSWORT")
     private String passwort;
 
     public Benutzer() {
@@ -54,6 +55,30 @@ public class Benutzer implements java.io.Serializable {
         this.rechte = rechte;
     }
 
+    /**
+     * Ersteller:	René Kanzenbach
+     * Erstelldatum:    11.06.2015
+     * Methode:         addRecht
+     * Version:         1.0
+     * Änderungen:      -
+     * 
+     * Fügt dem Benutzer das übergebene Recht hinzu. 
+     * 
+     * Prüft ob schon eine Collection mit Rechten existiert, falls nicht wird 
+     * eine neues HashSet angelegt und das Recht diesem hinzugefügt.
+     * 
+     * @param recht Wird den Rechten des Benutzers hinzugefügt.
+     */
+    public void addRecht(Benutzer_Recht recht) {
+
+        if (this.rechte != null) {
+            this.rechte.add(recht);
+        } else {
+            this.rechte = new HashSet();
+            this.rechte.add(recht);
+        }
+    }
+
     public String getEmail() {
         return email;
     }
@@ -65,19 +90,16 @@ public class Benutzer implements java.io.Serializable {
     public String getPasswort() {
         return passwort;
     }
-    
+
     /**
-     * Ersteller:	René Kanzenbach
-     * Erstelldatum:    02.06.2015
-     * Methode:         pruefePasswort
-     * Version:         1.0
-     * Änderungen:      -
-     * 
+     * Ersteller:	René Kanzenbach Erstelldatum: 02.06.2015 Methode:
+     * pruefePasswort Version: 1.0 Änderungen: -
+     *
      * Gleicht das übergebene Klartext Passwort mit dem Passwort des Benutzers
      * ab und gibt TRUE zurück falls diese identisch sind.
-     * 
+     *
      * Diese Methode nutzt die Benutzer.createHash() Methode.
-     * 
+     *
      * @param passwort Passwort in Klartext.
      * @return TRUE falls die Passwörter identisch sind und FALSE falls nicht.
      */

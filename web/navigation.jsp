@@ -9,6 +9,10 @@ Veränderungen:	-
 
 --%>
 
+<%@page import="java.util.HashSet"%>
+<%@page import="java.util.Set"%>
+<%@page import="Entitys.Benutzer_Recht"%>
+<%@page import="java.util.Collection"%>
 <%@page import="Entitys.Benutzer"%>
 <%@page import="Hilfsklassen.Konstanten"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -19,57 +23,98 @@ Veränderungen:	-
         //Link, welcher in der Navigationsleiste hervorgehoben werden soll.
         String highlightLink = "";
         highlightLink = request.getParameter("HIGHLIGHT_LINK");
-        
+
+        //Benutzer aus der Session.
         Benutzer benutzer = (Benutzer) request.getSession().getAttribute(
                 Konstanten.SESSION_ATTR_BENUTZER);
+        Collection<Integer> benRechte = new HashSet();
+
+        //Wenn der Benutzer angemeldet ist.
+        if (benutzer != null) {
+            //Rechte des Benutzers auslesen.
+            for (Benutzer_Recht recht : benutzer.getRechte()) {
+                benRechte.add(recht.getBenutzerRechtId());
+            }
+        }
     %>
 
 </head>
 <nav>
     <ul id="nav">
 
-        <!-- Startseite -->
-         <li
-            <% if (highlightLink.equals("STARTSEITE")) {
-                    %> class="current" <%
+
+        <% if (benRechte.contains(Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT)) { %>
+
+        <!-- Benutzerstartseite -->
+        <li 
+            <% if (highlightLink.equals("BENUTZER")) { %>
+            class="current" 
+            <% } %>>
+            <a href="user.jsp">Benutzer</a>
+        </li>
+        
+        <!-- BenutzerAccountSeite -->
+        <li 
+            <% if (highlightLink.equals("BENUTZER_ACCOUNT")) { %>
+            class="current" 
+            <% } %>>
+            <a href="user_account.jsp">Benutzer Account</a>
+        </li>
+
+        <% } else if (benRechte.contains(Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT)) { %>
+
+        <!-- Adminstartseite -->
+        <li <% if (highlightLink.equals("ADMIN")) {
+            %> class="current" <%
                 }
             %>>
+            <a href="admin.jsp">Admin</a>
+        </li>
+
+        <% } else { %>
+
+        <!-- Startseite -->
+        <li <% if (highlightLink.equals("STARTSEITE")) { %>
+            class="current" 
+            <% } %>>
             <a href="index.jsp">Startseite</a>
         </li>
+
+        <% } %>
+
 
         <!-- Kontakt -->
         <li 
             <% if (highlightLink.equals("KONTAKT")) {
-                    %> class="current" <%
+            %> class="current" <%
                 }
             %>>
             <a href="contact.jsp">Kontakt</a>
         </li>
 
+        <% if (benutzer != null) { %>
+
+        <!-- LogOut -->
+        <li <% if (highlightLink.equals("LOGOUT")) {
+            %> class="current" <%
+                }
+            %>>
+            <a href="<%= request.getContextPath() %>/LoginLogoutServlet?<%= Konstanten.URL_PARAM_AKTION %>=<%= Konstanten.URL_AKTION_LOGOUT %>" >
+                Abmelden</a>
+        </li>
+
+        <% } else { %>
+
         <!-- LogIn & Registrierung -->
         <li <% if (highlightLink.equals("LOGIN")) {
-                    %> class="current" <%
+            %> class="current" <%
                 }
             %>>
             <a href="login_register.jsp">
                 Anmelden & Registrieren</a>
         </li>
 
-        <!-- Adminstartseite -->
-        <li <% if (highlightLink.equals("ADMIN")) {
-                    %> class="current" <%
-                }
-            %>>
-            <a href="admin.jsp">Admin</a>
-        </li>
-
-        <!-- Benutzerstartseite -->
-        <li <% if (highlightLink.equals("BENUTZER")) {
-                    %> class="current" <%
-                }
-            %>>
-            <a href="user.jsp">Benutzer</a>
-        </li>
+        <% }%>
 
     </ul><!--close nav-->
 </nav>

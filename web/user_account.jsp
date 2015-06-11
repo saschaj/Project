@@ -3,17 +3,18 @@
 Ersteller:	Sascha Jungenkrüger
 Erstelldatum:   30.05.2015
 Dokument:	user_account.jsp
-Version:	1.1
+Version:	1.2
 Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Template an Entwurf angepasst
                 1.1 (Sascha Jungenkrüger)
                 - Einfügen der Formulardaten
+                1.2 (René Kanzenbach) 11.06.2015
+                - Navigationsleiste ausgelagert
 
 --%>
 <%@page import="java.sql.Date"%>
 <%@page import="Hilfsklassen.Konstanten"%>
-<% Benutzer ben = (Benutzer)session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
-   Kunde k = (Kunde)session.getAttribute(Konstanten.SESSION_ATTR_KUNDE); %>
+<% Kunde k = (Kunde)session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER); %>
 
 <%@page import="Entitys.Benutzer"%>
 <%@page import="Entitys.Kunde"%>
@@ -35,25 +36,10 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                         <h2>SWP SS 2015</h2>
                     </div>
                     
-                    <nav>
-                        <ul id="nav">
-                            <li>
-                                <a href="user.jsp">Vertragsübersicht</a>
-                            </li>
-                            <li>
-                                <a href="contact.jsp">Kontakt</a>
-                            </li>
-                            <li class="current">
-                                <a href="user_account.jsp">Account verwalten</a>
-                            </li>
-                            <li>
-                                <a href="LoginLogoutServlet?logout=true">Abmelden</a>
-                            </li>
-                            <%-- Testseiten.. Werden später wieder entfernt --%>
-                            <li><a href="index.jsp">Startseite</a></li>
-                            <li><a href="admin.jsp">Admin</a></li>
-                        </ul><!--close nav-->
-                    </nav>
+                    <%-- Navigationsbereich --%>
+                    <jsp:include page="navigation.jsp">
+                        <jsp:param name="HIGHLIGHT_LINK" value="BENUTZER_ACCOUNT" />
+                    </jsp:include>
                     
                 </div><!--close header_section-->
             </header>

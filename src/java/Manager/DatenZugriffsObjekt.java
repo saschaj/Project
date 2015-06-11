@@ -2,6 +2,7 @@ package Manager;
 
 import javax.persistence.*;
 import Entitys.*;
+import Hilfsklassen.Konstanten;
 import java.util.Date;
 import java.util.List;
 
@@ -57,7 +58,6 @@ public class DatenZugriffsObjekt {
     }
 
     public boolean isEmailAvailable(String email) {
-        boolean isAvailable = false;
         String query = "select count(b) from Benutzer b where b.email like '"+email+"'";
         long i = 0;
         i = (long) this.entityManager.createQuery(query).getSingleResult();
@@ -65,6 +65,22 @@ public class DatenZugriffsObjekt {
         return i == 0;
     }
 
+    /**
+     * Ersteller:	
+     * Erstelldatum:    
+     * Methode:         register
+     * Version:         1.0
+     * Änderungen:      1.1 René Kanzenbach 11.06.2015
+     *                  -Dem Benutzer wird jetzt bei der Registrierung das Recht
+     *                  "Benutzer_Ansicht" verliehen.
+     * 
+     * 
+     * @param vname
+     * @param name
+     * @param email
+     * @param password
+     * @return 
+     */
     public boolean register(String vname, String name, String email, String password) {
         boolean isRegister = false;
         Kunde neuerKunde = new Kunde();
@@ -73,6 +89,8 @@ public class DatenZugriffsObjekt {
         neuerKunde.setNachname(name);
         neuerKunde.setEmail(email);
         neuerKunde.setPasswort(password);
+        neuerKunde.addRecht(this.entityManager.find(Benutzer_Recht.class,
+                Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT));
 
         try {
             this.entityManager.getTransaction().begin();

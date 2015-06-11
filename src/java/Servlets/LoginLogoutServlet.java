@@ -48,6 +48,10 @@ public class LoginLogoutServlet extends HttpServlet {
         String register = request.getParameter("register");
         String getPassword = request.getParameter("get_pw");
         String logout = request.getParameter("logout");
+        
+        //Aktion die das Servlet anstoßen soll.
+        String aktion = request.getParameter(Konstanten.URL_PARAM_AKTION);
+        
 
         // Überprüfung, welcher Button gedrückt wurde
         if (register != null) {
@@ -55,14 +59,13 @@ public class LoginLogoutServlet extends HttpServlet {
             this.register(request, response);
 
         } else if (login != null) {
-
             //LogIn durchführen
             this.logIn(request, response);
-
         } else if (getPassword != null) {
             ausgabe = "Ihnen wurde ein neues Passwort zugeschickt und werden automatisch weitergeleitet!";
-        } else if (logout != null) {
-            ausgabe = "Sie wurden erfolgreich ausgeloggt und werden automatisch auf die Startseite weitergeleitet!";
+        } else if (aktion.equals(Konstanten.URL_AKTION_LOGOUT)) {
+            //Ausloggen
+            this.logOut(request, response);
         } else {
             ausgabe = "Irgendwas wurde nicht richtig programmiert!";
         }
@@ -86,10 +89,10 @@ public class LoginLogoutServlet extends HttpServlet {
     }
 
     /**
-     * Ersteller:	Sascha Jungenkrüger 
-     * Erstelldatum:    01.06.2015 
+     * Ersteller:       Sascha Jungenkrüger
+     * Erstelldatum:    01.06.2015
      * Methode:         register
-     * Version:         1.0 
+     * Version:         1.0
      * Änderungen:      -
      *
      * @param request
@@ -178,8 +181,6 @@ public class LoginLogoutServlet extends HttpServlet {
 
         // Überprüfung, ob alle Daten des Formulars korrekt sind
         if (vnameIsTrue && nameIsTrue && emailIsTrue && pwIsTrue) {
-            // Initialisierung des DAO
-            dao = new DatenZugriffsObjekt();
             eMailIsAvailable = dao.isEmailAvailable(email1);
             if (eMailIsAvailable) {
                 // Registrierung wird durchgeführt
@@ -214,7 +215,7 @@ public class LoginLogoutServlet extends HttpServlet {
                 // und auf der login_register.jsp ausgegeben.
                 fehler = ausgabe.split("!");
                 // Setzen der Fehler in den Request                    
-                request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, fehler);
+                request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehler);
                 // Da es Fehler im Formular gibt stellt man dem Besucher seine
                 // eingegebenen Daten zur Verfügung, damit er sie
                 // überarbeiten bzw. ergänzen kann.
@@ -228,7 +229,7 @@ public class LoginLogoutServlet extends HttpServlet {
             // und auf der login_register.jsp ausgegeben.
             fehler = ausgabe.split("!");
             // Setzen der Fehler in den Request
-            request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, fehler);
+            request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehler);
             // Da es Fehler im Formular gibt stellt man dem Besucher seine
             // eingegebenen Daten zur Verfügung, damit er sie
             // überarbeiten bzw. ergänzen kann.
@@ -238,8 +239,8 @@ public class LoginLogoutServlet extends HttpServlet {
     }
 
     /**
-     * Ersteller:	René Kanzenbach 
-     * Erstelldatum:    02.06.2015 
+     * Ersteller:	René Kanzenbach
+     * Erstelldatum:    02.06.2015
      * Methode:         logIn
      * Version:         1.0 
      * Änderungen:      -
@@ -281,7 +282,7 @@ public class LoginLogoutServlet extends HttpServlet {
         } else { //Falls LogIn nicht erfolgreich
 
             //Übergabe des Fehlertextes
-            request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, fehlerText);
+            request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehlerText);
 
             //Weiterleitung auf login_register.jsp
             request.getRequestDispatcher("/login_register.jsp")
@@ -290,6 +291,32 @@ public class LoginLogoutServlet extends HttpServlet {
 
         //DatenZugriffsObjekt schließen
         dao.close();
+    }
+
+    /**
+     *
+     * Ersteller:       René Kanzenbach 
+     * Erstelldatum:    11.06.2015 
+     * Methode:         logOut
+     * Version:         1.0 
+     * Veränderungen:   -
+     *
+     * Liest die aktuelle Session aus dem request und löst diese auf.
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    private void logOut(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        //Session auslesen
+        HttpSession session = request.getSession();
+        //Session auflösen
+        session.invalidate();
+        //Weiterleitung auf Startseite
+        request.getRequestDispatcher("/index.jsp")
+                .forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

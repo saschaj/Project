@@ -14,6 +14,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Navigationsbereich ausgelagert
 
 --%>
+<%@page import="Hilfsklassen.Konstanten"%>
 <% String fehler[]; %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -57,7 +58,8 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                                 <form method="POST" action="LoginLogoutServlet">
                                     <p><span>Email-Adresse:</span><input class="login" type="text" name="login_email" value="" /></p>
                                     <p><span>Passwort:</span><input class="login" type="password" name="login_passwort" value="" /></p>
-                                    <p style="padding-top: 15px"><span>&nbsp;</span><input class="submit" type="submit" name="login" value="Anmelden" />
+                                    <p style="padding-top: 15px"><span>&nbsp;</span>
+                                        <input class="submit" type="submit" name="login" value="Anmelden" />
                                         <span>&nbsp;</span><input class="submit" type="submit" name="get_pw" value="Passwort vergessen?" /></p>
                                 </form>
 

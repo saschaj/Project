@@ -9,54 +9,54 @@ import java.util.Date;
  * @author René
  */
 @Entity
-@Table (name="Vertrag")
+@Table(name = "Vertrag")
 @Inheritance(strategy = javax.persistence.InheritanceType.JOINED)
-public class Vertrag implements Serializable{
-    
+public class Vertrag implements Serializable {
+
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name="VERTRAG_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "VERTRAG_ID")
     private int vertragId;
-    
+
     @ManyToOne
     private Kunde kunde;
-    
+
     @ManyToOne
     private Vertrag_Status status;
-    
-    @ManyToOne
-    private Vertrag_Art art;
-    
-    @Column (name="VERTRAG_ENDE")
+
+    @ManyToOne(targetEntity = Vertrag_Art.class)
+    private String art;
+
+    @Column(name = "VERTRAG_ENDE")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date vertragEnde;
-    
-    @Column (name="VERTRAG_BEGINN")
+
+    @Column(name = "VERTRAG_BEGINN")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date vertragBeginn;
-    
-    @Column (name="VERTRAG_NR")
+
+    @Column(name = "VERTRAG_NR")
     private String vertragNr;
-    
-    @Column (name="KUENDIGUNGSFRIST")
+
+    @Column(name = "KUENDIGUNGSFRIST")
     private int kuendigungsfrist;
-    
+
     @ManyToOne
-    @JoinColumn (name="KUENDIGUNGSFRIST_EINHEIT")
+    @JoinColumn(name = "KUENDIGUNGSFRIST_EINHEIT")
     private Datum_Einheit kuendigungsfristEinheit;
-    
-    @Column (name="LAUFZEIT")
+
+    @Column(name = "LAUFZEIT")
     private int laufzeit;
-    
+
     @ManyToOne
-    @JoinColumn (name="LAUFZEIT_EINHEIT")
+    @JoinColumn(name = "LAUFZEIT_EINHEIT")
     private Datum_Einheit laufzeitEinheit;
-    
-    @Column (name="BENACHRICHTIGUNGSFRIST")
+
+    @Column(name = "BENACHRICHTIGUNGSFRIST")
     private int benachrichtigungsfrist;
-    
+
     @ManyToOne
-    @JoinColumn (name="BENACHRICHTIGUNGSFRIST_EINHEIT")
+    @JoinColumn(name = "BENACHRICHTIGUNGSFRIST_EINHEIT")
     private Datum_Einheit benachrichtigungsfristEinheit;
 
     public Vertrag() {
@@ -78,11 +78,11 @@ public class Vertrag implements Serializable{
         this.status = status;
     }
 
-    public Vertrag_Art getArt() {
+    public String getArt() {
         return art;
     }
 
-    public void setArt(Vertrag_Art art) {
+    public void setArt(String art) {
         this.art = art;
     }
 
@@ -157,7 +157,7 @@ public class Vertrag implements Serializable{
     public void setBenachrichtigungsfristEinheit(Datum_Einheit benachrichtigungsfristEinheit) {
         this.benachrichtigungsfristEinheit = benachrichtigungsfristEinheit;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -179,5 +179,5 @@ public class Vertrag implements Serializable{
         }
         return true;
     }
-    
+
 }
