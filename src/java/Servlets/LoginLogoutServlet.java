@@ -141,15 +141,13 @@ public class LoginLogoutServlet extends HttpServlet {
             // Überprüfung, ob die E-Mail-Adressen gleich sind
         } else if (!email1.equals(email2)) {
             // Fehlermeldung in Variable ausgabe gespeichert
-            ausgabe = ausgabe + "\n E-Mail-Adressen stimmen nicht überein. "
-                    + "Bitte überprüfen Sie Ihre Eingabe!";
+            ausgabe = ausgabe + "\n E-Mail-Adressen stimmen nicht überein!";
         } else {
             // Überprüfung, ob die E-Mail-Adressen konform sind
             if (!email1.matches("[a-zA-Z0-9].+@[a-zA-Z0-9\\.-]+[a-zA-Z]{2,4}")) {
                 // Fehlermeldung in Variable ausgabe gespeichert
                 ausgabe = ausgabe
-                        + "\n E-Mail-Adresse ist nicht konform. "
-                        + "Bitte überprüfen Sie Ihre Eingabe!";
+                        + "\n E-Mail-Adresse ist nicht konform!";
             } else {
                 // E-Mail-Adressen stimmen überein 
                 // und werden als true gespeichert
@@ -164,8 +162,7 @@ public class LoginLogoutServlet extends HttpServlet {
         } else if (!pw1.equals(pw2)) {
             // Fehlermeldung in Variable ausgabe gespeichert
             ausgabe = ausgabe
-                    + "\n Passwörter stimmen nicht überein. "
-                    + "Bitte überprüfen Sie Ihre Eingabe!";
+                    + "\n Passwörter stimmen nicht überein!";
         } else {
             // Überprüfung, ob das Passwort weniger als 6 Zeichen hat
             if (pw1.length() < 6) {
@@ -218,7 +215,7 @@ public class LoginLogoutServlet extends HttpServlet {
                 request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehler);
                 // Da es Fehler im Formular gibt stellt man dem Besucher seine
                 // eingegebenen Daten zur Verfügung, damit er sie
-                // überarbeiten bzw. ergänzen kann.
+                // überarbeiten bzw. ergänzen kann.                
                 request.getRequestDispatcher("/login_register.jsp")
                         .forward(request, response);
             }
