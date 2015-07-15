@@ -113,22 +113,7 @@ Veränderungen:	-
             <a href="login_register.jsp">
                 Anmelden & Registrieren</a>
         </li>
-
-        <!-- Adminstartseite -->
-        <li <% if (highlightLink.equals("ADMIN")) {
-                    %> class="current" <%
-                }
-            %>>
-            <a href="admin.jsp">Admin</a>
-        </li>
-
-        <!-- Benutzerstartseite -->
-        <li <% if (highlightLink.equals("BENUTZER")) {
-                    %> class="current" <%
-                }
-            %>>
-            <a href="user.jsp">Vertragsverwaltung</a>
-        </li>
+        <% } %>   
 
     </ul><!--close nav-->
 </nav>

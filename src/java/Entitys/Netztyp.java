@@ -8,7 +8,7 @@ import javax.persistence.*;
  * @author René
  */
 @Entity
-@Table (name="NETZTYPE")
+@Table (name="NETZTYP")
 public class Netztyp implements Serializable {
     
     @Id
