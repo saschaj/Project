@@ -22,4 +22,14 @@ public class Konstanten {
      * Attributname für einen Fehlertext in einem HttpRequest Objekt. 
      */
     public static final String REQUEST_ATTR_FEHLER = "fehler";
+    
+    /**
+     * Attributname für einen Fehlertext in einem HttpRequest Objekt. 
+     */
+    public static final String REQUEST_ATTR_ERFOLG = "erfolg";
+    
+    /**
+     * Attributname für die aufzurufende Vertragsseite.
+     */
+    public static final String REQUEST_ATTR_CONTRACT_PAGE = "fehler";
 }

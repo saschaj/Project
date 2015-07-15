@@ -16,6 +16,10 @@
         <servlet-name>BenutzerServlet</servlet-name>
         <servlet-class>Servlets.BenutzerServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>VertragServlet</servlet-name>
+        <servlet-class>Servlets.VertragServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>TestServlet</servlet-name>
         <url-pattern>/TestServlet</url-pattern>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>BenutzerServlet</servlet-name>
         <url-pattern>/BenutzerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>VertragServlet</servlet-name>
+        <url-pattern>/VertragServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

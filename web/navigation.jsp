@@ -68,7 +68,7 @@ Veränderungen:	-
                     %> class="current" <%
                 }
             %>>
-            <a href="user.jsp">Benutzer</a>
+            <a href="user.jsp">Vertragsverwaltung</a>
         </li>
 
     </ul><!--close nav-->

@@ -14,6 +14,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Navigationsbereich ausgelagert
 
 --%>
+<%@page import="Hilfsklassen.Konstanten"%>
 <% String fehler[]; %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -52,15 +53,21 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                         <h2>Anmelden</h2>
                         <div class="sidebar">
                             <div class="sidebar_item">
-
                                 <%-- Formular der Anmeldung --%>
                                 <form method="POST" action="LoginLogoutServlet">
-                                    <p><span>Email-Adresse:</span><input class="login" type="text" name="login_email" value="" /></p>
-                                    <p><span>Passwort:</span><input class="login" type="password" name="login_passwort" value="" /></p>
-                                    <p style="padding-top: 15px"><span>&nbsp;</span><input class="submit" type="submit" name="login" value="Anmelden" />
-                                        <span>&nbsp;</span><input class="submit" type="submit" name="get_pw" value="Passwort vergessen?" /></p>
+                                    <p>
+                                        <span class="span_login">Email-Adresse:</span>
+                                        <input class="contact" type="text" name="login_email" value="" />
+                                    </p>
+                                    <p>
+                                        <span class="span_login">Passwort:</span>
+                                        <input class="contact" type="password" name="login_passwort" value="" />
+                                    </p>
+                                    <p>
+                                        <input style="width:170px" class="submit" type="submit" name="login" value="Anmelden" />
+                                        <input style="width:170px" class="submit" type="submit" name="get_pw" value="Passwort vergessen?" />
+                                    </p>
                                 </form>
-
                             </div><!--close sidebar_item--> 
                         </div><!--close sidebar-->
                     </div><!--close sidebar_container-->
@@ -69,36 +76,43 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 
                         <%-- Überschrift --%>
                         <h2>Registrieren</h2>
-
                         <%-- Formular der Registrierung --%>
                         <form method="POST" action="LoginLogoutServlet">
-                            <% //if (formular.getAttribute("fehler") != null) {
-                                if (request.getAttribute("fehler") != null) {
-                                //fehler = (String[])formular.getAttribute("fehler");
-                                fehler = (String[])request.getAttribute("fehler");
-                                for(int i=0; i < fehler.length; i++) {  %>
-                                <span style="color:#FF0000"><%= fehler[i] %></span><br>
-                            <% }} if (request.getParameter("reg_vname") != null) { %>
-                            <p><span>Vorname:</span><input class="contact" type="text" name="reg_vname" value="<%= request.getParameter("reg_vname") %>" /></p>
-                            <% } else {%>
-                            <p><span>Vorname:</span><input class="contact" type="text" name="reg_vname" value="" /></p>
-                            <% } if (request.getParameter("reg_name") != null) { %>
-                            <p><span>Nachname:</span><input class="contact" type="text" name="reg_name" value="<%= request.getParameter("reg_name") %>" /></p>
-                            <% } else {%>
-                            <p><span>Nachname:</span><input class="contact" type="text" name="reg_name" value="" /></p>
-                            <% } if (request.getParameter("reg_email") != null) { %>
-                            <p><span>Email-Adresse:</span><input class="contact" type="text" name="reg_email" value="<%= request.getParameter("reg_email") %>" /></p>
-                            <% } else {%>
-                            <p><span>Email-Adresse:</span><input class="contact" type="text" name="reg_email" value="" /></p>
-                            <% } if (request.getParameter("reg_email2") != null) { %>
-                            <p><span>Email-Adresse wiederholen:</span><input class="contact" type="text" name="reg_email2" value="<%= request.getParameter("reg_email2") %>" /></p>
-                            <% } else {%>
-                            <p><span>Email-Adresse wiederholen:</span><input class="contact" type="text" name="reg_email2" value="" /></p>
-                            <% }%>
-                            <p><span>Passwort:</span><input class="contact" type="password" name="reg_pw" value="" /></p>
-                            <p><span>Passwort wiederholen:</span><input class="contact" type="password" name="reg_pw2" value="" /></p>
-                            <p style="padding-top: 15px"><span>&nbsp;</span><input class="submit" type="submit" name="register" value="Registrieren" /></p>
-                            
+                            <% if (request.getAttribute("fehler") != null) {
+                                    fehler = (String[]) request.getAttribute("fehler");
+                                    for (int i = 0; i < fehler.length; i++) {%>
+                            <span class="span_error"><%= fehler[i]%></span><br>
+                            <%  }
+                                    request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, null);
+                                }%>
+                            <p>
+                            <span class="span_reg">Vorname:</span>
+                            <input class="contact" type="text" name="reg_vname" value="<%= request.getParameter("reg_vname") != null ? request.getParameter("reg_vname") : ""%>" />
+                            </p>                            
+                            <p>
+                            <span class="span_reg">Nachname:</span>
+                            <input class="contact" type="text" name="reg_name" value="<%= request.getParameter("reg_name") != null ? request.getParameter("reg_name") : ""%>" />
+                            </p>                            
+                            <p>
+                            <span class="span_reg">Email-Adresse:</span>
+                            <input class="contact" type="text" name="reg_email" value="<%= request.getParameter("reg_email") != null ? request.getParameter("reg_email") : ""%>" />
+                            </p>                            
+                            <p>
+                            <span class="span_reg">Email-Adresse wiederholen:</span>
+                            <input class="contact" type="text" name="reg_email2" value="<%= request.getParameter("reg_email2") != null ? request.getParameter("reg_email2") : ""%>" />
+                            </p>                           
+                            <p>
+                            <span class="span_reg">Passwort:</span>
+                            <input class="contact" type="password" name="reg_pw" value="" />
+                            </p>
+                            <p>
+                            <span class="span_reg">Passwort wiederholen:</span>
+                            <input class="contact" type="password" name="reg_pw2" value="" />
+                            </p>
+                            <p style="padding-top: 15px">
+                            <span>&nbsp;</span>
+                            <input class="submit" type="submit" name="register" value="Registrieren" />
+                            </p>
                         </form>
                     </div><!--close form_settings-->
 
@@ -106,7 +120,8 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
             </div><!--close site_content-->
 
             <footer>
-                SWP SS 2015 by Julie Kenfack, Mladen Sikiric, René Kanzenbach & Sascha Jungenkrüger
+                SWP SS 2015 by Julie Kenfack, Mladen Sikiric,
+                René Kanzenbach & Sascha Jungenkrüger
             </footer>
 
         </div><!--close main-->
