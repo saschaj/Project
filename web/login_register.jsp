@@ -55,18 +55,11 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                             <div class="sidebar_item">
                                 <%-- Formular der Anmeldung --%>
                                 <form method="POST" action="LoginLogoutServlet">
-                                    <p>
-                                        <span class="span_login">Email-Adresse:</span>
-                                        <input class="contact" type="text" name="login_email" value="" />
-                                    </p>
-                                    <p>
-                                        <span class="span_login">Passwort:</span>
-                                        <input class="contact" type="password" name="login_passwort" value="" />
-                                    </p>
-                                    <p>
-                                        <input style="width:170px" class="submit" type="submit" name="login" value="Anmelden" />
-                                        <input style="width:170px" class="submit" type="submit" name="get_pw" value="Passwort vergessen?" />
-                                    </p>
+                                    <p><span>Email-Adresse:</span><input class="login" type="text" name="login_email" value="" /></p>
+                                    <p><span>Passwort:</span><input class="login" type="password" name="login_passwort" value="" /></p>
+                                    <p style="padding-top: 15px"><span>&nbsp;</span>
+                                        <input class="submit" type="submit" name="login" value="Anmelden" />
+                                        <span>&nbsp;</span><input class="submit" type="submit" name="get_pw" value="Passwort vergessen?" /></p>
                                 </form>
                             </div><!--close sidebar_item--> 
                         </div><!--close sidebar-->

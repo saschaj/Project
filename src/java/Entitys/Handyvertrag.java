@@ -12,8 +12,13 @@ import javax.persistence.*;
 public class Handyvertrag extends Vertrag implements Serializable {
     
     private String tarifname;
-    private String netztyp;
+    
+    @ManyToOne
+    @JoinColumn (name="NETZTYP")
+    private Netztyp netztyp;
+    
     private String rufnummer;
+    
 
     public Handyvertrag() {
     }
@@ -26,11 +31,11 @@ public class Handyvertrag extends Vertrag implements Serializable {
         this.tarifname = tarifname;
     }
 
-    public String getNetztyp() {
+    public Netztyp getNetztyp() {
         return netztyp;
     }
 
-    public void setNetztyp(String netztyp) {
+    public void setNetztyp(Netztyp netztyp) {
         this.netztyp = netztyp;
     }
 

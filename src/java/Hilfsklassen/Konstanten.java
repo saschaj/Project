@@ -13,13 +13,25 @@ package Hilfsklassen;
  */
 public class Konstanten {
     
+    
+    /*
+    ----------------------------------------------------------------------------
+    SESSION ATTRIBUTE
+    ----------------------------------------------------------------------------
+    */
     /**
      * Attributname für eine Benutzer_Entity in einem HttpSession Objekt.
      */
     public static final String SESSION_ATTR_BENUTZER = "BENUTZER";
     
+    
+    /*
+    ----------------------------------------------------------------------------
+    URL PARAMETER
+    ----------------------------------------------------------------------------
+    */
     /**
-     * Attributname für einen Fehlertext in einem HttpRequest Objekt. 
+     * Parametername für einen Fehlertext in einem HttpRequest Objekt. 
      */
     public static final String REQUEST_ATTR_FEHLER = "fehler";
     
@@ -32,4 +44,68 @@ public class Konstanten {
      * Attributname für die aufzurufende Vertragsseite.
      */
     public static final String REQUEST_ATTR_CONTRACT_PAGE = "fehler";
+    public static final String URL_PARAM_FEHLER = "fehler";
+     
+    /**
+     * Parametername für eine URL.
+     */
+    public static final String URL_PARAM_AKTION = "AKTION";
+    
+    /**
+     * Inhalt für URL_PARAM_AKTION.
+     */
+    public static final String URL_AKTION_LOGOUT = "LOGOUT";
+    
+    /**
+     * Inhalt für URL_PARAM_AKTION.
+     */
+    public static final String URL_AKTION_LOGIN = "LOGIN";
+    
+    
+    /*
+    ----------------------------------------------------------------------------
+    PRIMÄRSCHLÜSSEL DER BENUTZER RECHTE
+    ----------------------------------------------------------------------------
+    */
+    /**
+     * Primärschlüssel des BenutzerRechtes "Benutzer_verwalten" in der Tabelle
+     * Benutzer_Recht.
+     */
+    public static final int ID_BEN_RECHT_BENUTZER_VERWALTEN = 1;
+    
+    /**
+     * Primärschlüssel des BenutzerRechtes "Vertrag_verwalten" in der Tabelle
+     * Benutzer_Recht.
+     */
+    public static final int ID_BEN_RECHT_VERTRAG_VERWALTEN = 2;
+    
+    /**
+     * Primärschlüssel des BenutzerRechtes "Statistik_anzeigen" in der Tabelle
+     * Benutzer_Recht.
+     */
+    public static final int ID_BEN_RECHT_STATISTIK_ANZEIGEN = 3;
+    
+    /**
+     * Primärschlüssel des BenutzerRechtes "Fremde_Benutzer_verwalten" in der Tabelle
+     * Benutzer_Recht.
+     */
+    public static final int ID_BEN_RECHT_FREMDE_BENUTZER_VERWALTEN = 4;
+    
+    /**
+     * Primärschlüssel des BenutzerRechtes "Benutzer_wiederherstellen" in der Tabelle
+     * Benutzer_Recht.
+     */
+    public static final int ID_BEN_RECHT_BENUTZER_WIEDERHERSTELLEN = 5;
+    
+    /**
+     * Primärschlüssel des BenutzerRechtes "Benutzer_Ansicht" in der Tabelle
+     * Benutzer_Recht.
+     */
+    public static final int ID_BEN_RECHT_BENUTZER_ANSICHT = 6;
+    
+    /**
+     * Primärschlüssel des BenutzerRechtes "Admin_Ansicht" in der Tabelle
+     * Benutzer_Recht.
+     */
+    public static final int ID_BEN_RECHT_ADMIN_ANSICHT = 7;
 }

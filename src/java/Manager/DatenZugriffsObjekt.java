@@ -5,6 +5,8 @@ import Entitys.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import Hilfsklassen.Konstanten;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -149,6 +151,22 @@ public class DatenZugriffsObjekt {
         return vertraegeErg;
     }
 
+    /**
+     * Ersteller:	
+     * Erstelldatum:    
+     * Methode:         register
+     * Version:         1.0
+     * Änderungen:      1.1 René Kanzenbach 11.06.2015
+     *                  -Dem Benutzer wird jetzt bei der Registrierung das Recht
+     *                  "Benutzer_Ansicht" verliehen.
+     * 
+     * 
+     * @param vname
+     * @param name
+     * @param email
+     * @param password
+     * @return 
+     */
     public boolean register(String vname, String name, String email, String password) {
         boolean isRegister = false;
         Kunde neuerKunde = new Kunde();
@@ -157,6 +175,8 @@ public class DatenZugriffsObjekt {
         neuerKunde.setNachname(name);
         neuerKunde.setEmail(email);
         neuerKunde.setPasswort(password);
+        neuerKunde.addRecht(this.entityManager.find(Benutzer_Recht.class,
+                Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT));
 
         try {
             this.entityManager.getTransaction().begin();

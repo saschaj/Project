@@ -12,8 +12,17 @@ public class Zeitschriftvertrag extends Vertrag implements Serializable {
     
     @Column (name="ZEITSCHRIFT_NAME")
     private String zeitschriftName;
-    private String lieferintervall;
-    private String interessengebiet;
+    
+    @Column (name="LIEFERINTERVALL")
+    private int lieferintervall;
+    
+    @ManyToOne
+    @JoinColumn (name="LIEFERINTERVALL_EINHEIT")
+    private Datum_Einheit lieferintervallEinheit;
+    
+    @ManyToOne
+    @JoinColumn (name="INTERESSENGEBIET")
+    private Interessengebiet interessengebiet;
 
     public Zeitschriftvertrag() {
     }
@@ -26,19 +35,29 @@ public class Zeitschriftvertrag extends Vertrag implements Serializable {
         this.zeitschriftName = zeitschriftName;
     }
 
-    public String getLieferintervall() {
+    public int getLieferintervall() {
         return lieferintervall;
     }
 
-    public void setLieferintervall(String lieferintervall) {
+    public void setLieferintervall(int lieferintervall) {
         this.lieferintervall = lieferintervall;
     }
 
-    public String getInteressengebiet() {
+    public Datum_Einheit getLieferintervallEinheit() {
+        return lieferintervallEinheit;
+    }
+
+    public void setLieferintervallEinheit(Datum_Einheit lieferintervallEinheit) {
+        this.lieferintervallEinheit = lieferintervallEinheit;
+    }
+
+    public Interessengebiet getInteressengebiet() {
         return interessengebiet;
     }
 
-    public void setInteressengebiet(String interessengebiet) {
+    public void setInteressengebiet(Interessengebiet interessengebiet) {
         this.interessengebiet = interessengebiet;
     }
+    
+    
 }

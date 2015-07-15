@@ -284,10 +284,10 @@ public class VertragServlet extends HttpServlet {
                     neuStromvertrag.setVertragNr(vertragsNr);
                     neuStromvertrag.setVertragBeginn(parseDateSqlvBeginn);
                     neuStromvertrag.setLaufzeit(Integer.parseInt(laufzeit));
-                    neuStromvertrag.setLaufzeitEinheit(laufzeitEinheit);
+//                    neuStromvertrag.setLaufzeitEinheit(laufzeitEinheit);
                     neuStromvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuStromvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
-                    neuStromvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
+//                    neuStromvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
                     neuStromvertrag.setStromzaehlerNr(stromNr);
                     neuStromvertrag.setStromzaehlerStand(Integer.parseInt(stromStand));
                     neuStromvertrag.setVerbrauchProJahr(Integer.parseInt(stromVerbrauch));
@@ -305,10 +305,10 @@ public class VertragServlet extends HttpServlet {
                     neuGasvertrag.setVertragNr(vertragsNr);
                     neuGasvertrag.setVertragBeginn(parseDateSqlvBeginn);
                     neuGasvertrag.setLaufzeit(Integer.parseInt(laufzeit));
-                    neuGasvertrag.setLaufzeitEinheit(laufzeitEinheit);
+//                    neuGasvertrag.setLaufzeitEinheit(laufzeitEinheit);
                     neuGasvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuGasvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
-                    neuGasvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
+//                    neuGasvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
                     neuGasvertrag.setGaszaehlerNr(gasNr);
                     neuGasvertrag.setGaszaehlerStand(Integer.parseInt(gasStand));
                     neuGasvertrag.setVerbrauchProJahr(Integer.parseInt(gasVerbrauch));
@@ -327,13 +327,13 @@ public class VertragServlet extends HttpServlet {
                     neuFestnetzvertrag.setVertragBeginn(parseDateSqlvBeginn);
                     neuFestnetzvertrag.setVertragBeginn(parseDate);
                     neuFestnetzvertrag.setLaufzeit(Integer.parseInt(laufzeit));
-                    neuFestnetzvertrag.setLaufzeitEinheit(laufzeitEinheit);
+//                    neuFestnetzvertrag.setLaufzeitEinheit(laufzeitEinheit);
                     neuFestnetzvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuFestnetzvertrag.setVertragEnde(parseDate);
                     neuFestnetzvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
-                    neuFestnetzvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
+//                    neuFestnetzvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
                     neuFestnetzvertrag.setTarifname(festnetzTarif);
-                    neuFestnetzvertrag.setEmpfangstyp(festnetzEmpfang);
+//                    neuFestnetzvertrag.setEmpfangstyp(festnetzEmpfang);
 
                     // Zugriff auf DAO, damit die Daten in der DB
                     // gespeichert werden
@@ -347,12 +347,12 @@ public class VertragServlet extends HttpServlet {
                     neuHandyvertrag.setVertragNr(vertragsNr);
                     neuHandyvertrag.setVertragBeginn(parseDateSqlvBeginn);
                     neuHandyvertrag.setLaufzeit(Integer.parseInt(laufzeit));
-                    neuHandyvertrag.setLaufzeitEinheit(laufzeitEinheit);
+//                    neuHandyvertrag.setLaufzeitEinheit(laufzeitEinheit);
                     neuHandyvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuHandyvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
-                    neuHandyvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
+//                    neuHandyvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
                     neuHandyvertrag.setTarifname(handyTarif);
-                    neuHandyvertrag.setNetztyp(handyNetz);
+//                    neuHandyvertrag.setNetztyp(handyNetz);
                     neuHandyvertrag.setRufnummer(handyNr);
 
                     // Zugriff auf DAO, damit die Daten in der DB
@@ -367,13 +367,13 @@ public class VertragServlet extends HttpServlet {
                     neuZeitschriftvertrag.setVertragNr(vertragsNr);
                     neuZeitschriftvertrag.setVertragBeginn(parseDateSqlvBeginn);
                     neuZeitschriftvertrag.setLaufzeit(Integer.parseInt(laufzeit));
-                    neuZeitschriftvertrag.setLaufzeitEinheit(laufzeitEinheit);
+//                    neuZeitschriftvertrag.setLaufzeitEinheit(laufzeitEinheit);
                     neuZeitschriftvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuZeitschriftvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
-                    neuZeitschriftvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
+//                    neuZeitschriftvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
                     neuZeitschriftvertrag.setZeitschriftName(zeitschriftName);
 //                    neuZeitschriftvertrag.setLieferintervall(Integer.parseInt(zeitschriftIntervall));
-                    neuZeitschriftvertrag.setInteressengebiet(zeitschriftGebiet);
+//                    neuZeitschriftvertrag.setInteressengebiet(zeitschriftGebiet);
 
                     // Zugriff auf DAO, damit die Daten in der DB
                     // gespeichert werden

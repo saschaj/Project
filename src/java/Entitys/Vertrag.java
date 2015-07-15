@@ -9,40 +9,55 @@ import java.util.Date;
  * @author René
  */
 @Entity
-@Table (name="Vertrag")
+@Table(name = "Vertrag")
 @Inheritance(strategy = javax.persistence.InheritanceType.JOINED)
-public class Vertrag implements Serializable{
-    
+public class Vertrag implements Serializable {
+
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    @Column (name="VERTRAG_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "VERTRAG_ID")
     private int vertragId;
-    
+
     @ManyToOne
     private Kunde kunde;
-    
+
     @ManyToOne
     private Vertrag_Status status;
-    
-    @ManyToOne
-    private Vertrag_Art art;
-    
-    @Column (name="VERTRAG_ENDE")
+
+    @ManyToOne(targetEntity = Vertrag_Art.class)
+    private String art;
+
+    @Column(name = "VERTRAG_ENDE")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date vertragEnde;
-    
-    @Column (name="VERTRAG_BEGINN")
+
+    @Column(name = "VERTRAG_BEGINN")
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date vertragBeginn;
-    
-    @Column (name="VERTRAG_NR")
+
+    @Column(name = "VERTRAG_NR")
     private String vertragNr;
+
+    @Column(name = "KUENDIGUNGSFRIST")
     private int kuendigungsfrist;
-    @Column (name="KUENDIGUNGSFRIST_EINHEIT")
-    private String kuendigungsfristEinheit;
+
+    @ManyToOne
+    @JoinColumn(name = "KUENDIGUNGSFRIST_EINHEIT")
+    private Datum_Einheit kuendigungsfristEinheit;
+
+    @Column(name = "LAUFZEIT")
     private int laufzeit;
-    @Column (name="LAUFZEIT_EINHEIT")
-    private String laufzeitEinheit;
+
+    @ManyToOne
+    @JoinColumn(name = "LAUFZEIT_EINHEIT")
+    private Datum_Einheit laufzeitEinheit;
+
+    @Column(name = "BENACHRICHTIGUNGSFRIST")
+    private int benachrichtigungsfrist;
+
+    @ManyToOne
+    @JoinColumn(name = "BENACHRICHTIGUNGSFRIST_EINHEIT")
+    private Datum_Einheit benachrichtigungsfristEinheit;
 
     public Vertrag() {
     }
@@ -63,11 +78,11 @@ public class Vertrag implements Serializable{
         this.status = status;
     }
 
-    public Vertrag_Art getArt() {
+    public String getArt() {
         return art;
     }
 
-    public void setArt(Vertrag_Art art) {
+    public void setArt(String art) {
         this.art = art;
     }
 
@@ -103,14 +118,6 @@ public class Vertrag implements Serializable{
         this.kuendigungsfrist = kuendigungsfrist;
     }
 
-    public String getKuendigungsfristEinheit() {
-        return kuendigungsfristEinheit;
-    }
-
-    public void setKuendigungsfristEinheit(String kuendigungsfristEinheit) {
-        this.kuendigungsfristEinheit = kuendigungsfristEinheit;
-    }
-
     public int getLaufzeit() {
         return laufzeit;
     }
@@ -119,12 +126,36 @@ public class Vertrag implements Serializable{
         this.laufzeit = laufzeit;
     }
 
-    public String getLaufzeitEinheit() {
+    public Datum_Einheit getKuendigungsfristEinheit() {
+        return kuendigungsfristEinheit;
+    }
+
+    public void setKuendigungsfristEinheit(Datum_Einheit kuendigungsfristEinheit) {
+        this.kuendigungsfristEinheit = kuendigungsfristEinheit;
+    }
+
+    public Datum_Einheit getLaufzeitEinheit() {
         return laufzeitEinheit;
     }
 
-    public void setLaufzeitEinheit(String laufzeitEinheit) {
+    public void setLaufzeitEinheit(Datum_Einheit laufzeitEinheit) {
         this.laufzeitEinheit = laufzeitEinheit;
+    }
+
+    public int getBenachrichtigungsfrist() {
+        return benachrichtigungsfrist;
+    }
+
+    public void setBenachrichtigungsfrist(int benachrichtigungsfrist) {
+        this.benachrichtigungsfrist = benachrichtigungsfrist;
+    }
+
+    public Datum_Einheit getBenachrichtigungsfristEinheit() {
+        return benachrichtigungsfristEinheit;
+    }
+
+    public void setBenachrichtigungsfristEinheit(Datum_Einheit benachrichtigungsfristEinheit) {
+        this.benachrichtigungsfristEinheit = benachrichtigungsfristEinheit;
     }
 
     @Override
@@ -148,5 +179,5 @@ public class Vertrag implements Serializable{
         }
         return true;
     }
-    
+
 }
