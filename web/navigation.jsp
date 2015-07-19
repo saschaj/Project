@@ -113,8 +113,7 @@ Veränderungen:	-
             <a href="login_register.jsp">
                 Anmelden & Registrieren</a>
         </li>
-
-        <% }%>
+        <% } %>   
 
     </ul><!--close nav-->
 </nav>

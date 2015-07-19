@@ -57,8 +57,45 @@ h5, h6
   color: #888;
   padding-bottom: 15px;}
   
-span
-{ color: #000;}
+.span_reg
+{ float: left; 
+  width: 200px; 
+  text-align: left;
+  text-shadow: none;
+  color: #000;}
+
+.span_login
+{ float: left; 
+  width: 140px; 
+  text-align: left;
+  text-shadow: none;
+  color: #000;}
+
+.span_contract
+{ float: left; 
+  width: 160px; 
+  text-align: left;
+  text-shadow: none;
+  color: #000;}
+
+.span_error
+{ float: left; 
+  width: 400px; 
+  text-align: left;
+  text-shadow: none;
+  color: #FF0000;}
+
+.span_error_contract
+{ float: left; 
+  width: 700px; 
+  text-align: left;
+  text-shadow: none;
+  color: #FF0000;}
+
+.cat_search
+{
+    width: 200px;
+}
 
 a, a:hover
 { color: #000;
@@ -91,7 +128,7 @@ header
   height: 100px;} 
   
 #header_section
-{ width: 940px;
+{ width: 1000px;
   height: 60px;
   margin-bottom: 20px;} 
   
@@ -150,20 +187,20 @@ ul#nav li.current a, ul#nav li:hover a
   -webkit-border: 7px 7px 7px 7px;}
 
 #site_content
-{ width: 940px;
+{ width: 1000px;
   padding-top: 20px;
   overflow: hidden;
   margin-bottom: 30px;} 
 
 .sidebar_container
 { float: right;
-  width: 400px;
+  width: 450px;
   padding: 0;
   color: #000;}
 
 .sidebar
 { float: left;
-  width: 400px;
+  width: 450px;
   margin: 0 0px 10px 0;}
 
 .sidebar_item
@@ -261,11 +298,13 @@ footer a:hover
 .form_settings p
 { padding: 0 0 4px 0;}
 
-.form_settings span
-{ float: left; 
-  width: 280px; 
-  text-align: left;
-  text-shadow: none;}
+.contact
+{ padding: 2px; 
+  width: 200px; 
+  font: 100% arial; 
+  border: 1px solid #E5E5DB; 
+  background: #FFF; 
+  color: #47433F;}
   
 .form_settings input, .form_settings textarea
 { padding: 2px; 
@@ -284,11 +323,10 @@ footer a:hover
   color: #47433F;
   margin: 28px 0;}
 
-.form_settings .submit
-{ font: 100% arial; 
-  border: 1px solid #FFF; 
-  width: 99px; 
-  margin: 0 0 0 206px; 
+.submit
+{ font: 110% arial; 
+  border: 0px solid #FFF; 
+  width: 175px;  
   height: 26px;
   padding: 2px 0 3px 0;
   cursor: pointer; 
@@ -301,7 +339,6 @@ footer a:hover
   -webkit-border: 7px 7px 7px 7px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 5px;
   -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 5px;
-  box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 5px;
   color: #FFF;
   text-shadow: 1px 1px #000;}
 
