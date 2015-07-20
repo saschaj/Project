@@ -8,16 +8,25 @@ import javax.persistence.*;
  * @author René
  */
 @Entity
-public class Stromvertrag extends Vertrag implements Serializable{
-    
-    @Column (name="STROMZAEHLER_NR")
+public class Stromvertrag extends Vertrag implements Serializable {
+
+    @Column(name = "STROMZAEHLER_NR")
     private String stromzaehlerNr;
-    @Column (name="STROMZAEHLER_STAND")
+
+    @Column(name = "STROMZAEHLER_STAND")
     private int stromzaehlerStand;
-    @Column (name="VERBRAUCH_PRO_JAHR")
+
+    @Column(name = "VERBRAUCH_PRO_JAHR")
     private int verbrauchProJahr;
-    @Column (name="PREIS_PRO_KWH")
+
+    @Column(name = "PREIS_PRO_KWH")
     private float preisProKwh;
+
+    @Column(name = "ANZ_PERSONEN_HAUSHALT")
+    private int anzPersonenHaushalt;
+    
+    @Column (name = "GRUNDPREIS_MONAT")
+    private float grundpreisMonat;
 
     public Stromvertrag() {
     }
@@ -53,5 +62,21 @@ public class Stromvertrag extends Vertrag implements Serializable{
     public void setPreisProKwh(float preisProKwh) {
         this.preisProKwh = preisProKwh;
     }
-    
+
+    public int getAnzPersonenHaushalt() {
+        return anzPersonenHaushalt;
+    }
+
+    public void setAnzPersonenHaushalt(int anzPersonenHaushalt) {
+        this.anzPersonenHaushalt = anzPersonenHaushalt;
+    }
+
+    public float getGrundpreisMonat() {
+        return grundpreisMonat;
+    }
+
+    public void setGrundpreisMonat(float grundpreisMonat) {
+        this.grundpreisMonat = grundpreisMonat;
+    }
+
 }

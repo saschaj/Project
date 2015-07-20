@@ -17,6 +17,7 @@ public class Handyvertrag extends Vertrag implements Serializable {
     @JoinColumn (name="NETZTYP_ID")
     private Netztyp netztyp;
     
+    @Column (name = "RUFNUMMER")
     private String rufnummer;
     
 

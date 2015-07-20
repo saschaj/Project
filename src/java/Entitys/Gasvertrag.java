@@ -21,6 +21,9 @@ public class Gasvertrag extends Vertrag implements Serializable {
     
     @Column (name="VERBRAUCH_PRO_JAHR")
     private int verbrauchProJahr;
+    
+    @Column (name = "VERBRAUCHSFLAECHE")
+    private float verbrauchsFlaeche;
 
     public Gasvertrag() {
     }
@@ -56,5 +59,12 @@ public class Gasvertrag extends Vertrag implements Serializable {
     public void setVerbrauchProJahr(int verbrauchProJahr) {
         this.verbrauchProJahr = verbrauchProJahr;
     }
-    
+
+    public float getVerbrauchsFlaeche() {
+        return verbrauchsFlaeche;
+    }
+
+    public void setVerbrauchsFlaeche(float verbrauchsFlaeche) {
+        this.verbrauchsFlaeche = verbrauchsFlaeche;
+    }
 }

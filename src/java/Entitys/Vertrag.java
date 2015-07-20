@@ -58,7 +58,33 @@ public class Vertrag implements Serializable {
     @ManyToOne
     @JoinColumn(name = "BENACHRICHTIGUNGSFRIST_EINHEIT")
     private Zeit_Einheit benachrichtigungsfristEinheit;
+    
+    @Column( name = "VERTRAGSBEZEICHNUNG" )
+    private String vertragsBezeichnung;
+    
+    @ManyToOne
+    @JoinColumn (name = "LIEFERANSCHRIFT")
+    private Adresse lieferAnschrift;
 
+    @ManyToOne
+    @JoinColumn (name = "RECHNUNGSANSCHRIFT")
+    private Adresse rechnungsAnschrift;
+    
+    @Column (name = "RATEN_BETRAG")
+    private float ratenBetrag;
+    
+    @Column (name = "RATEN_INTERVALL")
+    private String ratenIntervall;
+    
+    @Column (name = "VERLAENGERUNG_MONATE")
+    private int verlaengerungMonate;
+    
+    @Column (name = "VERTRAGS_PARTNER")
+    private String vertragsPartner;
+    
+    @Column (name = "KUNDEN_NR")
+    private String kundenNr;
+    
     public Vertrag() {
     }
 

@@ -16,15 +16,21 @@ public class Kunde extends Benutzer{
     private Collection<Vertrag> vertraege;
     
     @Temporal(TemporalType.DATE)
+    @Column (name = "GEBURTSDATUM")
     private Date geburtsdatum;
     
+    @Column (name = "VORNAME")
     private String vorname;
-    private String nachname; 
-    private String strasse;
-    private String hausnummer;
-    private String plz;
-    private String ort;
+    
+    @Column (name = "NACHNAME")
+    private String nachname;
+    
+    @Column (name = "TELEFONNUMMER")
     private String telefonnummer;
+    
+    @ManyToOne
+    @JoinColumn (name = "ADRESSE")
+    private Adresse adresse;
 
     public Kunde() {
     }
@@ -53,36 +59,12 @@ public class Kunde extends Benutzer{
         this.nachname = nachname;
     }
 
-    public String getStrasse() {
-        return strasse;
+    public Adresse getAdresse() {
+        return adresse;
     }
 
-    public void setStrasse(String strasse) {
-        this.strasse = strasse;
-    }
-
-    public String getHausnummer() {
-        return hausnummer;
-    }
-
-    public void setHausnummer(String hausnummer) {
-        this.hausnummer = hausnummer;
-    }
-    
-    public String getPLZ() {
-        return this.plz;
-    }
-    
-    public void setPLZ(String plz) {
-        this.plz = plz;
-    }
-
-    public String getOrt() {
-        return ort;
-    }
-
-    public void setOrt(String ort) {
-        this.ort = ort;
+    public void setAdresse(Adresse adresse) {
+        this.adresse = adresse;
     }
 
     public String getTelefonnummer() {
@@ -95,7 +77,5 @@ public class Kunde extends Benutzer{
 
     public Collection<Vertrag> getVertraege() {
         return vertraege;
-    }
-    
-    
+    } 
 }

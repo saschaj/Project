@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import Hilfsklassen.Konstanten;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -39,9 +38,6 @@ public class DatenZugriffsObjekt {
         neuerKunde.setVorname("Saul Slash");
         neuerKunde.setNachname("Hudson");
         neuerKunde.setGeburtsdatum(new java.util.Date(1965, 7, 23));
-        neuerKunde.setStrasse("Highway To Hell");
-        neuerKunde.setHausnummer("666");
-        neuerKunde.setOrt("Paradise City");
         neuerKunde.setEmail("gunsNroses@web.de");
 
         stromVertrag.setLaufzeit(30);
