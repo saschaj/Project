@@ -13,6 +13,7 @@ public class Interessengebiet implements Serializable{
     
     @Id
     @GeneratedValue (strategy=GenerationType.IDENTITY)
+    @Column(name = "INTERESSENGEBIET_ID")
     private int interessengebietId;
     
     @Column (name="NAME")

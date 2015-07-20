@@ -8,12 +8,13 @@ import javax.persistence.*;
  * @author René
  */
 @Entity
-@Table (name="DATUM_EINHEIT")
-public class Datum_Einheit implements Serializable {
+@Table (name="Zeit"
+        + "_EINHEIT")
+public class Zeit_Einheit implements Serializable {
     
     @Id
     @GeneratedValue (strategy=GenerationType.IDENTITY)
-    private int datumEinheitId;
+    private int zeitEinheitId;
     
     @Column (name="NAME")
     private String name;
@@ -24,7 +25,7 @@ public class Datum_Einheit implements Serializable {
     /**
      * Standartkonstruktor.
      */
-    public Datum_Einheit() {    
+    public Zeit_Einheit() {    
     }
 
     public String getName() {
@@ -43,14 +44,14 @@ public class Datum_Einheit implements Serializable {
         this.beschreibung = beschreibung;
     }
 
-    public int getDatumEinheitId() {
-        return datumEinheitId;
+    public int getZeitEinheitId() {
+        return zeitEinheitId;
     }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 41 * hash + this.datumEinheitId;
+        int hash = 3;
+        hash = 37 * hash + this.zeitEinheitId;
         return hash;
     }
 
@@ -62,12 +63,14 @@ public class Datum_Einheit implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Datum_Einheit other = (Datum_Einheit) obj;
-        if (this.datumEinheitId != other.datumEinheitId) {
+        final Zeit_Einheit other = (Zeit_Einheit) obj;
+        if (this.zeitEinheitId != other.zeitEinheitId) {
             return false;
         }
         return true;
     }
+
+    
     
     
 }

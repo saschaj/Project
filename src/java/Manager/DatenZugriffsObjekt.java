@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import Hilfsklassen.Konstanten;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -96,7 +97,7 @@ public class DatenZugriffsObjekt {
         Collection<Vertrag> vertraegeErg = null, vertraegeErg2 = null;
         java.util.Date beginn = null, ende = null;
         SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-        
+
         try {
             beginn = df.parse(suchText);
         } catch (ParseException ex) {
@@ -106,12 +107,12 @@ public class DatenZugriffsObjekt {
                 Logger.getLogger(DatenZugriffsObjekt.class.getName()).log(Level.SEVERE, null, ex1);
             }
         }
-        
+
         try {
             ende = df.parse(suchText);
         } catch (ParseException ex) {
             ende = new java.util.Date();
-        }        
+        }
 
         vertraegeErg = this.entityManager.createQuery(
                 "SELECT v FROM Vertrag v WHERE "
@@ -119,21 +120,21 @@ public class DatenZugriffsObjekt {
                 + "v.vertragNr = '" + suchText + "'").getResultList();
         // Hiermit werden alle Verträge des Kunden gesucht
         // um die Daten mit dem Suchbegriff einzeln abzugleichen
-        vertraegeErg2 = 
-                this.entityManager.createQuery("SELECT v FROM Vertrag v WHERE "
-                        + "v.kunde.benutzerId = "+k.getBenutzerId()+"")
-                        .getResultList();
-        
+        vertraegeErg2
+                = this.entityManager.createQuery("SELECT v FROM Vertrag v WHERE "
+                        + "v.kunde.benutzerId = " + k.getBenutzerId() + "")
+                .getResultList();
+
         if (!vertraegeErg2.isEmpty()) {
             for (Vertrag v : vertraegeErg2) {
                 String beginnV = v.getVertragBeginn() != null ? v.getVertragBeginn().toString() : null;
                 String endeV = v.getVertragEnde() != null ? v.getVertragEnde().toString() : null;
-                
+
                 if (beginnV != null && beginnV.contains(suchText)) {
                     vertraegeErg.add(v);
                 } else if (endeV != null && endeV.contains(suchText)) {
                     vertraegeErg.add(v);
-                }                
+                }
             }
         }
 
@@ -152,20 +153,20 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller:	
-     * Erstelldatum:    
-     * Methode:         register
-     * Version:         1.0
-     * Änderungen:      1.1 René Kanzenbach 11.06.2015
-     *                  -Dem Benutzer wird jetzt bei der Registrierung das Recht
-     *                  "Benutzer_Ansicht" verliehen.
-     * 
-     * 
+     * Ersteller:
+     * Erstelldatum:
+     * Methode: register
+     * Version: -1.0
+     *          -1.1 René Kanzenbach 11.06.2015
+     *           -Dem Benutzer wird jetzt bei der Registrierung
+     *           das Recht "Benutzer_Ansicht" verliehen.
+     *
+     *
      * @param vname
      * @param name
      * @param email
      * @param password
-     * @return 
+     * @return
      */
     public boolean register(String vname, String name, String email, String password) {
         boolean isRegister = false;
@@ -195,9 +196,13 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller:	René Kanzenbach Erstelldatum: 02.06.2015 Methode: getBenutzer
-     * Version: 1.0 Änderungen: -
-     *
+     * Ersteller:   René Kanzenbach
+     * Datum:	    02.06.2015
+     * Methode:     getBenutzer
+     * Version:     1.0 
+     *              1.1 René Kanzenbach 20.07.2015
+     *              -Fehler behoben. Wirft jetzt keine NullpointerException mehr
+     *	    
      * Sucht einen Benutzer anhand der übergebenen E-Mail aus der Datenbank und
      * gibt diesen zurück. Wird kein Benutzer mit der gesuchten E-Mail gefunden
      * gibt die Methode eine NULL-Referenz zurück.
@@ -214,6 +219,8 @@ public class DatenZugriffsObjekt {
     public Benutzer getBenutzer(String eMail) {
 
         List<Benutzer> benutzerListe;
+        Iterator iterator;
+        Benutzer benutzer;
 
         //Benutzer mit gleicher EMail-Adresse suchen
         benutzerListe = this.entityManager.createQuery(""
@@ -221,8 +228,16 @@ public class DatenZugriffsObjekt {
                 + "FROM Benutzer ben "
                 + "WHERE ben.email LIKE '" + eMail + "' ").getResultList();
 
-        //Den ersten gefundenen Benutzer zurückgeben
-        return (Benutzer) benutzerListe.get(0);
+        //Iterator holen
+        iterator = benutzerListe.iterator();
+        
+        if(iterator.hasNext()) {
+            benutzer = (Benutzer) iterator.next();
+        }else {
+            benutzer = null;
+        }
+        
+        return benutzer;
     }
 
     /**

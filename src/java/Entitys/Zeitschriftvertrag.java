@@ -18,10 +18,10 @@ public class Zeitschriftvertrag extends Vertrag implements Serializable {
     
     @ManyToOne
     @JoinColumn (name="LIEFERINTERVALL_EINHEIT")
-    private Datum_Einheit lieferintervallEinheit;
+    private Zeit_Einheit lieferintervallEinheit;
     
     @ManyToOne
-    @JoinColumn (name="INTERESSENGEBIET")
+    @JoinColumn (name="INTERESSENGEBIET_ID")
     private Interessengebiet interessengebiet;
 
     public Zeitschriftvertrag() {
@@ -43,11 +43,11 @@ public class Zeitschriftvertrag extends Vertrag implements Serializable {
         this.lieferintervall = lieferintervall;
     }
 
-    public Datum_Einheit getLieferintervallEinheit() {
+    public Zeit_Einheit getLieferintervallEinheit() {
         return lieferintervallEinheit;
     }
 
-    public void setLieferintervallEinheit(Datum_Einheit lieferintervallEinheit) {
+    public void setLieferintervallEinheit(Zeit_Einheit lieferintervallEinheit) {
         this.lieferintervallEinheit = lieferintervallEinheit;
     }
 

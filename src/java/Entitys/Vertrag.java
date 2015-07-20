@@ -22,10 +22,10 @@ public class Vertrag implements Serializable {
     private Kunde kunde;
 
     @ManyToOne
-    private Vertrag_Status status;
+    private Vertrag_Status vertragStatus;
 
-    @ManyToOne(targetEntity = Vertrag_Art.class)
-    private String art;
+    @ManyToOne
+    private Vertrag_Art vertragArt;
 
     @Column(name = "VERTRAG_ENDE")
     @Temporal(javax.persistence.TemporalType.DATE)
@@ -43,21 +43,21 @@ public class Vertrag implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "KUENDIGUNGSFRIST_EINHEIT")
-    private Datum_Einheit kuendigungsfristEinheit;
+    private Zeit_Einheit kuendigungsfristEinheit;
 
     @Column(name = "LAUFZEIT")
     private int laufzeit;
 
     @ManyToOne
     @JoinColumn(name = "LAUFZEIT_EINHEIT")
-    private Datum_Einheit laufzeitEinheit;
+    private Zeit_Einheit laufzeitEinheit;
 
     @Column(name = "BENACHRICHTIGUNGSFRIST")
     private int benachrichtigungsfrist;
 
     @ManyToOne
     @JoinColumn(name = "BENACHRICHTIGUNGSFRIST_EINHEIT")
-    private Datum_Einheit benachrichtigungsfristEinheit;
+    private Zeit_Einheit benachrichtigungsfristEinheit;
 
     public Vertrag() {
     }
@@ -70,22 +70,22 @@ public class Vertrag implements Serializable {
         this.kunde = kunde;
     }
 
-    public Vertrag_Status getStatus() {
-        return status;
+    public Vertrag_Status getVertragStatus() {
+        return vertragStatus;
     }
 
-    public void setStatus(Vertrag_Status status) {
-        this.status = status;
+    public void setVertragStatus(Vertrag_Status vertragStatus) {
+        this.vertragStatus = vertragStatus;
     }
 
-    public String getArt() {
-        return art;
+    public Vertrag_Art getVertragArt() {
+        return vertragArt;
     }
 
-    public void setArt(String art) {
-        this.art = art;
+    public void setVertragArt(Vertrag_Art vertragArt) {
+        this.vertragArt = vertragArt;
     }
-
+    
     public Date getVertragEnde() {
         return vertragEnde;
     }
@@ -126,19 +126,19 @@ public class Vertrag implements Serializable {
         this.laufzeit = laufzeit;
     }
 
-    public Datum_Einheit getKuendigungsfristEinheit() {
+    public Zeit_Einheit getKuendigungsfristEinheit() {
         return kuendigungsfristEinheit;
     }
 
-    public void setKuendigungsfristEinheit(Datum_Einheit kuendigungsfristEinheit) {
+    public void setKuendigungsfristEinheit(Zeit_Einheit kuendigungsfristEinheit) {
         this.kuendigungsfristEinheit = kuendigungsfristEinheit;
     }
 
-    public Datum_Einheit getLaufzeitEinheit() {
+    public Zeit_Einheit getLaufzeitEinheit() {
         return laufzeitEinheit;
     }
 
-    public void setLaufzeitEinheit(Datum_Einheit laufzeitEinheit) {
+    public void setLaufzeitEinheit(Zeit_Einheit laufzeitEinheit) {
         this.laufzeitEinheit = laufzeitEinheit;
     }
 
@@ -150,11 +150,11 @@ public class Vertrag implements Serializable {
         this.benachrichtigungsfrist = benachrichtigungsfrist;
     }
 
-    public Datum_Einheit getBenachrichtigungsfristEinheit() {
+    public Zeit_Einheit getBenachrichtigungsfristEinheit() {
         return benachrichtigungsfristEinheit;
     }
 
-    public void setBenachrichtigungsfristEinheit(Datum_Einheit benachrichtigungsfristEinheit) {
+    public void setBenachrichtigungsfristEinheit(Zeit_Einheit benachrichtigungsfristEinheit) {
         this.benachrichtigungsfristEinheit = benachrichtigungsfristEinheit;
     }
 

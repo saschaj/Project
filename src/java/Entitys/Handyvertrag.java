@@ -14,7 +14,7 @@ public class Handyvertrag extends Vertrag implements Serializable {
     private String tarifname;
     
     @ManyToOne
-    @JoinColumn (name="NETZTYP")
+    @JoinColumn (name="NETZTYP_ID")
     private Netztyp netztyp;
     
     private String rufnummer;

@@ -9,11 +9,12 @@ import javax.persistence.*;
  */
 @Entity
 public class Vertrag_Status implements Serializable {
-    
+
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "VERTRAG_STATUS_ID")
     private int vertragStatusId;
-    
+
     private String name;
     private String beschreibung;
 
@@ -61,6 +62,5 @@ public class Vertrag_Status implements Serializable {
         }
         return true;
     }
-    
-    
+
 }

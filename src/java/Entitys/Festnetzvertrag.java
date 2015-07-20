@@ -13,8 +13,8 @@ public class Festnetzvertrag extends Vertrag implements Serializable{
     private String tarifname;
     
     @ManyToOne
-    @JoinColumn (name="EMPFANGSTYP")
-    private Netztyp empfangstyp;
+    @JoinColumn (name="NETZTYP_ID")
+    private Netztyp netztypp;
 
     public Festnetzvertrag() {
     }
@@ -27,12 +27,12 @@ public class Festnetzvertrag extends Vertrag implements Serializable{
         this.tarifname = tarifname;
     }
 
-    public Netztyp getEmpfangstyp() {
-        return empfangstyp;
+    public Netztyp getNetztypp() {
+        return netztypp;
     }
 
-    public void setEmpfangstyp(Netztyp empfangstyp) {
-        this.empfangstyp = empfangstyp;
+    public void setNetztypp(Netztyp netztypp) {
+        this.netztypp = netztypp;
     }
-    
+
 }

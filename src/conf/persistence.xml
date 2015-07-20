@@ -14,9 +14,9 @@
     <class>Entitys.Gasvertrag</class>
     <class>Entitys.Handyvertrag</class>
     <class>Entitys.Zeitschriftvertrag</class>
-    <class>Entitys.Datum_Einheit</class>
     <class>Entitys.Interessengebiet</class>
     <class>Entitys.Netztyp</class>
+    <class>Entitys.Zeit_Einheit</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:derby://localhost:1527/DB_Vertragsverwaltung"/>

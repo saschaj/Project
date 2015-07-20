@@ -20,6 +20,7 @@ public class Benutzer implements java.io.Serializable {
     private int benutzerId;
 
     @ManyToOne
+    @JoinColumn(name = "BENUTZER_STATUS_ID")
     private Benutzer_Status status;
 
     @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)

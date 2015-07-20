@@ -21,11 +21,11 @@ public class Netztyp implements Serializable {
     @Column (name="BESCHREIBUNG")
     private String beschreibung;
     
-    @Column (name="HANDY_TYP")
-    private boolean handyTyp;
+    @Column (name="IST_HANDY_TYP")
+    private boolean istHandyTyp;
     
-    @Column (name="FESTNETZ_TYP")
-    private boolean festnetzTyp;
+    @Column (name="IST_FESTNETZ_TYP")
+    private boolean istFestnetzTyp;
     
     public Netztyp() {
     }
@@ -50,20 +50,20 @@ public class Netztyp implements Serializable {
         return netztypId;
     }
 
-    public boolean isHandyTyp() {
-        return handyTyp;
+    public boolean isIstHandyTyp() {
+        return istHandyTyp;
     }
 
-    public void setHandyTyp(boolean handyTyp) {
-        this.handyTyp = handyTyp;
+    public void setIstHandyTyp(boolean istHandyTyp) {
+        this.istHandyTyp = istHandyTyp;
     }
 
-    public boolean isFestnetzTyp() {
-        return festnetzTyp;
+    public boolean isIstFestnetzTyp() {
+        return istFestnetzTyp;
     }
 
-    public void setFestnetzTyp(boolean festnetzTyp) {
-        this.festnetzTyp = festnetzTyp;
+    public void setIstFestnetzTyp(boolean istFestnetzTyp) {
+        this.istFestnetzTyp = istFestnetzTyp;
     }
 
     @Override
