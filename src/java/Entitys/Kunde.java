@@ -32,6 +32,9 @@ public class Kunde extends Benutzer{
     @JoinColumn (name = "ADRESSE")
     private Adresse adresse;
 
+    /**
+     * Konstrutor.
+     */
     public Kunde() {
     }
 

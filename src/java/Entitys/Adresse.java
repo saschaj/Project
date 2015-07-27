@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class Adresse implements Serializable{
     
     @Id
-    @GeneratedValue
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name = "ADRESS_ID")
     private int adressId;
     
@@ -31,6 +31,9 @@ public class Adresse implements Serializable{
     @Column (name = "ORT")
     private String ort;
     
+    /**
+     * Konstruktor.
+     */
     public Adresse() {
     }
 

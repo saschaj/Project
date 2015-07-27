@@ -10,6 +10,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
@@ -156,30 +159,34 @@ public class DatenZugriffsObjekt {
      *          -1.1 René Kanzenbach 11.06.2015
      *           -Dem Benutzer wird jetzt bei der Registrierung
      *           das Recht "Benutzer_Ansicht" verliehen.
-     *
+     *          -1.2 René Kanzenbach 22.07.2015
+     *           -Dem Benutzer wird jetzt bei der Registrierung der Status
+     *            "Aktiv" verliehen.
      *
      * @param vname
      * @param name
      * @param email
-     * @param password
+     * @param passwort
      * @return
      */
-    public boolean register(String vname, String name, String email, String password) {
-        boolean isRegister = false;
+    public boolean register(String vname, String name, String email, String passwort) {
+        boolean istRegistriert = false;
         Kunde neuerKunde = new Kunde();
 
         neuerKunde.setVorname(vname);
         neuerKunde.setNachname(name);
         neuerKunde.setEmail(email);
-        neuerKunde.setPasswort(password);
+        neuerKunde.setPasswort(passwort);
         neuerKunde.addRecht(this.entityManager.find(Benutzer_Recht.class,
                 Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT));
+        neuerKunde.setStatus(this.entityManager.find(Benutzer_Status.class, 
+                Konstanten.ID_BEN_STATUS_AKTIV));
 
         try {
             this.entityManager.getTransaction().begin();
             this.entityManager.persist(neuerKunde);
             this.entityManager.getTransaction().commit();
-            isRegister = true;
+            istRegistriert = true;
         } catch (RollbackException re) {
 
         } catch (PersistenceException pe) {
@@ -188,7 +195,7 @@ public class DatenZugriffsObjekt {
             this.entityManager.getTransaction().rollback();
         }
 
-        return isRegister;
+        return istRegistriert;
     }
 
     /**
@@ -234,6 +241,20 @@ public class DatenZugriffsObjekt {
         }
         
         return benutzer;
+    }
+    
+    /**
+     * Erzeugt ein Kuchendiagramm, welches anzeigt, wie viele Benutzer im 
+     * System registriert sind und welchen Status diese besitzen.
+     * 
+     * @return JFreeChart mit Benutzerinformationen.
+     */
+    public JFreeChart getBenutzerStatistik() {
+        
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        JFreeChart chart = ChartFactory.createPieChart("TITEL", dataset);
+        
+        return chart;
     }
 
     /**

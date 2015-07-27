@@ -19,7 +19,7 @@ public class Benutzer implements java.io.Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int benutzerId;
 
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.ALL)
     @JoinColumn(name = "BENUTZER_STATUS_ID")
     private Benutzer_Status status;
 

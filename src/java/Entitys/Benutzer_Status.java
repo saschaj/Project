@@ -13,12 +13,12 @@ import javax.persistence.*;
 public class Benutzer_Status implements Serializable {
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
     @Column (name="BENUTZER_STATUS_ID")
     private int benutzerStatusId;
 
-    @OneToMany(mappedBy = "status", cascade = CascadeType.PERSIST)
-    private Set<Benutzer> benutzer;
+//    @OneToMany(mappedBy = "status", cascade = CascadeType.PERSIST, 
+//            fetch = FetchType.LAZY)
+//    private Set<Benutzer> benutzer;
 
     private String name;
     private String beschreibung;
@@ -30,9 +30,9 @@ public class Benutzer_Status implements Serializable {
         return benutzerStatusId;
     }
 
-    public Set<Benutzer> getBenutzer() {
-        return benutzer;
-    }
+//    public Set<Benutzer> getBenutzer() {
+//        return benutzer;
+//    }
 
     public String getName() {
         return name;

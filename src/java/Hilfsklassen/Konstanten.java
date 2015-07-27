@@ -108,4 +108,29 @@ public class Konstanten {
      * Benutzer_Recht.
      */
     public static final int ID_BEN_RECHT_ADMIN_ANSICHT = 7;
+    
+    
+    /*
+    ----------------------------------------------------------------------------
+    PRIMÄRSCHLÜSSEL DER BENUTZER STATUS
+    ----------------------------------------------------------------------------
+    */
+    
+    /**
+     * Primärschlüssel des BenutzerStatus "Aktiv" in der Tabelle 
+     * "BENUTZER_STATUS"
+     */
+    public static final int ID_BEN_STATUS_AKTIV = 1;
+    
+    /**
+     * Primärschlüssel des BenutzerStatus "Geloescht" in der Tabelle 
+     * "BENUTZER_STATUS"
+     */
+    public static final int ID_BEN_STATUS_GELOESCHT= 2;
+    
+    /**
+     * Primärschlüssel des BenutzerStatus "Unbestaetigt" in der Tabelle 
+     * "BENUTZER_STATUS"
+     */
+    public static final int ID_BEN_STATUS_UNBESTAETIGT= 3;
 }
