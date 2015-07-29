@@ -146,7 +146,7 @@ public class DatenZugriffsObjekt {
         vertraegeErg = this.entityManager.createQuery(
                 "SELECT v FROM Vertrag v WHERE "
                 + "v.kunde.benutzerId = " + k.getBenutzerId() + " AND "
-                + "v.art.name = '" + kategorie + "'").getResultList();
+                + "v.vertragArt.name = '" + kategorie + "'").getResultList();
 
         return vertraegeErg;
     }

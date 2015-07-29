@@ -41,6 +41,7 @@ public class LoginLogoutServlet extends HttpServlet {
             throws ServletException, IOException {
 
         // Deklaration des Hilfsvariablen für die demenstprechenden Funktionen
+
         String meta = "", ausgabe = "";
 
         // Initialisierung der verschiedenen Verlinkungen
@@ -63,7 +64,7 @@ public class LoginLogoutServlet extends HttpServlet {
             this.logIn(request, response);
         } else if (getPassword != null) {
             ausgabe = "Ihnen wurde ein neues Passwort zugeschickt und werden automatisch weitergeleitet!";
-        } else if (aktion.equals(Konstanten.URL_AKTION_LOGOUT)) {
+        } else if (aktion != null && aktion.equals(Konstanten.URL_AKTION_LOGOUT)) {
             //Ausloggen
             this.logOut(request, response);
         } else {
