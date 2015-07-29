@@ -6,10 +6,17 @@ Dokument:	admin_dynamic.jsp
 Version:	1.0
 Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Erstellung der Seite mit Musterausgabe
+                1.1 René Kanzenbach (28.07.2015)
+                - JSP zeigt jetzt die Statistiken an.
 
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    String benutzerStatistikURL;
+    //URL fuer die BenutzerStatistik auslesen.
+    benutzerStatistikURL = (String) request.getAttribute("StatistikURL");
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,8 +25,8 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
         <title>Administratorsicht</title>
     </head>
     <body>
-        <h2>Die View dient zum Einen zur Auflistung und Anzeige der registrierten Benutzer und zum Anderen um sich Statistiken anzeigen zu lassen.</h2>
-        
-                    
+        <% if(benutzerStatistikURL != null) { %>
+            <IMG src='<%= benutzerStatistikURL %>' width='500' height='500' border='0'>
+        <% } %>        
     </body>
 </html>

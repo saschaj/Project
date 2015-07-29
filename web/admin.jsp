@@ -64,7 +64,8 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                         <%-- Formular der Benutzersuche --%>
                         <form method="POST" action="" >
                             <span>Benutzer suchen: </span><p><input class="search_text" type="text" name="search" value="" />
-                            <span>&nbsp;</span><input class="submit" type="submit" name="search_text" value="Suchen" /></p>
+                            <span>&nbsp;</span>
+                            <input class="submit" type="submit" name="search_text" value="Suchen" /></p>
                         </form>
                         
                     </div>
@@ -73,8 +74,14 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                     <div id="form_settings">
                         
                         <%-- Formular der Statistiken --%>
-                        <form method="POST" action="">
-                            <p><span>&nbsp;</span><input class="submit" type="submit" name="search_cat" value="Statistik anzeigen" /></p>
+                        <form method="POST" action="AdminServlet">
+                            <p>
+                                <input class="submit" type="submit" 
+                                 name="BenutzerStatistik" value="Benutzerübersicht" />
+                                <br><br>
+                                <input class="submit" type="submit" 
+                                 name="VertragStatistik" value="Vertragsübersicht" />
+                            </p>
                         </form>
                         
                     </div>

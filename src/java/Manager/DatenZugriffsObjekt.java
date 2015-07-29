@@ -12,6 +12,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 /**
@@ -155,13 +158,13 @@ public class DatenZugriffsObjekt {
      * Ersteller:
      * Erstelldatum:
      * Methode: register
-     * Version: -1.0
-     *          -1.1 René Kanzenbach 11.06.2015
-     *           -Dem Benutzer wird jetzt bei der Registrierung
-     *           das Recht "Benutzer_Ansicht" verliehen.
-     *          -1.2 René Kanzenbach 22.07.2015
-     *           -Dem Benutzer wird jetzt bei der Registrierung der Status
-     *            "Aktiv" verliehen.
+     * Version:     -1.0
+     *              -1.1 René Kanzenbach 11.06.2015
+     *              -Dem Benutzer wird jetzt bei der Registrierung
+     *              das Recht "Benutzer_Ansicht" verliehen.
+     *              -1.2 René Kanzenbach 22.07.2015
+     *              -Dem Benutzer wird jetzt bei der Registrierung der Status
+     *              "Aktiv" verliehen.
      *
      * @param vname
      * @param name
@@ -179,7 +182,7 @@ public class DatenZugriffsObjekt {
         neuerKunde.setPasswort(passwort);
         neuerKunde.addRecht(this.entityManager.find(Benutzer_Recht.class,
                 Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT));
-        neuerKunde.setStatus(this.entityManager.find(Benutzer_Status.class, 
+        neuerKunde.setStatus(this.entityManager.find(Benutzer_Status.class,
                 Konstanten.ID_BEN_STATUS_AKTIV));
 
         try {
@@ -200,12 +203,12 @@ public class DatenZugriffsObjekt {
 
     /**
      * Ersteller:   René Kanzenbach
-     * Datum:	    02.06.2015
+     * Datum:       02.06.2015
      * Methode:     getBenutzer
-     * Version:     1.0 
+     * Version:     1.0
      *              1.1 René Kanzenbach 20.07.2015
      *              -Fehler behoben. Wirft jetzt keine NullpointerException mehr
-     *	    
+     *
      * Sucht einen Benutzer anhand der übergebenen E-Mail aus der Datenbank und
      * gibt diesen zurück. Wird kein Benutzer mit der gesuchten E-Mail gefunden
      * gibt die Methode eine NULL-Referenz zurück.
@@ -233,28 +236,168 @@ public class DatenZugriffsObjekt {
 
         //Iterator holen
         iterator = benutzerListe.iterator();
-        
-        if(iterator.hasNext()) {
+
+        if (iterator.hasNext()) {
             benutzer = (Benutzer) iterator.next();
-        }else {
+        } else {
             benutzer = null;
         }
-        
+
         return benutzer;
     }
-    
+
     /**
-     * Erzeugt ein Kuchendiagramm, welches anzeigt, wie viele Benutzer im 
+     * Ersteller:   René Kanzenbach
+     * Datum:       28.07.2015
+     * Version:     1.0
+     * Änderungen:  -
+     *
+     * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Benutzer im
      * System registriert sind und welchen Status diese besitzen.
-     * 
+     *
      * @return JFreeChart mit Benutzerinformationen.
      */
     public JFreeChart getBenutzerStatistik() {
-        
+
+        JFreeChart chart;
         DefaultPieDataset dataset = new DefaultPieDataset();
-        JFreeChart chart = ChartFactory.createPieChart("TITEL", dataset);
+        List<Benutzer> benutzerListe = this.getAllBenutzer();
+        PiePlot plot;
+
+        //Ermitteln, wie viele Benutzer es mit welchem Status gibt.
+        for (Benutzer ben : benutzerListe) {
+
+            String benutzerStatus = ben.getStatus().getName();
+            
+            if(dataset.getKeys().contains(benutzerStatus)) {
+                /*
+                Wenn sich bereits Benutzer mit dem gleichen Status im Dataset
+                befinden, erhoehe den Wert um 1.
+                */
+                dataset.setValue(benutzerStatus, dataset.getValue(benutzerStatus)
+                    .intValue() + 1);
+            }else {
+                /*
+                Wenn noch keine Benutzer mit gleichem Status im Dataset sind,
+                setze den Wert auf 1;
+                */
+                dataset.setValue(benutzerStatus, 1);
+            }
+        }
+
+        //Diagramm erstellen.
+        chart = ChartFactory.createPieChart("Benutzerübersicht", dataset);
+        
+        //Anpassen des Labelformates im Diagramm.
+        plot = (PiePlot) chart.getPlot();
+        plot.setLabelGenerator(
+                new StandardPieSectionLabelGenerator("{0} Anzahl: {1} ({2})"));
+
+        return chart;
+    }
+    
+    /**
+     * Ersteller:   René Kanzenbach
+     * Datum:       28.07.2015
+     * Version:     1.0
+     * Änderungen:  -
+     * 
+     * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Vertraege im
+     * System registriert sind und was es fuer Vertraege sind.
+     * 
+     * @return 
+     */
+    public JFreeChart getVertragStatistik(){
+        
+        JFreeChart chart;
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        List<Vertrag> vertragListe = this.getAllVertraege();
+        PiePlot plot;
+        
+        //Dataset mit Informationen fuellen.
+        for(Vertrag vertrag : vertragListe) {
+            
+            //Vertragsart auslesen.
+            String vertragArt = vertrag.getVertragArt().getName();
+            
+            if(dataset.getKeys().contains(vertragArt)) {
+                
+                /*
+                Wenn das Dataset bereits einen Vertrag mit dieser Vertragsart
+                enthaelt, wird der Wert um 1 erhoeht.
+                */
+                dataset.setValue(vertragArt, dataset.getValue(vertragArt).
+                    intValue() + 1);
+            } else {
+                /*
+                Wenn Das Dataset noch keinen Vertrag mit dieser Vertragsart
+                enthaelt, wird der Wert auf 1 gesetzt.
+                */
+                dataset.setValue(vertragArt, 1);
+            }
+            
+        }
+        
+        //Diagramm erstellen.
+        chart = ChartFactory.createPieChart("Vertragsübersicht", dataset);
+        
+        //Anpassen des Labelformates im Diagramm.
+        plot = (PiePlot) chart.getPlot();
+        plot.setLabelGenerator(
+                new StandardPieSectionLabelGenerator("{0} Anzahl: {1} ({2})"));
         
         return chart;
+    }
+
+    /**
+     * Ersteller:       René Kanzenbach
+     * Erstelldatum:    27.07.2015
+     * Version:         1.0
+     * Veränderungen:   -
+     *
+     * Gibt alle Benutzer zurück, die sich in der Datenbank befinden, unabhängig
+     * vom Benutzerstatus oder den Rechten des Benutzers.
+     *
+     * @return Liste aller Benutzer im System.
+     */
+    public List<Benutzer> getAllBenutzer() {
+
+        List<Benutzer> alleBenutzer = null;
+        Query query;
+
+        //Select-Query erstellen.
+        query = this.entityManager.createQuery("SELECT ben "
+                + "FROM Benutzer ben");
+
+        //Query ausführen.
+        alleBenutzer = query.getResultList();
+
+        return alleBenutzer;
+    }
+    
+    /**
+     * Ersteller:       René Kanzenbach
+     * Erstelldatum:    28.07.2015
+     * Version:         1.0
+     * Veränderungen:   -
+     *
+     * Gibt alle Vertraege zurück, die sich in der Datenbank befinden.
+     *
+     * @return Liste aller Benutzer im System.
+     */
+    public List<Vertrag> getAllVertraege() {
+        
+        List<Vertrag> alleVertraege = null;
+        Query query;
+
+        //Select-Query erstellen.
+        query = this.entityManager.createQuery("SELECT vert "
+                + "FROM Vertrag vert");
+
+        //Query ausführen.
+        alleVertraege = query.getResultList();
+
+        return alleVertraege;
     }
 
     /**

@@ -62,5 +62,5 @@ public class Vertrag_Status implements Serializable {
         }
         return true;
     }
-
+    
 }
