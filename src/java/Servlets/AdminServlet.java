@@ -1,13 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Servlets;
 
+import Entitys.Benutzer;
 import Manager.DatenZugriffsObjekt;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -45,9 +41,9 @@ public class AdminServlet extends HttpServlet {
         }else if(request.getParameter("VertragStatistik") != null){
             //Der Button "Vertragsübersicht" wurde in der admin.jsp betaetigt.
             this.zeigeVertragsStatistik(request, response);
-        }else if(request.getParameter("search_text") != null){
+        }else if(request.getParameter("SucheBenutzer") != null){
+            this.benutzerSuche(request, response);
         }
-
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -185,5 +181,28 @@ public class AdminServlet extends HttpServlet {
         //Aufrufen der admin_dynamic.jsp
         request.getRequestDispatcher("/admin.jsp").forward(request, response);
         dao.close();
+    }
+    
+    /**
+     * Ersteller:   René Kanzenbach
+     * Datum:       04.08.2015
+     * Version:     1.0
+     * Änderungen:  -
+     * 
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException 
+     */
+    private void benutzerSuche(HttpServletRequest request,
+            HttpServletResponse response) throws ServletException, IOException {
+        
+        List<Benutzer> benutzerListe;
+        DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+        String benutzerSuche = request.getParameter("SucheBenutzerText");
+        
+        benutzerListe = dao.sucheBenutzer(benutzerSuche);
+        request.setAttribute("BenutzerListe",benutzerListe);
+        request.getRequestDispatcher("/admin.jsp").forward(request, response);
     }
 }

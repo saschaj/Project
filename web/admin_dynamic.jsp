@@ -11,11 +11,17 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 
 --%>
 
+<%@page import="java.util.List"%>
+<%@page import="Entitys.Benutzer"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
     String benutzerStatistikURL;
+    List<Benutzer> benutzerListe;
+    
     //URL fuer die BenutzerStatistik auslesen.
     benutzerStatistikURL = (String) request.getAttribute("StatistikURL");
+    //Liste aller gefundenen Benutzer auslesen.
+    benutzerListe = (List<Benutzer>) request.getAttribute("BenutzerListe");
 %>
 <!DOCTYPE html>
 <html>
@@ -25,8 +31,13 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
         <title>Administratorsicht</title>
     </head>
     <body>
-        <% if(benutzerStatistikURL != null) { %>
+        <% 
+        if(benutzerStatistikURL != null) { 
+        %>
             <IMG src='<%= benutzerStatistikURL %>' width='500' height='500' border='0'>
-        <% } %>        
+        <%
+        }else if(benutzerListe != null) { 
+        }
+        %>        
     </body>
 </html>

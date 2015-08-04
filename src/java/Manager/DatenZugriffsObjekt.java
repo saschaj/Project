@@ -175,13 +175,14 @@ public class DatenZugriffsObjekt {
     public boolean register(String vname, String name, String email, String passwort) {
         boolean istRegistriert = false;
         Kunde neuerKunde = new Kunde();
+        Benutzer_Recht recht = this.entityManager.find(Benutzer_Recht.class,
+                Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT);
 
         neuerKunde.setVorname(vname);
         neuerKunde.setNachname(name);
         neuerKunde.setEmail(email);
         neuerKunde.setPasswort(passwort);
-        neuerKunde.addRecht(this.entityManager.find(Benutzer_Recht.class,
-                Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT));
+        neuerKunde.addRecht(recht);
         neuerKunde.setStatus(this.entityManager.find(Benutzer_Status.class,
                 Konstanten.ID_BEN_STATUS_AKTIV));
 
@@ -398,6 +399,31 @@ public class DatenZugriffsObjekt {
         alleVertraege = query.getResultList();
 
         return alleVertraege;
+    }
+    
+    /**
+     * Ersteller:       René Kanzenbach
+     * Erstelldatum:    04.08.2015
+     * Version:         1.0
+     * Veränderungen:   -
+     * 
+     * Sucht Benutzer mit Hilfe der eingegebenen Suche und gibt diese in einer
+     * Liste zurück.
+     * 
+     * Es wird nur die E-Mail des Benutzers auf Übereinstimmungen geprüft.
+     * 
+     * @param suche
+     * @return 
+     */
+    public List<Benutzer> sucheBenutzer (String suche) {
+        
+        Query query;
+        query = this.entityManager.createQuery(""
+                + "SELECT * "
+                + "FROM Benutzer"
+                + "WHERE email LIKE :emailName ", Benutzer.class);
+        query.setParameter("emailName", suche);
+        return query.getResultList();
     }
 
     /**
