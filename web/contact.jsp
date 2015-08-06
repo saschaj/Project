@@ -56,11 +56,11 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                         <div id="form_settings">
                             <!--Der Sascha ist voll doof -->
                             <form method="POST" action="KontaktServlet">
-                                <p><span>Name:</span><input class="contact" type="text" name="your_name" value="" /></p>
-                                <p><span>Email Adresse*:</span><input class="contact" type="text" name="your_email" value="" /></p>
-                                <p><span>Mitteilung*:</span><textarea class="contact textarea" rows="4" cols="50" name="your_message"></textarea></p>
+                                <p><span class="span_contract">Name:</span><input class="contact" type="text" name="your_name" value="" /></p>
+                                <p><span class="span_contract">Email Adresse*:</span><input class="contact" type="text" name="your_email" value="" /></p>
+                                <p><span class="span_contract">Mitteilung*:</span><textarea class="contact textarea" rows="4" cols="50" name="your_message"></textarea></p>
                                 <p><span>Bitte beantworten Sie die folgende einfache Aufgabe:</span></p>
-                                <p><span>17 + 25 = ?</span><input class="contact" type="text" name="benutzer_antwort" /><input type="hidden" name="antwort" value="42" /></p>                                    
+                                <p><span class="span_contract">17 + 25 = ?</span><input class="contact" type="text" name="benutzer_antwort" /><input type="hidden" name="antwort" value="42" /></p>                                    
                                 <p>* Bitte füllen Sie die Felder aus</p>
                                 <p style="padding-top: 15px"><span>&nbsp;</span><input class="submit" type="submit" name="contact_submitted" value="Abschicken" /></p>
                             </form>

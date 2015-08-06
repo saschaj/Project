@@ -22,9 +22,6 @@ public class Festnetzvertrag extends Vertrag implements Serializable{
     
     @Column (name = "IST_VOIP")
     private boolean istVOIP;
-    
-    @Column (name = "EMPFANGSTYP")
-    private String empfangsTyp;
 
     public Festnetzvertrag() {
     }
@@ -59,13 +56,5 @@ public class Festnetzvertrag extends Vertrag implements Serializable{
 
     public void setIstVOIP(boolean istVOIP) {
         this.istVOIP = istVOIP;
-    }
-
-    public String getEmpfangsTyp() {
-        return empfangsTyp;
-    }
-
-    public void setEmpfangsTyp(String empfangsTyp) {
-        this.empfangsTyp = empfangsTyp;
     }
 }

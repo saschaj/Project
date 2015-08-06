@@ -305,6 +305,14 @@ footer a:hover
   border: 1px solid #E5E5DB; 
   background: #FFF; 
   color: #47433F;}
+
+.login
+{ padding: 2px;
+  width: 200px;
+  font: 100% arial; 
+  border: 1px solid #E5E5DB; 
+  background: #FFF; 
+  color: #47433F;}
   
 .form_settings input, .form_settings textarea
 { padding: 2px; 
@@ -326,7 +334,7 @@ footer a:hover
 .submit
 { font: 110% arial; 
   border: 0px solid #FFF; 
-  width: 175px;  
+  width: 165px;  
   height: 26px;
   padding: 2px 0 3px 0;
   cursor: pointer; 

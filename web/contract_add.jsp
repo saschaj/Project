@@ -7,6 +7,11 @@ Version:	1.0
 Veränderungen:	-
 
 --%>
+<%@page import="Entitys.Netztyp"%>
+<%@page import="Entitys.Interessengebiet"%>
+<%@page import="java.util.List"%>
+<%@page import="Entitys.Zeit_Einheit"%>
+<%@page import="Manager.DatenZugriffsObjekt"%>
 <%@page import="Hilfsklassen.Konstanten"%>
 <% String fehler[] = null; %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -75,10 +80,13 @@ Veränderungen:	-
                         value="<%= request.getParameter("laufzeit") != null 
                               ? request.getParameter("laufzeit") : "" %>">
                         <select name="laufzeiteinheit">
-                            <option>Tage</option>
-                            <option>Wochen</option>
-                            <option>Monate</option>
-                            <option>Jahre</option>
+                            <% 
+                            // Liest alles Zeiteinheiten aus der DB und gibt
+                            // diese in einer Auswahlbox aus
+                            List<Zeit_Einheit> einheiten = new DatenZugriffsObjekt().getEinheiten();
+                            for (Zeit_Einheit einheit : einheiten) { %>
+                            <option><%= einheit.getName() %></option>
+                            <% } %>                            
                         </select>
                         </p>
                         <p>
@@ -94,17 +102,46 @@ Veränderungen:	-
                         value="<%= request.getParameter("kuendigungsfrist") != null 
                               ? request.getParameter("kuendigungsfrist") : "" %>">
                         <select name="kuendigungsfristeinheit">
-                            <option>Tage</option>
-                            <option>Wochen</option>
-                            <option>Monate</option>
+                            <% for (Zeit_Einheit einheit : einheiten) { %>
+                            <option><%= einheit.getName() %></option>
+                            <% } %>    
                         </select>
                         </p>
+                        
                         * Hier können Sie entweder nur das Vertragsende 
                         oder den Vertragsbeginn & die Laufzeit eingeben<br>
-
-                        <% 
-                        if (request.getParameter("cat").equals("Strom")) {%>
                         <br>Optionale Daten
+                        <p>
+                        <span class="span_reg">Kundennummer:</span>
+                        <input class="contact" type="text" name="kundennr"
+                        value="<%= request.getParameter("kundennr") != null 
+                              ? request.getParameter("kundennr") : "" %>" >
+                        </p>
+                        <p>
+                        <span class="span_reg">Vertragsbezeichnung:</span>
+                        <input class="contact" type="text" name="vertragsbez"
+                        value="<%= request.getParameter("vertragsbez") != null 
+                              ? request.getParameter("vertragsbez") : "" %>" >
+                        </p>
+                        <p>
+                        <span class="span_reg">Vertragspartner:</span>
+                        <input class="contact" type="text" name="vertragspartner"
+                        value="<%= request.getParameter("vertragspartner") != null 
+                              ? request.getParameter("vertragspartner") : "" %>" >
+                        </p>
+                        <p>
+                        <span class="span_reg">Benachrichtigungsfrist:</span>
+                        <input class="contact" type="text" name="benachrichtigungsfrist"
+                        value="<%= request.getParameter("benachrichtigungsfrist") != null 
+                              ? request.getParameter("benachrichtigungsfrist") : "" %>">
+                        <select name="benachrichtigungsfristeinheit">
+                            <% for (Zeit_Einheit einheit : einheiten) { %>
+                            <option><%= einheit.getName() %></option>
+                            <% } %>    
+                        </select>
+                        </p>
+                        <% 
+                        if (request.getParameter("cat").equals("Strom")) {%>                        
                         <p>
                         <span class="span_reg">Stromzählernr:</span>
                         <input class="contact" type="text" name="snr" 
@@ -129,6 +166,19 @@ Veränderungen:	-
                         value="<%= request.getParameter("spreisKwh") != null 
                                 ? request.getParameter("spreisKwh") : "" %>">
                         </p>
+                        <p>
+                        <span class="span_reg">Anzahl Personen im Haushalt:</span>
+                        <input class="contact" type="text" name="sanzPers"
+                        value="<%= request.getParameter("sanzPers") != null 
+                                ? request.getParameter("sanzPers") : "" %>">
+                        </p>
+                        <p>
+                        <span class="span_reg">Grundpreis(pro Monat):</span>
+                        <input class="contact" type="text" name="gPreisMonat"
+                        value="<%= request.getParameter("sPreisMonat") != null 
+                                ? request.getParameter("sPreisMonat") : "" %>">
+                        </p>
+                        
                         <% } else if (request.getParameter("cat").equals("Gas")) { %>
                         <br>Optionale Daten
                         <p>
@@ -155,6 +205,12 @@ Veränderungen:	-
                         value="<%= request.getParameter("gpreisKwh") != null 
                                 ? request.getParameter("gpreisKwh") : "" %>">
                         </p>
+                        <p>
+                        <span class="span_reg">Verbrauchsfläche:</span>
+                        <input class="contact" type="text" name="gflaeche"
+                        value="<%= request.getParameter("gflaeche") != null 
+                                ? request.getParameter("gflaeche") : "" %>">
+                        </p>
                         <% } else if (request.getParameter("cat").equals("Festnetz/DSL")) { %>
                         <br>Optionale Daten
                         <p>
@@ -166,10 +222,19 @@ Veränderungen:	-
                         <p>
                         <span class="span_reg">Empfangstyp:</span>
                         <select name="fempfangstyp">
-                            <option>DSL</option>
-                            <option>Festnetz</option>
-                            <option>LTE</option>
+                            <% List<Netztyp> typen = new DatenZugriffsObjekt().getNetztypen(false,true);
+                            for (Netztyp typ : typen) { %>
+                            <option><%= typ.getName() %></option>
+                            <% } %> 
                         </select>
+                        </p>
+                        <p>
+                        <span class="span_reg">ISDN:</span>  
+                        <input type="checkbox" name="fistISDN">
+                        </p>
+                        <p>
+                        <span class="span_reg">VOIP:</span>  
+                        <input type="checkbox" name="fistVOIP">
                         </p>
                         <% } else if (request.getParameter("cat").equals("Handy")) { %>
                         <br>Optionale Daten
@@ -182,11 +247,10 @@ Veränderungen:	-
                         <p>
                         <span class="span_reg">Netztyp:</span>
                         <select name="hnetztyp">
-                            <option>GPRS</option>
-                            <option>EDGE</option>
-                            <option>UMTS</option>
-                            <option>HSDPA</option>
-                            <option>LTE</option>
+                            <% List<Netztyp> typen = new DatenZugriffsObjekt().getNetztypen(true,false);
+                            for (Netztyp typ : typen) { %>
+                            <option><%= typ.getName() %></option>
+                            <% } %> 
                         </select>
                         </p>
                         <p>
@@ -209,27 +273,18 @@ Veränderungen:	-
                         value="<%= request.getParameter("intervall") != null 
                                 ? request.getParameter("intervall") : "" %>">
                         <select name="zeinheit">
-                            <option>Tage</option>
-                            <option>Wochen</option>
-                            <option>Monat</option>
+                            <% for (Zeit_Einheit einheit : einheiten) { %>
+                            <option><%= einheit.getName() %></option>
+                            <% } %> 
                         </select>
                         </p>
                         <p>
                         <span class="span_reg">Interessengebiet</span>
                         <select name="zinteressen">
-                            <option>Audio- und Hifimagazin</option>
-                            <option>Automobilzeitschrift</option>
-                            <option>Computermagazin</option>
-                            <option>Fachzeitschrift</option>                            
-                            <option>Fitnessmagazin</option>
-                            <option>Gartenmagazin</option>
-                            <option>Kindermagazin</option>
-                            <option>Kochen & Rezepte</option>
-                            <option>Nachrichtenmagazin</option>
-                            <option>Reisemagazin</option>
-                            <option>Tageszeitung</option>
-                            <option>Wissensmagazin</option>
-                            <option>Wohnideenmagazin</option>
+                            <% List<Interessengebiet> gebiete = new DatenZugriffsObjekt().getInteressengebiete();
+                            for (Interessengebiet gebiet : gebiete) { %>
+                            <option><%= gebiet.getName() %></option>
+                            <% } %>  
                         </select>
                         </p>
                         <% } %>

@@ -44,7 +44,7 @@ Veränderungen:	-
                     </table>
                 </form>
                 <% } else { %>
-                Es wurde keine passenden Ergebnnise gefunden!
+                Es wurde keine passenden Ergebnisse gefunden!
                 <%}
                     }%>
 

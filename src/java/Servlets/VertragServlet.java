@@ -3,9 +3,13 @@ package Servlets;
 import Entitys.Festnetzvertrag;
 import Entitys.Gasvertrag;
 import Entitys.Handyvertrag;
+import Entitys.Interessengebiet;
 import Entitys.Kunde;
+import Entitys.Netztyp;
 import Entitys.Stromvertrag;
 import Entitys.Vertrag;
+import Entitys.Vertrag_Art;
+import Entitys.Zeit_Einheit;
 import Entitys.Zeitschriftvertrag;
 import Hilfsklassen.Konstanten;
 import Manager.DatenZugriffsObjekt;
@@ -26,9 +30,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Ersteller: Sascha Jungenkrüger Erstelldatum: 03.06.2015 Version: 1.1
- * Änderungen: 1.0 - Erstellung 1.1 (Sascha Jungenkrüger) - Vertrag hinzufügen
- * implementiert
+ * Ersteller: Sascha Jungenkrüger 
+ * Erstelldatum: 03.06.2015 
+ * Version: 1.1
+ * Änderungen: 1.0 - Erstellung 
+ *             1.1 (Sascha Jungenkrüger) - Vertrag hinzufügen implementiert
  *
  * Diese Klasse übernimmt die Verarbeitung für die Suche und das Hinzufügen
  * eines Vertrag.
@@ -70,17 +76,30 @@ public class VertragServlet extends HttpServlet {
                 kuendigungsfristEinheit
                 = request.getParameter("kuendigungsfristeinheit"),
                 kategorie = request.getParameter("cat");
+                
         // Initialisierung der optionalen Formulardaten
-        String stromNr = request.getParameter("snr"),
+        String  kundennr = request.getParameter("kundennr"),
+                vertragsBez = request.getParameter("vertragsbez"),
+                vertragsPartner = request.getParameter("vertragspartner"),
+                benachrichtigungsfrist = 
+                request.getParameter("benachrichtigungsfrist"),
+                benachrichtigungsfristEinheit
+                = request.getParameter("benachrichtigungsfristeinheit"),
+                stromNr = request.getParameter("snr"),
                 stromStand = request.getParameter("sstand"),
                 stromVerbrauch = request.getParameter("sverbrauch"),
                 stromPreis = request.getParameter("spreisKwh"),
+                stromPersonen = request.getParameter("sanzPers"),
+                stromGrundPreis = request.getParameter("gPreisMonat"),
                 gasNr = request.getParameter("gnr"),
                 gasStand = request.getParameter("gstand"),
                 gasVerbrauch = request.getParameter("gverbrauch"),
                 gasPreis = request.getParameter("gpreisKwh"),
+                gasFlaeche = request.getParameter("gFlaeche"),
                 festnetzTarif = request.getParameter("ftarifname"),
                 festnetzEmpfang = request.getParameter("fempfangstyp"),
+                festnetzIstISDN = request.getParameter("fistISDN"),
+                festnetzIstVOIP = request.getParameter("fistVOIP"),
                 handyTarif = request.getParameter("htarifname"),
                 handyNetz = request.getParameter("hnetztyp"),
                 handyNr = request.getParameter("hrufnummer"),
@@ -106,6 +125,7 @@ public class VertragServlet extends HttpServlet {
         Festnetzvertrag neuFestnetzvertrag = null;
         Handyvertrag neuHandyvertrag = null;
         Zeitschriftvertrag neuZeitschriftvertrag = null;
+        Vertrag_Art art = null;
         String ausgabe = "", fehler[] = null;
 
         // Überprüfung der Vertragsnummer, ob das Feld gefüllt ist
@@ -205,13 +225,22 @@ public class VertragServlet extends HttpServlet {
             ausgabe = ausgabe + ""
                     + "Bei der Kündigungsfrist sind nur Ziffern erlaubt.!";
         }
+        
+        // Überprüft, ob die Benachrichtigungsfrist nur Ziffern enthält
+        if (!benachrichtigungsfrist.equals("") 
+                && benachrichtigungsfrist.matches("[^0-9]")) {
+            ausgabe = ausgabe + 
+                    "Bei der Benachrichtigungsfrist sind nur Ziffern erlaubt.!";
+        }
 
         // Überprüft die optionalen Eingaben
         switch (kategorie) {
             case "Strom":
                 if (!stromNr.equals("")
                         && stromNr.matches("[\\d]+?[\\d\\w-./]")) {
-                    ausgabe = "Ihr Stromnummer enthält ungültige Zeichen & Ziffen.!";
+                    ausgabe = 
+                            "Ihr Stromnummer enthält "
+                            + "ungültige Zeichen & Ziffen.!";
                 }
                 if (!stromStand.equals("")
                         && !stromStand.matches("[\\d]+")) {
@@ -229,11 +258,22 @@ public class VertragServlet extends HttpServlet {
                             + "Beim Strompreis sind nur ganze Zahlen "
                             + "oder Fließkommazahlen erlaubt.!";
                 }
+                if (!stromPersonen.equals("")
+                        && stromPersonen.matches("[\\d]+")) {
+                    ausgabe = ausgabe + "Bei der Personenangabe sind nur"
+                            + "ganze Ziffern erlaubt.!";
+                }
+                if (!stromGrundPreis.equals("")
+                        && stromGrundPreis.matches("[\\d]+[,][\\d]+")) {
+                    ausgabe = ausgabe + "Ihr Grundpreis enthält "
+                            + "ungültige Ziffern.!";
+                }
                 break;
             case "Gas":
                 if (!gasNr.equals("")
                         && gasNr.matches("[\\d]+?[\\d\\w-./]")) {
-                    ausgabe = "Ihr Gasnummer enthält ungültige Zeichen & Ziffen.!";
+                    ausgabe = "Ihr Gasnummer enthält "
+                            + "ungültige Zeichen & Ziffen.!";
                 }
                 if (!gasStand.equals("")
                         && !gasStand.matches("[\\d]+")) {
@@ -249,6 +289,12 @@ public class VertragServlet extends HttpServlet {
                         && gasPreis.matches("[\\d]+[,][\\d]+")) {
                     ausgabe = ausgabe
                             + "Beim Strompreis sind nur ganze Zahlen "
+                            + "oder Fließkommazahlen erlaubt.!";
+                }
+                if (!gasFlaeche.equals("")
+                        && gasFlaeche.matches("[\\d]+[,][\\d]+")) {
+                    ausgabe = ausgabe
+                            + "Bei der Gasfläche sind nur ganze Zahlen "
                             + "oder Fließkommazahlen erlaubt.!";
                 }
                 break;
@@ -271,7 +317,7 @@ public class VertragServlet extends HttpServlet {
                 break;
         }
 
-        // Wenn die nicht im Ausgabestring steht, sind die Eingaben korrekt
+        // Wenn nichts im Ausgabestring steht, sind die Eingaben korrekt
         // und es kann fortgesetzt werden
         if (ausgabe.equals("")) {
 
@@ -280,18 +326,51 @@ public class VertragServlet extends HttpServlet {
                 case "Strom":
                     // Vertragsdaten setzen
                     neuStromvertrag = new Stromvertrag();
+                    neuStromvertrag.setVertragArt(new DatenZugriffsObjekt().getVertragsArt(Konstanten.ID_VERTRAG_ART_STROM));
                     neuStromvertrag.setKunde((Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER));
                     neuStromvertrag.setVertragNr(vertragsNr);
+                    neuStromvertrag.setVertragStatus(new DatenZugriffsObjekt().getVertragsStatus(Konstanten.ID_VERTRAGSSTATUS_AKTIV));
                     neuStromvertrag.setVertragBeginn(parseDateSqlvBeginn);
                     neuStromvertrag.setLaufzeit(Integer.parseInt(laufzeit));
-//                    neuStromvertrag.setLaufzeitEinheit(laufzeitEinheit);
+                    neuStromvertrag.setLaufzeitEinheit(getZeitEinheit(laufzeitEinheit));
                     neuStromvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuStromvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
-//                    neuStromvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
+                    neuStromvertrag.setKuendigungsfristEinheit(getZeitEinheit(kuendigungsfristEinheit));
+                    neuStromvertrag.setKundenNr(kundennr);
+                    neuStromvertrag.setVertragsBezeichnung(aenderUmlaute(vertragsBez));
+                    neuStromvertrag.setVertragsPartner(aenderUmlaute(vertragsPartner));
+                    if (benachrichtigungsfrist.equals("")) {
+                        neuStromvertrag.setBenachrichtigungsfrist(0);
+                    } else {
+                        neuStromvertrag.setBenachrichtigungsfrist(Integer.parseInt(benachrichtigungsfrist));
+                    }                    
+                    neuStromvertrag.setBenachrichtigungsfristEinheit(getZeitEinheit(benachrichtigungsfristEinheit));
                     neuStromvertrag.setStromzaehlerNr(stromNr);
-                    neuStromvertrag.setStromzaehlerStand(Integer.parseInt(stromStand));
-                    neuStromvertrag.setVerbrauchProJahr(Integer.parseInt(stromVerbrauch));
-                    neuStromvertrag.setPreisProKwh(Float.parseFloat(stromPreis));
+                    if (stromStand.equals("")) {
+                        neuStromvertrag.setStromzaehlerStand(0);
+                    } else {
+                        neuStromvertrag.setStromzaehlerStand(Integer.parseInt(stromStand));
+                    }
+                    if (stromVerbrauch.equals("")) {
+                        neuStromvertrag.setVerbrauchProJahr(0);
+                    } else {
+                        neuStromvertrag.setVerbrauchProJahr(Integer.parseInt(stromVerbrauch));
+                    }
+                    if (stromPreis.equals("")) {
+                        neuStromvertrag.setPreisProKwh(0);
+                    } else {
+                        neuStromvertrag.setPreisProKwh(Float.parseFloat(stromPreis));
+                    }
+                    if (stromPersonen.equals("")) {
+                        neuStromvertrag.setAnzPersonenHaushalt(0);
+                    } else {
+                        neuStromvertrag.setAnzPersonenHaushalt(Integer.parseInt(stromPersonen));
+                    }
+                    if (stromGrundPreis.equals("")) {
+                        neuStromvertrag.setGrundpreisMonat(0);
+                    } else {
+                        neuStromvertrag.setGrundpreisMonat(Float.parseFloat(stromGrundPreis));
+                    }
 
                     // Zugriff auf DAO, damit die Daten in der DB
                     // gespeichert werden
@@ -301,39 +380,88 @@ public class VertragServlet extends HttpServlet {
                 case "Gas":
                     // Vertragsdaten setzen
                     neuGasvertrag = new Gasvertrag();
+                    neuGasvertrag.setVertragArt((Vertrag_Art) new DatenZugriffsObjekt().getVertragsArt(Konstanten.ID_VERTRAG_ART_GAS));
                     neuGasvertrag.setKunde((Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER));
                     neuGasvertrag.setVertragNr(vertragsNr);
+                    neuGasvertrag.setVertragStatus(new DatenZugriffsObjekt().getVertragsStatus(Konstanten.ID_VERTRAGSSTATUS_AKTIV));
                     neuGasvertrag.setVertragBeginn(parseDateSqlvBeginn);
                     neuGasvertrag.setLaufzeit(Integer.parseInt(laufzeit));
-//                    neuGasvertrag.setLaufzeitEinheit(laufzeitEinheit);
+                    neuGasvertrag.setLaufzeitEinheit(getZeitEinheit(laufzeitEinheit));
                     neuGasvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuGasvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
-//                    neuGasvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
+                    neuGasvertrag.setKuendigungsfristEinheit(getZeitEinheit(kuendigungsfristEinheit));
+                    neuGasvertrag.setKundenNr(kundennr);
+                    neuGasvertrag.setVertragsBezeichnung(aenderUmlaute(vertragsBez));
+                    neuGasvertrag.setVertragsPartner(aenderUmlaute(vertragsPartner));
+                    if (benachrichtigungsfrist.equals("")) {
+                        neuGasvertrag.setBenachrichtigungsfrist(0);
+                    } else {
+                        neuGasvertrag.setBenachrichtigungsfrist(Integer.parseInt(benachrichtigungsfrist));
+                    }                    
+                    neuGasvertrag.setBenachrichtigungsfristEinheit(getZeitEinheit(benachrichtigungsfristEinheit));
                     neuGasvertrag.setGaszaehlerNr(gasNr);
-                    neuGasvertrag.setGaszaehlerStand(Integer.parseInt(gasStand));
-                    neuGasvertrag.setVerbrauchProJahr(Integer.parseInt(gasVerbrauch));
-//                    neuGasvertrag.setPreisProKhw(Float.parseFloat(gasPreis));
+                    if (gasStand.equals("")) {
+                        neuGasvertrag.setGaszaehlerStand(0);
+                    } else {
+                        neuGasvertrag.setGaszaehlerStand(Integer.parseInt(gasStand));
+                    }
+                    if (gasVerbrauch.equals("")) {
+                        neuGasvertrag.setVerbrauchProJahr(0);
+                    } else {
+                        neuGasvertrag.setVerbrauchProJahr(Integer.parseInt(gasVerbrauch));
+                    }                    
+                    if (gasPreis.equals("")) {
+                        neuGasvertrag.setPreisProKhw(0);
+                    } else {
+                        neuGasvertrag.setPreisProKhw(Float.parseFloat(gasPreis));
+                    }  
+                    if (gasFlaeche.equals("")) {
+                        neuGasvertrag.setVerbrauchsFlaeche(0);
+                    } else {
+                        neuGasvertrag.setVerbrauchsFlaeche(Float.parseFloat(gasFlaeche));
+                    }  
 
                     // Zugriff auf DAO, damit die Daten in der DB
                     // gespeichert werden
                     // return true=gespeichert false=nicht gespeichert
-//                    vertragGespeichert = new DatenZugriffsObjekt().addContract(neuGasvertrag);
+                    vertragGespeichert = new DatenZugriffsObjekt().addContract(neuGasvertrag);
                     break;
                 case "Festnetz/DSL":
                     // Vertragsdaten setzen
                     neuFestnetzvertrag = new Festnetzvertrag();
+                    neuFestnetzvertrag.setVertragArt(new DatenZugriffsObjekt().getVertragsArt(Konstanten.ID_VERTRAG_ART_FESTNETZ));
                     neuFestnetzvertrag.setKunde((Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER));
                     neuFestnetzvertrag.setVertragNr(vertragsNr);
+                    neuFestnetzvertrag.setVertragStatus(new DatenZugriffsObjekt().getVertragsStatus(Konstanten.ID_VERTRAGSSTATUS_AKTIV));
                     neuFestnetzvertrag.setVertragBeginn(parseDateSqlvBeginn);
                     neuFestnetzvertrag.setVertragBeginn(parseDate);
                     neuFestnetzvertrag.setLaufzeit(Integer.parseInt(laufzeit));
-//                    neuFestnetzvertrag.setLaufzeitEinheit(laufzeitEinheit);
+                    neuFestnetzvertrag.setLaufzeitEinheit(getZeitEinheit(laufzeitEinheit));
                     neuFestnetzvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuFestnetzvertrag.setVertragEnde(parseDate);
                     neuFestnetzvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
-//                    neuFestnetzvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
+                    neuFestnetzvertrag.setKuendigungsfristEinheit(getZeitEinheit(kuendigungsfristEinheit));
+                    neuFestnetzvertrag.setKundenNr(kundennr);
+                    neuFestnetzvertrag.setVertragsBezeichnung(aenderUmlaute(vertragsBez));
+                    neuFestnetzvertrag.setVertragsPartner(aenderUmlaute(vertragsPartner));
+                    if (benachrichtigungsfrist.equals("")) {
+                        neuFestnetzvertrag.setBenachrichtigungsfrist(0);
+                    } else {
+                        neuFestnetzvertrag.setBenachrichtigungsfrist(Integer.parseInt(benachrichtigungsfrist));
+                    }                    
+                    neuFestnetzvertrag.setBenachrichtigungsfristEinheit(getZeitEinheit(benachrichtigungsfristEinheit));
                     neuFestnetzvertrag.setTarifname(festnetzTarif);
-//                    neuFestnetzvertrag.setEmpfangstyp(festnetzEmpfang);
+                    neuFestnetzvertrag.setNetztypp(getNetztyp(festnetzEmpfang));
+                    if (festnetzIstISDN == null) {
+                        neuFestnetzvertrag.setIstISDN(false);
+                    } else {
+                        neuFestnetzvertrag.setIstISDN(true);
+                    }
+                    if (festnetzIstVOIP == null) {
+                        neuFestnetzvertrag.setIstVOIP(false);
+                    } else {
+                        neuFestnetzvertrag.setIstVOIP(true);
+                    }
 
                     // Zugriff auf DAO, damit die Daten in der DB
                     // gespeichert werden
@@ -343,16 +471,27 @@ public class VertragServlet extends HttpServlet {
                 case "Handy":
                     // Vertragsdaten setzen
                     neuHandyvertrag = new Handyvertrag();
+                    neuHandyvertrag.setVertragArt(new DatenZugriffsObjekt().getVertragsArt(Konstanten.ID_VERTRAG_ART_HANDY));
                     neuHandyvertrag.setKunde((Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER));
                     neuHandyvertrag.setVertragNr(vertragsNr);
+                    neuHandyvertrag.setVertragStatus(new DatenZugriffsObjekt().getVertragsStatus(Konstanten.ID_VERTRAGSSTATUS_AKTIV));
                     neuHandyvertrag.setVertragBeginn(parseDateSqlvBeginn);
                     neuHandyvertrag.setLaufzeit(Integer.parseInt(laufzeit));
-//                    neuHandyvertrag.setLaufzeitEinheit(laufzeitEinheit);
+                    neuHandyvertrag.setLaufzeitEinheit(getZeitEinheit(laufzeitEinheit));
                     neuHandyvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuHandyvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
-//                    neuHandyvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
+                    neuHandyvertrag.setKuendigungsfristEinheit(getZeitEinheit(kuendigungsfristEinheit));
+                    neuHandyvertrag.setKundenNr(kundennr);
+                    neuHandyvertrag.setVertragsBezeichnung(aenderUmlaute(vertragsBez));
+                    neuHandyvertrag.setVertragsPartner(aenderUmlaute(vertragsPartner));
+                    if (benachrichtigungsfrist.equals("")) {
+                        neuHandyvertrag.setBenachrichtigungsfrist(0);
+                    } else {
+                        neuHandyvertrag.setBenachrichtigungsfrist(Integer.parseInt(benachrichtigungsfrist));
+                    }                    
+                    neuHandyvertrag.setBenachrichtigungsfristEinheit(getZeitEinheit(benachrichtigungsfristEinheit));
                     neuHandyvertrag.setTarifname(handyTarif);
-//                    neuHandyvertrag.setNetztyp(handyNetz);
+                    neuHandyvertrag.setNetztyp(getNetztyp(handyNetz));
                     neuHandyvertrag.setRufnummer(handyNr);
 
                     // Zugriff auf DAO, damit die Daten in der DB
@@ -363,22 +502,38 @@ public class VertragServlet extends HttpServlet {
                 case "Zeitschriften":
                     // Vertragsdaten setzen
                     neuZeitschriftvertrag = new Zeitschriftvertrag();
+                    neuZeitschriftvertrag.setVertragArt(new DatenZugriffsObjekt().getVertragsArt(Konstanten.ID_VERTRAG_ART_ZEITSCHRIFT));
                     neuZeitschriftvertrag.setKunde((Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER));
                     neuZeitschriftvertrag.setVertragNr(vertragsNr);
+                    neuZeitschriftvertrag.setVertragStatus(new DatenZugriffsObjekt().getVertragsStatus(Konstanten.ID_VERTRAGSSTATUS_AKTIV));
                     neuZeitschriftvertrag.setVertragBeginn(parseDateSqlvBeginn);
                     neuZeitschriftvertrag.setLaufzeit(Integer.parseInt(laufzeit));
-//                    neuZeitschriftvertrag.setLaufzeitEinheit(laufzeitEinheit);
+                    neuZeitschriftvertrag.setLaufzeitEinheit(getZeitEinheit(laufzeitEinheit));
                     neuZeitschriftvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuZeitschriftvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
-//                    neuZeitschriftvertrag.setKuendigungsfristEinheit(kuendigungsfristEinheit);
+                    neuZeitschriftvertrag.setKuendigungsfristEinheit(getZeitEinheit(kuendigungsfristEinheit));
+                    neuZeitschriftvertrag.setKundenNr(kundennr);
+                    neuZeitschriftvertrag.setVertragsBezeichnung(aenderUmlaute(vertragsBez));
+                    neuZeitschriftvertrag.setVertragsPartner(aenderUmlaute(vertragsPartner));
+                    if (benachrichtigungsfrist.equals("")) {
+                        neuZeitschriftvertrag.setBenachrichtigungsfrist(0);
+                    } else {
+                        neuZeitschriftvertrag.setBenachrichtigungsfrist(Integer.parseInt(benachrichtigungsfrist));
+                    }                    
+                    neuZeitschriftvertrag.setBenachrichtigungsfristEinheit(getZeitEinheit(benachrichtigungsfristEinheit));
                     neuZeitschriftvertrag.setZeitschriftName(zeitschriftName);
-//                    neuZeitschriftvertrag.setLieferintervall(Integer.parseInt(zeitschriftIntervall));
-//                    neuZeitschriftvertrag.setInteressengebiet(zeitschriftGebiet);
+                    if (zeitschriftIntervall.equals("")) {
+                        neuZeitschriftvertrag.setLieferintervall(0);
+                    } else {
+                        neuZeitschriftvertrag.setLieferintervall(Integer.parseInt(zeitschriftIntervall));
+                    }                    
+                    neuZeitschriftvertrag.setLieferintervallEinheit(getZeitEinheit(zeitschriftEinheit));
+                    neuZeitschriftvertrag.setInteressengebiet(getInteressengebiet(zeitschriftGebiet));
 
                     // Zugriff auf DAO, damit die Daten in der DB
                     // gespeichert werden
                     // return true=gespeichert false=nicht gespeichert
-//                    vertragGespeichert = new DatenZugriffsObjekt().addContract(neuZeitschriftvertrag);
+                    vertragGespeichert = new DatenZugriffsObjekt().addContract(neuZeitschriftvertrag);
                     break;
             }
             if (vertragGespeichert) {
@@ -389,7 +544,7 @@ public class VertragServlet extends HttpServlet {
                 request.getRequestDispatcher("/user.jsp").forward(request, response);
             } else {
                 ausgabe = "Vertrag konnte nicht gespeichert werden. (Ausklammern des Zugriffs der DAO)";
-                request.setAttribute(Konstanten.REQUEST_ATTR_ERFOLG, ausgabe);
+                request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, ausgabe);
                 request.setAttribute("check", request.getParameter("check"));
                 request.setAttribute("cat", request.getParameter("cat"));
                 request.getRequestDispatcher("/user.jsp").forward(request, response);
@@ -403,6 +558,8 @@ public class VertragServlet extends HttpServlet {
             request.getRequestDispatcher("/user.jsp").forward(request, response);
         }
     }
+    
+    
 
     public void searchContract(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
@@ -412,33 +569,171 @@ public class VertragServlet extends HttpServlet {
         String suchText = request.getParameter("suchText");
 
         if (suchText != null) {
-            if(!suchText.equals("")) {
-                vertraege = new DatenZugriffsObjekt().searchContract(suchText, (Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER));
-            
+            if (!suchText.equals("")) {
+                vertraege = new DatenZugriffsObjekt().searchContract(aenderUmlaute(suchText), (Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER));
+
                 if (vertraege.isEmpty()) {
                     vertraege = null;
                 }
             } else {
                 vertraege = null;
             }
-            
-            request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, "Bitten füllen sie das Suchfeld, damit Ihnen bei erfolgreicher Suche Verträge angezeigt werden.");
-            request.setAttribute("vertraege", vertraege);
-            request.setAttribute("kategorie", null);
-            request.setAttribute("suchText", suchText);
+
+            request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, "Bitten füllen sie das Suchfeld aus damit Ihnen, bei erfolgreicher Suche, Verträge angezeigt werden.");
+            request.setAttribute(Konstanten.REQUEST_ATTR_VERTRAEGE, vertraege);
+            request.setAttribute(Konstanten.REQUEST_ATTR_KATEGORIE, null);
+            request.setAttribute(Konstanten.REQUEST_ATTR_SUCHTEXT, aenderUmlaute(suchText));
             request.getRequestDispatcher("/user.jsp").forward(request, response);
         } else if (kategorie != null) {
             vertraege = new DatenZugriffsObjekt().searchContractCategory(kategorie, (Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER));
-            
+
             if (!vertraege.isEmpty()) {
-                request.setAttribute("vertraege", vertraege);
+                request.setAttribute(Konstanten.REQUEST_ATTR_VERTRAEGE, vertraege);
             } else {
-                request.setAttribute("vertraege", null);
+                request.setAttribute(Konstanten.REQUEST_ATTR_VERTRAEGE, null);
             }
-            request.setAttribute("kategorie", kategorie);
-            request.setAttribute("suchText", null);
+            request.setAttribute(Konstanten.REQUEST_ATTR_KATEGORIE, kategorie);
+            request.setAttribute(Konstanten.REQUEST_ATTR_SUCHTEXT, null);
             request.getRequestDispatcher("/user.jsp").forward(request, response);
         }
+    }
+    
+    /**
+     * Ersteller: Sascha Jungenkrüger 
+     * Erstelldatum: 29.07.2015 
+     * Version: 1.0
+     * Änderungen: 1.0 - Erstellung 
+     * 
+     * @param art Die gewählte Zeiteinheit aus dem Formular
+     * 
+     * @return Das Objekt der ausgewählten Zeiteinheit
+     */
+    public Zeit_Einheit getZeitEinheit(String art) {
+        int zeiteinheitID = 0;
+        switch (art) {
+            case "Tag(e)":
+                zeiteinheitID = Konstanten.ID_ZEIT_EINHEIT_TAG;
+                break;
+            case "Woche(n)":
+                zeiteinheitID = Konstanten.ID_ZEIT_EINHEIT_WOCHE;
+                break;
+            case "Monat(e)":
+                zeiteinheitID = Konstanten.ID_ZEIT_EINHEIT_MONAT;
+                break;
+            case "Jahr(e)":
+                zeiteinheitID = Konstanten.ID_ZEIT_EINHEIT_JAHR;
+                break;
+        }
+        return new DatenZugriffsObjekt().getZeitEinheit(zeiteinheitID);
+    }
+    
+    /**
+     * Ersteller: Sascha Jungenkrüger 
+     * Erstelldatum: 29.07.2015 
+     * Version: 1.0
+     * Änderungen: 1.0 - Erstellung 
+     * 
+     * @param netztyp 
+     * @return 
+     */
+    public Netztyp getNetztyp(String netztyp) {
+        int netztypID = 0;
+        switch (netztyp) {
+            case "GPRS":
+                netztypID = Konstanten.ID_NETZTYP_GPRS;
+                break;
+            case "EDGE":
+                netztypID = Konstanten.ID_NETZTYP_EDGE;
+                break;
+            case "UMTS":
+                netztypID = Konstanten.ID_NETZTYP_UMTS;
+                break;
+            case "HSDPA":
+                netztypID = Konstanten.ID_NETZTYP_HSDPA;
+                break;
+            case "LTE":
+                netztypID = Konstanten.ID_NETZTYP_LTE;
+                break;
+            case "DSL":
+                netztypID = Konstanten.ID_NETZTYP_DSL;
+                break;
+            case "VDSL":
+                netztypID = Konstanten.ID_NETZTYP_VDSL;
+                break;
+        }
+        return new DatenZugriffsObjekt().getNetztyp(netztypID);
+    }
+    
+    /**
+     * Ersteller: Sascha Jungenkrüger 
+     * Erstelldatum: 29.07.2015 
+     * Version: 1.0
+     * Änderungen: 1.0 - Erstellung 
+     * 
+     * @param gebiet Die gewählte Zeiteinheit aus dem Formular
+     * 
+     * @return Das Objekt der ausgewählten Zeiteinheit
+     */
+    public Interessengebiet getInteressengebiet(String gebiet) {
+        int gebietID = 0;
+        switch (gebiet) {
+            case "Audio- und Hifimagazin":
+                gebietID = Konstanten.ID_GEBIETE_AUDIO;
+                break;
+            case "Automobilzeitschrift":
+                gebietID = Konstanten.ID_GEBIETE_AUTO;
+                break;
+            case "Computermagazin":
+                gebietID = Konstanten.ID_GEBIETE_COMPUTER;
+                break;
+            case "Fachzeitschrift":
+                gebietID = Konstanten.ID_GEBIETE_FACH;
+                break;
+            case "Fitnessmagazin":
+                gebietID = Konstanten.ID_GEBIETE_FITNESS;
+                break;
+            case "Gartenmagazin":
+                gebietID = Konstanten.ID_GEBIETE_GARTEN;
+                break;
+            case "Kindermagazin":
+                gebietID = Konstanten.ID_GEBIETE_KINDER;
+                break;
+            case "Kochen & Rezepte":
+                gebietID = Konstanten.ID_GEBIETE_KOCHEN;
+                break;
+            case "Reisemagazin":
+                gebietID = Konstanten.ID_GEBIETE_REISE;
+                break;
+            case "Sonstiges":
+                gebietID = Konstanten.ID_GEBIETE_SONSTIGES;
+                break;
+            case "Tageszeitung":
+                gebietID = Konstanten.ID_GEBIETE_TAGESZEITUNG;
+                break;
+            case "Wissensmagazin":
+                gebietID = Konstanten.ID_GEBIETE_WISSEN;
+                break;
+            case "Wohnideenmagazin":
+                gebietID = Konstanten.ID_GEBIETE_WOHNEN;
+                break;
+        }
+        return new DatenZugriffsObjekt().getInteressengebiet(gebietID);
+    }
+    
+    public String aenderUmlaute(String begriff) {
+        if (begriff.contains("Ã¤")) {
+            begriff = begriff.replace("Ã¤", "ae");
+        }
+        if (begriff.contains("Ã¶")) {
+            begriff = begriff.replace("Ã¶", "oe");
+        }
+        if (begriff.contains("Ã¼")) {
+            begriff = begriff.replace("Ã¼", "ue");
+        }
+        if (begriff.contains("Ã")) {
+            begriff = begriff.replace("Ã", "ss");
+        }
+        return begriff;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

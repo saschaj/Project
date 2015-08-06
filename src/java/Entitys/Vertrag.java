@@ -59,7 +59,7 @@ public class Vertrag implements Serializable {
     @JoinColumn(name = "BENACHRICHTIGUNGSFRIST_EINHEIT")
     private Zeit_Einheit benachrichtigungsfristEinheit;
     
-    @Column( name = "VERTRAGSBEZEICHNUNG" )
+    @Column(name = "VERTRAGSBEZEICHNUNG")
     private String vertragsBezeichnung;
     
     @ManyToOne
@@ -70,12 +70,6 @@ public class Vertrag implements Serializable {
     @JoinColumn (name = "RECHNUNGSANSCHRIFT")
     private Adresse rechnungsAnschrift;
     
-    @Column (name = "RATEN_BETRAG")
-    private float ratenBetrag;
-    
-    @Column (name = "RATEN_INTERVALL")
-    private String ratenIntervall;
-    
     @Column (name = "VERLAENGERUNG_MONATE")
     private int verlaengerungMonate;
     
@@ -84,6 +78,30 @@ public class Vertrag implements Serializable {
     
     @Column (name = "KUNDEN_NR")
     private String kundenNr;
+
+    public String getVertragsBezeichnung() {
+        return vertragsBezeichnung;
+    }
+
+    public void setVertragsBezeichnung(String vertragsBezeichnung) {
+        this.vertragsBezeichnung = vertragsBezeichnung;
+    }
+
+    public String getVertragsPartner() {
+        return vertragsPartner;
+    }
+
+    public void setVertragsPartner(String vertragsPartner) {
+        this.vertragsPartner = vertragsPartner;
+    }
+
+    public String getKundenNr() {
+        return kundenNr;
+    }
+
+    public void setKundenNr(String kundenNr) {
+        this.kundenNr = kundenNr;
+    }
     
     public Vertrag() {
     }
