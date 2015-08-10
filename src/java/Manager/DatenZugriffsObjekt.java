@@ -342,6 +342,22 @@ public class DatenZugriffsObjekt {
     /**
      * Ersteller: Sascha Jungenkrüger 
      * Datum: 29.07.2015 
+     * Methode: getVertrag
+     * Version: 1.0
+     *
+     * Liest einen Vertrag über den übergebenen Index aus der Datenbank
+     * und liefert das entsprechende Objekt zurück.
+     * 
+     * @param vertragID Primärschlüssel für ein Objekt des Vertrags
+     * @return Ein Objekt den gewünschten Vertrag der Datenbank
+     */
+    public Vertrag getVertrag(int vertragID) {
+        return this.entityManager.find(Vertrag.class, vertragID);
+    }
+    
+    /**
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
      * Methode: getVertragsArt
      * Version: 1.0
      *

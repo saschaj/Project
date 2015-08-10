@@ -70,14 +70,15 @@ public class Vertrag implements Serializable {
     @JoinColumn (name = "RECHNUNGSANSCHRIFT")
     private Adresse rechnungsAnschrift;
     
-    @Column (name = "VERLAENGERUNG_MONATE")
-    private int verlaengerungMonate;
-    
     @Column (name = "VERTRAGS_PARTNER")
     private String vertragsPartner;
     
     @Column (name = "KUNDEN_NR")
     private String kundenNr;
+    
+    public int getVertragId() {
+        return vertragId;
+    }
 
     public String getVertragsBezeichnung() {
         return vertragsBezeichnung;

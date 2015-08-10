@@ -29,16 +29,17 @@ Veränderungen:	-
                 <h2>Ergebnisse für ihren Suchbegriff "<%= request.getAttribute("suchText")%>"</h2>
                 <% }  %> 
                 <% if (request.getAttribute("vertraege") != null) { %>
-                <form method="POST" action="VertragServlet">
+                <form method="POST" action="user.jsp">
                     <table border="0">
                         <%  vertraege = (Collection<Vertrag>) request.getAttribute("vertraege");
                             for (Vertrag vertrag : vertraege) {%>
                         <tr>
-                            <td style="width:350px"><%= vertrag.getVertragNr() %></td>
+                            <td style="width:350px"><%= aenderUmlaute(vertrag.getVertragsBezeichnung())%></td>
                             <td><input class="submit" style="width:100px" type="submit" name="anzeigen" value="Anzeigen" /></td>
                             <td><input class="submit" style="width:100px" type="submit" name="aendern" value="Ändern" /></td>
                             <td><input class="submit" style="width:100px" type="submit" name="loeschen" value="Löschen" /></td>
-                            <td><input type="hidden" name="vertrag" value="<%= vertrag %>"></td>
+                            <td><input type="hidden" name="vertrag" value="<%= vertrag.getVertragId()%>"></td>
+                            <td><input type="hidden" name="change" value="1"></td>
                         </tr>                                        
                         <% } %>                 
                     </table>
@@ -54,3 +55,21 @@ Veränderungen:	-
 
     </body>
 </html>
+
+<%! 
+        public String aenderUmlaute(String begriff) {
+        if (begriff.contains("Ã¤")) {
+            begriff = begriff.replace("Ã¤", "ae");
+        }
+        if (begriff.contains("Ã¶")) {
+            begriff = begriff.replace("Ã¶", "oe");
+        }
+        if (begriff.contains("Ã¼")) {
+            begriff = begriff.replace("Ã¼", "ue");
+        }
+        if (begriff.contains("Ã")) {
+            begriff = begriff.replace("Ã", "ss");
+        }
+        return begriff;
+    }
+%>

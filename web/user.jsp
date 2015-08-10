@@ -62,7 +62,10 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                                 <% if (request.getParameter("add") != null
                                     || request.getAttribute("check") != null) { %>
                                     <%@include file="contract_add.jsp"%>
-                                <% } %>
+                                <% }
+                                    if (request.getParameter("change") != null) { %>
+                                    <%@include file="contract_change.jsp"%>    
+                                <%    }%>
                                 
                             </div><!--close sidebar_item--> 
                         </div><!--close sidebar-->
