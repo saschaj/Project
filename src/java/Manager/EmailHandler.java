@@ -50,12 +50,12 @@ public class EmailHandler {
      * @param url Loginseiten URL
      *  
      */
-    public void sendRegisterMail(String subject, InternetAddress recipient, String passwort, String url) {
+    public void sendRegisterMail(String subject, String recipient, String passwort) {
                 
         try {
             Message msg = new MimeMessage(session);
             msg.setSubject(subject);
-            msg.setRecipient(RecipientType.TO, recipient);
+            msg.setRecipient(RecipientType.TO, new InternetAddress(recipient));
             
             // Body text.
             BodyPart messageBodyPart = new MimeBodyPart();
@@ -64,10 +64,9 @@ public class EmailHandler {
                     + "\n\nIhre Registrierung war erfolgreich."
                     + ""
                     + "\nIhre Zugangsdaten sind:"
-                    + "\nEmail-Adresse: " + recipient.getAddress()
+                    + "\nEmail-Adresse: " + recipient
                     + "\nPasswort:" + passwort
-                    + "\n\nSie können sich nun auf folgender Seite einloggen:"
-                    + "\n\n" + url);
+                    );
             
             // Multipart message.
             Multipart multipart = new MimeMultipart();

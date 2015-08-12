@@ -67,8 +67,12 @@ public class LoginLogoutServlet extends HttpServlet {
             //LogIn durchführen
             this.logIn(request, response);
         } else if (getPassword != null) {
+            String email = request.getParameter("login_email");
+            if (email != null && !email.equals("")) {
+                ausgabe = "Geben Sie ihre E-Mailadresse an.";
+            }
             EmailHandler emailer = new EmailHandler();
-            emailer.sendPasswortMail(login);            
+            emailer.sendPasswortMail(email);            
             ausgabe = "Ihnen wurde ein neues Passwort zugeschickt. Sie werden automatisch weitergeleitet!";
         } else if (aktion != null && aktion.equals(Konstanten.URL_AKTION_LOGOUT)) {
             //Ausloggen
@@ -212,6 +216,9 @@ public class LoginLogoutServlet extends HttpServlet {
                         out.println("</body>");
                         out.println("</html>");
                     }
+                    EmailHandler emailer = new EmailHandler();
+                    emailer.sendRegisterMail("Registrierung für " + vname + ""
+                             + name + " erfolgreich", email1, pw1);
                 }
             } else {
                 ausgabe = "Ihre E-Mail-Adresse ist schon vorhanden!";
