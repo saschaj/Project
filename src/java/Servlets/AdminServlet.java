@@ -18,14 +18,14 @@ import org.jfree.chart.servlet.ServletUtilities;
 public class AdminServlet extends HttpServlet {
 
     /**
-     * Ersteller:   René Kanzenbach
-     * Datum:       28.07.2015
-     * Version:     1.0
-     * Änderungen:  -
-     * 
+     * Ersteller: René Kanzenbach
+     * Datum: 28.07.2015
+     * Version: 1.0
+     * Änderungen: -
+     *
      * Prüft, welche Aktion in der admin.jsp aufgerufen wurde und führt dann die
      * entsprechende Methode auf.
-     * 
+     *
      * @param request
      * @param response
      * @throws javax.servlet.ServletException
@@ -33,15 +33,15 @@ public class AdminServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         //Pruefen, welche Aktion ausgeführt wurde.
-        if(request.getParameter("BenutzerStatistik") != null) {
+        if (request.getParameter("BenutzerStatistik") != null) {
             //Der Button "Benutzerübersicht" wurde in der admin.jsp betaetigt.
             this.zeigeBenutzerStatistik(request, response);
-        }else if(request.getParameter("VertragStatistik") != null){
+        } else if (request.getParameter("VertragStatistik") != null) {
             //Der Button "Vertragsübersicht" wurde in der admin.jsp betaetigt.
             this.zeigeVertragsStatistik(request, response);
-        }else if(request.getParameter("SucheBenutzer") != null){
+        } else if (request.getParameter("SucheBenutzer") != null) {
             this.benutzerSuche(request, response);
         }
     }
@@ -86,123 +86,126 @@ public class AdminServlet extends HttpServlet {
                 + " kuemmert.";
     }// </editor-fold>
 
-    
     /**
-     * Ersteller:   René Kanzenbach
-     * Datum:       28.07.2015
-     * Version:     1.0
-     * Änderungen:  -
-     * 
-     * Diese Methode erzeugt ein Diagramm-PNG, welches in der 
+     * Ersteller: René Kanzenbach
+     * Datum: 28.07.2015
+     * Version: 1.0
+     * Änderungen: -
+     *
+     * Diese Methode erzeugt ein Diagramm-PNG, welches in der
      * admin_dynamic.jsp ausgegeben wird.
-     * 
-     * Dazu wird die Methode getBenutzerStatistik():JFreeChart ,des 
-     * DatenZugriffsObjekt, aufgerufen. Das JFreeChart-Diagramm wird dann in 
-     * dieser Methode in ein PNG umgewandelt und der admin_dynamic.jsp 
+     *
+     * Dazu wird die Methode getBenutzerStatistik():JFreeChart ,des
+     * DatenZugriffsObjekt, aufgerufen. Das JFreeChart-Diagramm wird dann in
+     * dieser Methode in ein PNG umgewandelt und der admin_dynamic.jsp
      * übergeben.
-     * 
+     *
      * @param request
      * @param response
      * @throws ServletException
-     * @throws IOException 
+     * @throws IOException
      */
     private void zeigeBenutzerStatistik(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        
+
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
         JFreeChart benutzerStatistik = dao.getBenutzerStatistik();
         String dateiName;
         String url;
-        
+
         /* Diagramm in 500x500Pixel großes Bild umwandeln und den Namen des 
          * Bildes in dateiName speichern.
          */
         dateiName = ServletUtilities.saveChartAsPNG(
                 benutzerStatistik, 500, 500, request.getSession());
-        
+
         /*
-        Erstellen der URL, die verwendet werden kann um das Diagramm anzuzeigen.
-        Dazu wird ein DisplayChart-Servlet verwendet, welches das Diagramm-Bild
-        an den aufrufenden Browser weiterleitet.
-        */
-        url = request.getContextPath() + "/servlet/DisplayChart?filename=" 
+         Erstellen der URL, die verwendet werden kann um das Diagramm anzuzeigen.
+         Dazu wird ein DisplayChart-Servlet verwendet, welches das Diagramm-Bild
+         an den aufrufenden Browser weiterleitet.
+         */
+        url = request.getContextPath() + "/servlet/DisplayChart?filename="
                 + dateiName;
-        
+
         //URL des Diagrammbildes als Parameter uebergeben.
         request.setAttribute("StatistikURL", url);
         //Aufrufen der admin_dynamic.jsp
         request.getRequestDispatcher("/admin.jsp").forward(request, response);
         dao.close();
     }
-    
+
     /**
-     * Ersteller:   René Kanzenbach
-     * Datum:       28.07.2015
-     * Version:     1.0
-     * Änderungen:  -
-     * 
-     * Diese Methode erzeugt ein Diagramm-PNG, welches in der 
+     * Ersteller: René Kanzenbach
+     * Datum: 28.07.2015
+     * Version: 1.0
+     * Änderungen: -
+     *
+     * Diese Methode erzeugt ein Diagramm-PNG, welches in der
      * admin_dynamic.jsp ausgegeben wird.
-     * 
-     * Dazu wird die Methode getVertragStatistik():JFreeChart ,des 
-     * DatenZugriffsObjekt, aufgerufen. Das JFreeChart-Diagramm wird dann in 
-     * dieser Methode in ein PNG umgewandelt und der admin_dynamic.jsp 
+     *
+     * Dazu wird die Methode getVertragStatistik():JFreeChart ,des
+     * DatenZugriffsObjekt, aufgerufen. Das JFreeChart-Diagramm wird dann in
+     * dieser Methode in ein PNG umgewandelt und der admin_dynamic.jsp
      * übergeben.
-     * 
+     *
      * @param request
      * @param response
      * @throws ServletException
-     * @throws IOException 
+     * @throws IOException
      */
     private void zeigeVertragsStatistik(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        
+
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
         JFreeChart vertragDiagramm = dao.getVertragStatistik();
         String dateiName;
         String url;
-        
+
         /* Diagramm in 500x500Pixel großes Bild umwandeln und den Namen des 
          * Bildes in dateiName speichern.
          */
         dateiName = ServletUtilities.saveChartAsPNG(
                 vertragDiagramm, 500, 500, request.getSession());
-        
+
         /*
-        Erstellen der URL, die verwendet werden kann um das Diagramm anzuzeigen.
-        Dazu wird ein DisplayChart-Servlet verwendet, welches das Diagramm-Bild
-        an den aufrufenden Browser weiterleitet.
-        */
-        url = request.getContextPath() + "/servlet/DisplayChart?filename=" 
+         Erstellen der URL, die verwendet werden kann um das Diagramm anzuzeigen.
+         Dazu wird ein DisplayChart-Servlet verwendet, welches das Diagramm-Bild
+         an den aufrufenden Browser weiterleitet.
+         */
+        url = request.getContextPath() + "/servlet/DisplayChart?filename="
                 + dateiName;
-        
+
         //URL des Diagrammbildes als Parameter uebergeben.
         request.setAttribute("StatistikURL", url);
         //Aufrufen der admin_dynamic.jsp
         request.getRequestDispatcher("/admin.jsp").forward(request, response);
         dao.close();
     }
-    
+
     /**
-     * Ersteller:   René Kanzenbach
-     * Datum:       04.08.2015
-     * Version:     1.0
-     * Änderungen:  -
-     * 
+     * Ersteller: René Kanzenbach
+     * Datum: 04.08.2015
+     * Version: 1.0
+     * Änderungen: -
+     *
      * @param request
      * @param response
      * @throws ServletException
-     * @throws IOException 
+     * @throws IOException
      */
     private void benutzerSuche(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
-        
+
         List<Benutzer> benutzerListe;
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+        //Benutzer Suchtext auslesen.
         String benutzerSuche = request.getParameter("SucheBenutzerText");
-        
+
+        //Liste aller Benutzer erzeugen, die mit der Sucher übereinstimmen.
         benutzerListe = dao.sucheBenutzer(benutzerSuche);
-        request.setAttribute("BenutzerListe",benutzerListe);
+        //Benutzerliste als Attribut dem Request-Objekt übergeben.
+        request.setAttribute("BenutzerListe", benutzerListe);
+        //Weiterleiten auf admin.jsp
         request.getRequestDispatcher("/admin.jsp").forward(request, response);
     }
 }

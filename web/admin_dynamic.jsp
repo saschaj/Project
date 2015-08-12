@@ -17,7 +17,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 <%
     String benutzerStatistikURL;
     List<Benutzer> benutzerListe;
-    
+
     //URL fuer die BenutzerStatistik auslesen.
     benutzerStatistikURL = (String) request.getAttribute("StatistikURL");
     //Liste aller gefundenen Benutzer auslesen.
@@ -31,13 +31,39 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
         <title>Administratorsicht</title>
     </head>
     <body>
-        <% 
-        if(benutzerStatistikURL != null) { 
-        %>
-            <IMG src='<%= benutzerStatistikURL %>' width='500' height='500' border='0'>
         <%
-        }else if(benutzerListe != null) { 
+        if (benutzerStatistikURL != null) {
+        %>
+            <IMG src='<%= benutzerStatistikURL%>' width='500' height='500' border='0'>
+        <%
+        } else if (benutzerListe != null) {
+        %>
+            <TABLE border="1">
+                <%
+                for (Benutzer benutzer : benutzerListe) {
+                %>
+                    <tr>
+                    <form method="POST" action="AdminServlet">
+                        <td colspan="2">
+                            <h3><%= benutzer.getEmail()%></h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><button type="Submit" class="submit">Löschen</button></td>
+                        <td><button type="Submit" class="submit">Wiederherstellen</button></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <button type="Submit" class="submit">Passwort zurücksetzen</button>
+                        </td>
+                    </form>
+                    </tr>
+                <%
+                }
+                %>
+            </TABLE>
+        <%
         }
         %>        
-    </body>
+</body>
 </html>
