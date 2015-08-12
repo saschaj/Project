@@ -95,7 +95,7 @@ public class VertragServlet extends HttpServlet {
                 gasStand = request.getParameter("gstand"),
                 gasVerbrauch = request.getParameter("gverbrauch"),
                 gasPreis = request.getParameter("gpreisKwh"),
-                gasFlaeche = request.getParameter("gFlaeche"),
+                gasFlaeche = request.getParameter("gflaeche"),
                 festnetzTarif = request.getParameter("ftarifname"),
                 festnetzEmpfang = request.getParameter("fempfangstyp"),
                 festnetzIstISDN = request.getParameter("fistISDN"),
@@ -132,8 +132,6 @@ public class VertragServlet extends HttpServlet {
         // , wenn ja wird überprüft ob ungültige Ziffern enthalten sind
         if (vertragsNr.equals("")) {
             ausgabe = "Bitte geben Sie eine Vertragsnummer ein.!";
-        } else if (vertragsNr.matches("[\\d]+[\\d\\w-./]")) {
-            ausgabe = "Ihr Vertragsnummer enthält ungültige Ziffen.!";
         }
 
         // Überprüfung, ob der Vertragsbeginn & die Laufzeit
@@ -221,9 +219,6 @@ public class VertragServlet extends HttpServlet {
         if (kuendigungsfrist.equals("")) {
             ausgabe = ausgabe + ""
                     + "Bitte geben Sie die vertragliche Kündigungsfrist ein.!";
-        } else if (kuendigungsfrist.matches("[^0-9]")) {
-            ausgabe = ausgabe + ""
-                    + "Bei der Kündigungsfrist sind nur Ziffern erlaubt.!";
         }
         
         // Überprüft, ob die Benachrichtigungsfrist nur Ziffern enthält
@@ -237,7 +232,7 @@ public class VertragServlet extends HttpServlet {
         switch (kategorie) {
             case "Strom":
                 if (!stromNr.equals("")
-                        && stromNr.matches("[\\d]+?[\\d\\w-./]")) {
+                        && stromNr.matches("[0-9]*")) {
                     ausgabe = 
                             "Ihr Stromnummer enthält "
                             + "ungültige Zeichen & Ziffen.!";
@@ -259,7 +254,7 @@ public class VertragServlet extends HttpServlet {
                             + "oder Fließkommazahlen erlaubt.!";
                 }
                 if (!stromPersonen.equals("")
-                        && stromPersonen.matches("[\\d]+")) {
+                        && stromPersonen.matches("[\\d]")) {
                     ausgabe = ausgabe + "Bei der Personenangabe sind nur"
                             + "ganze Ziffern erlaubt.!";
                 }

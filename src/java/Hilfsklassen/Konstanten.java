@@ -38,6 +38,12 @@ public class Konstanten {
     public static final String REQUEST_ATTR_FEHLER = "fehler";
     
     /**
+     * Parametername für einen Fehlertext (Vertrag ändern) 
+     * in einem HttpRequest Objekt. 
+     */
+    public static final String REQUEST_ATTR_FEHLER_CHANGE = "fehler";
+    
+    /**
      * Attributname für einen Fehlertext in einem HttpRequest Objekt. 
      */
     public static final String REQUEST_ATTR_ERFOLG = "erfolg";
