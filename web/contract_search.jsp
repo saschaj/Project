@@ -35,9 +35,8 @@ Veränderungen:	-
                             for (Vertrag vertrag : vertraege) {%>
                         <tr>
                             <td style="width:350px"><%= aenderUmlaute(vertrag.getVertragsBezeichnung())%></td>
-                            <td><input class="submit" style="width:100px" type="submit" name="anzeigen" value="Anzeigen" /></td>
-                            <td><input class="submit" style="width:100px" type="submit" name="aendern" value="Ändern" /></td>
-                            <td><input class="submit" style="width:100px" type="submit" name="loeschen" value="Löschen" /></td>
+                            <td><input class="submit" style="width:150px" type="submit" name="aendern" value="Anzeigen/Ändern" /></td>
+                            <td><input class="submit" style="width:150px" type="submit" name="loeschen" value="Löschen" /></td>
                             <td><input type="hidden" name="vertrag" value="<%= vertrag.getVertragId()%>"></td>
                             <td><input type="hidden" name="change" value="1"></td>
                         </tr>                                        
