@@ -16,8 +16,12 @@ package Servlets;
 import Entitys.Benutzer;
 import Hilfsklassen.Konstanten;
 import Manager.DatenZugriffsObjekt;
+import Manager.EmailHandler;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -63,7 +67,9 @@ public class LoginLogoutServlet extends HttpServlet {
             //LogIn durchführen
             this.logIn(request, response);
         } else if (getPassword != null) {
-            ausgabe = "Ihnen wurde ein neues Passwort zugeschickt und werden automatisch weitergeleitet!";
+            EmailHandler emailer = new EmailHandler();
+            emailer.sendPasswortMail(login);            
+            ausgabe = "Ihnen wurde ein neues Passwort zugeschickt. Sie werden automatisch weitergeleitet!";
         } else if (aktion != null && aktion.equals(Konstanten.URL_AKTION_LOGOUT)) {
             //Ausloggen
             this.logOut(request, response);
