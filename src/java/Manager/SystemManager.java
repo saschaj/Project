@@ -6,6 +6,8 @@ import Entitys.Zeit_Einheit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
+import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 
 /**
@@ -20,9 +22,15 @@ public class SystemManager {
     public SystemManager() {
         emailer = new EmailHandler();
     }
-
+    
+        
+    /**
+     * Einmal Täglich wird zu jedem Vertrag geprüft ob eine Benachrichtigung 
+     * verschickt werden muss.
+     */
+    @Schedule(minute = "*/1", hour = "*")
     private void pruefeAufAblaufendeFristen() {
-
+        System.out.println("pruefeAufAblaufendeFristen um: " + Calendar.getInstance(Locale.GERMANY).getTime());
         Calendar now;
         DatenZugriffsObjekt dao;
         ArrayList<Vertrag> alleVertraege;
@@ -31,7 +39,7 @@ public class SystemManager {
         dao = new DatenZugriffsObjekt();
         alleVertraege = new ArrayList(dao.getAllVertraege());
         for (Vertrag v : alleVertraege) {
-            Calendar benachrichtigungsDatum = Calendar.getInstance();
+            Calendar benachrichtigungsDatum = Calendar.getInstance(Locale.GERMANY);
             benachrichtigungsDatum.setTime(v.getVertragEnde());
 
             int benachrichtigungsFrist = v.getBenachrichtigungsfrist();
@@ -41,8 +49,10 @@ public class SystemManager {
 
             datumAendern(benachrichtigungsDatum, kfEinheit, -kuendigungsFrist);
             datumAendern(benachrichtigungsDatum, bfEinheit, -benachrichtigungsFrist);
-
-            if (benachrichtigungsDatum.before(now)) {
+            System.out.println("benachrichtigungsDatum: " + benachrichtigungsDatum.getTime());
+            
+                   
+            if (benachrichtigungsDatum.before(now) && !v.isBenachrichtigungVersand()) {
                 Kunde k = v.getKunde();
                 ArrayList<Vertrag> tmpList;
                 if (ablaufendeVertraege.containsKey(k)) {
@@ -50,6 +60,8 @@ public class SystemManager {
                 } else {
                     tmpList = new ArrayList<>();
                 }
+                v.setBenachrichtigungVersand(true);
+                dao.addContract(v);
                 tmpList.add(v);
                 ablaufendeVertraege.put(k, tmpList);
             }

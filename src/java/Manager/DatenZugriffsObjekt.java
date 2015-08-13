@@ -8,13 +8,10 @@ import java.util.Collection;
 import Hilfsklassen.Konstanten;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
-import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 /**
@@ -65,6 +62,26 @@ public class DatenZugriffsObjekt {
 
     }
 
+    public boolean addBenutzer(Benutzer b) {
+        boolean addComplete = false;
+
+        try {
+            this.entityManager.getTransaction().begin();
+            this.entityManager.persist(b);
+            this.entityManager.getTransaction().commit();
+            addComplete = true;
+
+        } catch (RollbackException re) {
+
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
+        } catch (Throwable th) {
+            this.entityManager.getTransaction().rollback();
+        }
+
+        return addComplete;
+    }
+    
     public boolean isEmailAvailable(String email) {
         boolean isAvailable = false;
         String query = "select count(b) from Benutzer b where "
@@ -575,6 +592,7 @@ public class DatenZugriffsObjekt {
         query.setParameter("emailName", suche);
         return query.getResultList();
     }
+    
 
     /**
      * Methode zum schließen des EntityManagers.

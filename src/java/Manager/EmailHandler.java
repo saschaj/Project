@@ -5,13 +5,13 @@
  */
 package Manager;
 
-import Entitys.Benutzer;
 import Entitys.Kunde;
 import Entitys.Vertrag;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -52,7 +52,7 @@ public class EmailHandler {
     }
 
     /**
-     * Diese Methode sendet eine Email mit den Benutzerdaten an die übergebene
+     * sendRegisterMai sendet eine Email mit den Benutzerdaten an die übergebene
      * Emailadresse.
      *
      * @param subject Text der Betreffzeile
@@ -93,7 +93,7 @@ public class EmailHandler {
     }
 
     /**
-     * Diese Methode sendet eine E-Mail an die eigene E-Mail-Adresse und belegt
+     * sendInfoMail sendet eine E-Mail an die eigene E-Mail-Adresse und belegt
      * den Absender mit der vom Kontaktierenden hinterlegten E-Mail-Adresse.
      *
      * @param emailAbsender Die vom Kontaktierenden hinterlegte E-Mail-Adresse
@@ -125,8 +125,8 @@ public class EmailHandler {
     }
 
     /**
-     * Diese Methode sendet eine E-Mail an die übergebene E-Mail-Adresse in der
-     * ein neuerzeugtes Passwort für den Benutzeraccount eben dieser steht.
+     * sendPasswortMail sendet eine E-Mail an die übergebene E-Mail-Adresse in
+     * der ein neuerzeugtes Passwort für den Benutzeraccount eben dieser steht.
      *
      * @param recipient
      */
@@ -164,12 +164,14 @@ public class EmailHandler {
             String msgBody = "Diese Email informiert sie über in Kürze "
                     + "ablaufende Kündigungsfristen Ihrer Verträge.\n";
             Calendar datum = Calendar.getInstance(Locale.GERMANY);
+            DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.GERMANY);
             for (Vertrag v : l) {
-                SystemManager.datumAendern(datum, v.getKuendigungsfristEinheit(), v.getKuendigungsfrist());
+                SystemManager.datumAendern(datum, v.getKuendigungsfristEinheit(), -v.getKuendigungsfrist());
+                Date anzeige = new Date(datum.getTimeInMillis());
                 msgBody = msgBody
-                        + "\nVertrag : " + v.getVertragsBezeichnung() + " - "
+                        + "\nVertrag : " + v.getVertragNr() + " - "
                         + v.getVertragsBezeichnung() + "\n"
-                        + "Kündbar bis: " + datum.getTime() + "\n";
+                        + "Kündbar bis zum: " + df.format(anzeige) + "\n";
             }
             // Body text.
             BodyPart messageBodyPart = new MimeBodyPart();

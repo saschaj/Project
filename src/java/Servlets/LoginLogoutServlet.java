@@ -15,6 +15,7 @@ package Servlets;
 
 import Entitys.Benutzer;
 import Hilfsklassen.Konstanten;
+import Hilfsklassen.PasswortErzeuger;
 import Manager.DatenZugriffsObjekt;
 import Manager.EmailHandler;
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class LoginLogoutServlet extends HttpServlet {
                 sendeMail = true;
                 meta = "<meta http-equiv='refresh' content='2; URL=index.jsp'>";
                 ausgabe = "Ihnen wurde ein neues Passwort zugeschickt. Sie werden automatisch weitergeleitet!";
-               
+
             } else {
                 ausgabe = "Geben Sie ihre E-Mail-Adresse an.";
             }
@@ -95,9 +96,20 @@ public class LoginLogoutServlet extends HttpServlet {
             out.println("</html>");
         }
         if (sendeMail) {
-            EmailHandler emailer = new EmailHandler();
-            emailer.sendPasswortMail(email);
+            passwortZuruecksetzen(email);
+
         }
+    }
+
+    private void passwortZuruecksetzen(String email) {
+        DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+        PasswortErzeuger p = new PasswortErzeuger();
+        String neuesPasswort = p.getNewPasswort();
+        Benutzer b = dao.getBenutzer(email);
+        b.setPasswort(neuesPasswort);
+        dao.addBenutzer(b);
+        EmailHandler emailer = new EmailHandler();
+        emailer.sendPasswortMail(email);
     }
 
     /**
