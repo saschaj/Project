@@ -28,21 +28,18 @@ Veränderungen:	-
                 <%      } else if (request.getAttribute("suchText") != null) {%>
                 <h2>Ergebnisse für ihren Suchbegriff "<%= request.getAttribute("suchText")%>"</h2>
                 <% }  %> 
-                <% if (request.getAttribute("vertraege") != null) { %>
-                <form method="POST" action="user.jsp">
-                    <table border="0">
+                <% if (request.getAttribute("vertraege") != null) { %>                
                         <%  vertraege = (Collection<Vertrag>) request.getAttribute("vertraege");
-                            for (Vertrag vertrag : vertraege) {%>
-                        <tr>
-                            <td style="width:350px"><%= aenderUmlaute(vertrag.getVertragsBezeichnung())%></td>
-                            <td><input class="submit" style="width:150px" type="submit" name="aendern" value="Anzeigen/Ändern" /></td>
-                            <td><input class="submit" style="width:150px" type="submit" name="loeschen" value="Löschen" /></td>
-                            <td><input type="hidden" name="vertrag" value="<%= vertrag.getVertragId()%>"></td>
-                            <td><input type="hidden" name="change" value="1"></td>
-                        </tr>                                        
-                        <% } %>                 
-                    </table>
-                </form>
+                            for (Vertrag vertrag : vertraege) { %>
+                            <p>
+                            <form method="POST" action="user.jsp">                            
+                            <span class="span_search"><%= aenderUmlaute(vertrag.getVertragsBezeichnung())%></span>                           
+                            <input class="submit" style="width:150px" type="submit" name="aendern" value="Anzeigen/Ändern" />
+                            <input class="submit" style="width:150px" type="submit" name="loeschen" value="Löschen" />
+                            <input type="hidden" name="vertrag" value="<%= vertrag.getVertragId()%>">
+                            <input type="hidden" name="change" value="1">
+                            </form>
+                        <% } %>        
                 <% } else { %>
                 Es wurde keine passenden Ergebnisse gefunden!
                 <%}

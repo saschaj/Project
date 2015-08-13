@@ -168,13 +168,13 @@ public class Konstanten {
      * Primärschlüssel der ZeitEinheit "Tag(e)" in der Tabelle 
      * "ZEIT_EINHEIT"
      */
-    public static final int ID_ZEIT_EINHEIT_TAG = 3;
+    public static final int ID_ZEIT_EINHEIT_TAG = 1;
     
     /**
      * Primärschlüssel der ZeitEinheit "Woche(n)" in der Tabelle 
      * "ZEIT_EINHEIT"
      */
-    public static final int ID_ZEIT_EINHEIT_WOCHE = 3;
+    public static final int ID_ZEIT_EINHEIT_WOCHE = 2;
     
     /**
      * Primärschlüssel der ZeitEinheit "Monat(e)" in der Tabelle 
@@ -186,7 +186,7 @@ public class Konstanten {
      * Primärschlüssel der ZeitEinheit "Jahr(e)" in der Tabelle 
      * "ZEIT_EINHEIT"
      */
-    public static final int ID_ZEIT_EINHEIT_JAHR = 3;
+    public static final int ID_ZEIT_EINHEIT_JAHR = 4;
     
     /*
     ----------------------------------------------------------------------------
@@ -222,7 +222,7 @@ public class Konstanten {
      * Primärschlüssel der Vertragsart "Zeitschriftvertrag" in der Tabelle 
      * "VERTRAG_ART"
      */
-    public static final int ID_VERTRAG_ART_ZEITSCHRIFT = 1;
+    public static final int ID_VERTRAG_ART_ZEITSCHRIFT = 5;
     
     /*
     ----------------------------------------------------------------------------

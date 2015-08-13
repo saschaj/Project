@@ -30,11 +30,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 /**
- * Ersteller: Sascha Jungenkrüger 
- * Erstelldatum: 03.06.2015 
- * Version: 1.1
- * Änderungen: 1.0 - Erstellung 
- *             1.1 (Sascha Jungenkrüger) - Vertrag hinzufügen implementiert
+ * Ersteller: Sascha Jungenkrüger Erstelldatum: 03.06.2015 Version: 1.1
+ * Änderungen: 1.0 - Erstellung 1.1 (Sascha Jungenkrüger) - Vertrag hinzufügen
+ * implementiert
  *
  * Diese Klasse übernimmt die Verarbeitung für die Suche und das Hinzufügen
  * eines Vertrag.
@@ -63,6 +61,22 @@ public class VertragServlet extends HttpServlet {
 
     }
 
+    /**
+     * Ersteller:   Sascha Jungenkrüger
+     * Datum:       04.06.2015
+     * Version:     1.0 Sascha Jungenkrüger
+     *              1.1 Sascha Jungenkrüger 15.06.2015
+     *              - Datepicker eingefügt und angepasst
+     *              1.2 Sascha Jungenkrüger 02.08.2015
+     *              - Datumsberechnung überarbeitet
+     *              - Obligatorische Daten eingefügt (Vertragsbezeichnung)
+     * Änderungen:  -
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     * @throws ParseException 
+     */
     public void saveContract(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
 
@@ -76,13 +90,13 @@ public class VertragServlet extends HttpServlet {
                 kuendigungsfristEinheit
                 = request.getParameter("kuendigungsfristeinheit"),
                 kategorie = request.getParameter("cat");
-                
+
         // Initialisierung der optionalen Formulardaten
-        String  kundennr = request.getParameter("kundennr"),
+        String kundennr = request.getParameter("kundennr"),
                 vertragsBez = request.getParameter("vertragsbez"),
                 vertragsPartner = request.getParameter("vertragspartner"),
-                benachrichtigungsfrist = 
-                request.getParameter("benachrichtigungsfrist"),
+                benachrichtigungsfrist
+                = request.getParameter("benachrichtigungsfrist"),
                 benachrichtigungsfristEinheit
                 = request.getParameter("benachrichtigungsfristeinheit"),
                 stromNr = request.getParameter("snr"),
@@ -109,17 +123,14 @@ public class VertragServlet extends HttpServlet {
                 zeitschriftGebiet = request.getParameter("zinteressen");
 
         HttpSession session = request.getSession();
-        int vBeginnJahr = 0, vBeginnMonat = 0, vBeginnTag = 0,
-                vEndeJahr = 0, vEndeMonat = 0, vEndeTag = 0,
-                kfrist = 0;
+        int vEndeJahr = 0, vEndeMonat = 0, vEndeTag = 0, vLaufzeit = 0;
         boolean vertragGespeichert = false;
-        DateFormat formatter = new SimpleDateFormat("mm/dd/yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
         Calendar calBeginn = GregorianCalendar.getInstance(),
                 calEnde = GregorianCalendar.getInstance();
         java.util.Date parseDate = null;
         java.sql.Date parseDateSqlvBeginn = null;
         java.sql.Date parseDateSqlvEnde = null;
-        Vertrag neuerVertrag = null;
         Stromvertrag neuStromvertrag = null;
         Gasvertrag neuGasvertrag = null;
         Festnetzvertrag neuFestnetzvertrag = null;
@@ -127,11 +138,17 @@ public class VertragServlet extends HttpServlet {
         Zeitschriftvertrag neuZeitschriftvertrag = null;
         Vertrag_Art art = null;
         String ausgabe = "", fehler[] = null;
+        
+        // Überprüfung der Vertragsbezeichnung, ob es gefüllt ist
+        // Der Text wird innerhalb der Suche angezeigt
+        if (vertragsBez.equals("")) {
+            ausgabe = "Bitte geben Sie eine Vertragsbezeichnung ein.!";
+        }
 
         // Überprüfung der Vertragsnummer, ob das Feld gefüllt ist
         // , wenn ja wird überprüft ob ungültige Ziffern enthalten sind
         if (vertragsNr.equals("")) {
-            ausgabe = "Bitte geben Sie eine Vertragsnummer ein.!";
+            ausgabe = ausgabe + "Bitte geben Sie eine Vertragsnummer ein.!";
         }
 
         // Überprüfung, ob der Vertragsbeginn & die Laufzeit
@@ -139,75 +156,53 @@ public class VertragServlet extends HttpServlet {
         if (!vertragsBeginn.equals("") && !laufzeit.equals("")
                 || !vertragsEnde.equals("")) {
             // Überprüfung, ob das Vertragsende gefüllt ist
-            if (!vertragsEnde.equals("")) {
-                // Datum aus String entnehmen und Formatierung zu DD/MM/JJJJ
-                // ändern.
-                vEndeJahr = Integer.parseInt(vertragsEnde.substring(6, 10));
-                vEndeMonat = Integer.parseInt(vertragsEnde.substring(0, 2));
-                vEndeTag = Integer.parseInt(vertragsEnde.substring(3, 5));
-                calEnde.set(vEndeJahr, vEndeMonat - 1, vEndeTag, 0, 0, 0);
-                parseDate = new java.util.Date(calEnde.getTimeInMillis());
+            if (!vertragsBeginn.equals("") && !vertragsEnde.equals("")) {
+                // Übergebene Vertragsende als Date parsen
+                parseDate = format.parse(vertragsEnde);
 
                 // Prüfung, ob das Vertragsende in der Vergangenheit liegt
                 if (parseDate.before(Calendar.getInstance().getTime())) {
                     ausgabe = ausgabe + "Der eingegebene Vertrag ist abgelaufen.";
                 } else {
                     parseDateSqlvEnde = new java.sql.Date(parseDate.getTime());
-                    if (!vertragsBeginn.equals("")) {
-                        vBeginnJahr = Integer.parseInt(vertragsBeginn.substring(6, 10));
-                        vBeginnMonat = Integer.parseInt(vertragsBeginn.substring(0, 2));
-                        vBeginnTag = Integer.parseInt(vertragsBeginn.substring(3, 5));
-                        calBeginn.set(vBeginnJahr, vBeginnMonat - 1, vBeginnTag, 0, 0, 0);
-                        parseDate = new java.util.Date(calBeginn.getTimeInMillis());
-                        parseDateSqlvBeginn = new java.sql.Date(parseDate.getTime());
-                    } else {
-                        parseDateSqlvBeginn = null;
-                    }
-                    if (laufzeit.equals("")) {
-                        laufzeit = "0";
-                    }
                 }
+                // Den eingegebenen Vertragsbeginn parsen und
+                // in Date Objekt speichern
+                parseDate = format.parse(vertragsBeginn);
+                parseDateSqlvBeginn = new java.sql.Date(parseDate.getTime());
 
             } else if (!vertragsBeginn.equals("") && !laufzeit.equals("")) {
-                // Überprüfung, ob die Laufzeit nur Ziffern enthält
-                if (laufzeit.matches("[^0-9]")) {
-                    ausgabe = ausgabe + ""
-                            + "Bei der Laufzeit sind nur Ziffern erlaubt.!";
-                } else {
-                    //Formatierung des Datum von MM/DD/JJJJ zu DD/MM/JJJJ
-                    vBeginnJahr = Integer.parseInt(vertragsBeginn.substring(6, 10));
-                    vBeginnMonat = Integer.parseInt(vertragsBeginn.substring(0, 2));
-                    vBeginnTag = Integer.parseInt(vertragsBeginn.substring(3, 5));
-                    calBeginn.set(vBeginnJahr, vBeginnMonat - 1, vBeginnTag, 0, 0, 0);
-                    parseDate = new java.util.Date(calBeginn.getTimeInMillis());
-                    parseDateSqlvBeginn = new java.sql.Date(parseDate.getTime());
-                    // Kündigungsfrist als int konvertieren
-                    kfrist = Integer.parseInt(kuendigungsfrist);
-                    if (kuendigungsfristEinheit.equals("Tage")) {
-                        vEndeJahr = 1970;
-                        vEndeMonat = 1;
-                        vEndeTag = 1 + kfrist;
-                    } else if (kuendigungsfristEinheit.equals("Wochen")) {
-                        vEndeJahr = 1970;
-                        vEndeMonat = 1;
-                        vEndeTag = 1;
-                    } else if (kuendigungsfristEinheit.equals("Monate")) {
-                        vEndeJahr = 1970;
-                        vEndeMonat = 1 + kfrist;
-                        vEndeTag = 1;
-                    }
-                    calEnde.set(vEndeJahr, vEndeMonat - 1, vEndeTag, 0, 0, 0);
-                    // Erstelle das neue Datum
-                    parseDate = new java.util.Date(
-                            calBeginn.getTimeInMillis()
-                            + calEnde.getTimeInMillis());
-                    // Erstelle das sql-Date für die Datenbank
-                    parseDateSqlvEnde = new java.sql.Date(parseDate.getTime());
+                // Wenn nur Vertragsbegonn & Laufzeit eingetragen wurden
+                // Übergebene Vertragsbeginn als Date parsen
+                parseDate = format.parse(vertragsBeginn);
+                parseDateSqlvBeginn = new java.sql.Date(parseDate.getTime());
+                // Kündigungsfrist als int konvertieren
+                vLaufzeit = Integer.parseInt(laufzeit);
+                if (laufzeitEinheit.equals("Tag(e)")) {
+                    vEndeJahr = 1970;
+                    vEndeMonat = 1;
+                    vEndeTag = 1 + vLaufzeit;
+                } else if (laufzeitEinheit.equals("Woche(n)")) {
+                    vEndeJahr = 1970;
+                    vEndeMonat = 1 + vLaufzeit;
+                    vEndeTag = 1;
+                } else if (laufzeitEinheit.equals("Jahr(e)")) {
+                    vEndeJahr = 1970 + vLaufzeit;
+                    vEndeMonat = 1;
+                    vEndeTag = 1;
                 }
-            } else {
-                ausgabe = ausgabe + ""
-                        + "Bitte geben Sie entweder die ein Vertragsbeginn "
-                        + "& die Laufzeit oder ein Vertragsende ein.!";
+                calEnde.set(vEndeJahr, vEndeMonat - 1, vEndeTag, 0, 0, 0);
+                // Erstelle das neue Datum
+                parseDate = new java.util.Date(
+                        calBeginn.getTimeInMillis()
+                        + calEnde.getTimeInMillis());
+                // Erstelle das sql-Date für die Datenbank
+                parseDateSqlvEnde = new java.sql.Date(parseDate.getTime());
+            } else if (!vertragsEnde.equals("")) {
+                // Übergebene Vertragsende als Date parsen
+                parseDate = format.parse(vertragsEnde);
+                // Erstelle das sql-Date für die Datenbank
+                parseDateSqlvEnde = new java.sql.Date(parseDate.getTime());
             }
         } else {
             ausgabe = ausgabe + ""
@@ -220,97 +215,97 @@ public class VertragServlet extends HttpServlet {
             ausgabe = ausgabe + ""
                     + "Bitte geben Sie die vertragliche Kündigungsfrist ein.!";
         }
-        
+
         // Überprüft, ob die Benachrichtigungsfrist nur Ziffern enthält
-        if (!benachrichtigungsfrist.equals("") 
+        if (!benachrichtigungsfrist.equals("")
                 && benachrichtigungsfrist.matches("[^0-9]")) {
-            ausgabe = ausgabe + 
-                    "Bei der Benachrichtigungsfrist sind nur Ziffern erlaubt.!";
+            ausgabe = ausgabe
+                    + "Bei der Benachrichtigungsfrist sind nur Ziffern erlaubt.!";
         }
 
         // Überprüft die optionalen Eingaben
-        switch (kategorie) {
-            case "Strom":
-                if (!stromNr.equals("")
-                        && stromNr.matches("[0-9]*")) {
-                    ausgabe = 
-                            "Ihr Stromnummer enthält "
-                            + "ungültige Zeichen & Ziffen.!";
-                }
-                if (!stromStand.equals("")
-                        && !stromStand.matches("[\\d]+")) {
-                    ausgabe = ausgabe + ""
-                            + "Beim Stromstand sind nur Ziffern erlaubt.!";
-                }
-                if (!stromVerbrauch.equals("")
-                        && !stromVerbrauch.matches("[\\d]+")) {
-                    ausgabe = ausgabe + ""
-                            + "Beim Stromverbrauch sind nur Ziffern erlaubt.!";
-                }
-                if (!stromPreis.equals("")
-                        && stromPreis.matches("[\\d]+[,][\\d]+")) {
-                    ausgabe = ausgabe
-                            + "Beim Strompreis sind nur ganze Zahlen "
-                            + "oder Fließkommazahlen erlaubt.!";
-                }
-                if (!stromPersonen.equals("")
-                        && stromPersonen.matches("[\\d]")) {
-                    ausgabe = ausgabe + "Bei der Personenangabe sind nur"
-                            + "ganze Ziffern erlaubt.!";
-                }
-                if (!stromGrundPreis.equals("")
-                        && stromGrundPreis.matches("[\\d]+[,][\\d]+")) {
-                    ausgabe = ausgabe + "Ihr Grundpreis enthält "
-                            + "ungültige Ziffern.!";
-                }
-                break;
-            case "Gas":
-                if (!gasNr.equals("")
-                        && gasNr.matches("[\\d]+?[\\d\\w-./]")) {
-                    ausgabe = "Ihr Gasnummer enthält "
-                            + "ungültige Zeichen & Ziffen.!";
-                }
-                if (!gasStand.equals("")
-                        && !gasStand.matches("[\\d]+")) {
-                    ausgabe = ausgabe + ""
-                            + "Beim Stromstand sind nur Ziffern erlaubt.!";
-                }
-                if (!gasVerbrauch.equals("")
-                        && !gasVerbrauch.matches("[\\d]+")) {
-                    ausgabe = ausgabe + ""
-                            + "Beim Stromverbrauch sind nur Ziffern erlaubt.!";
-                }
-                if (!gasPreis.equals("")
-                        && gasPreis.matches("[\\d]+[,][\\d]+")) {
-                    ausgabe = ausgabe
-                            + "Beim Strompreis sind nur ganze Zahlen "
-                            + "oder Fließkommazahlen erlaubt.!";
-                }
-                if (!gasFlaeche.equals("")
-                        && gasFlaeche.matches("[\\d]+[,][\\d]+")) {
-                    ausgabe = ausgabe
-                            + "Bei der Gasfläche sind nur ganze Zahlen "
-                            + "oder Fließkommazahlen erlaubt.!";
-                }
-                break;
-            case "Festnetz/DSL":
-                break;
-            case "Handy":
-                if (!handyNr.equals("")
-                        && handyNr.matches("[01]{2}[5-7][1-9]{1}[\\d]{6,}")) {
-                    ausgabe = ausgabe + ""
-                            + "Die Handynummer enthält ungültige Ziffern.!";
-                }
-                break;
-            case "Zeitschriften":
-                if (!zeitschriftIntervall.equals("")
-                        && zeitschriftIntervall.matches("[\\d]")) {
-                    ausgabe = ausgabe + ""
-                            + "Der Zeitschriftenintervall akzeptiert "
-                            + "nur Ziffern.!";
-                }
-                break;
-        }
+//        switch (kategorie) {
+//            case "Strom":
+//                if (!stromNr.equals("")
+//                        && stromNr.matches("[0-9]*")) {
+//                    ausgabe
+//                            = "Ihr Stromnummer enthält "
+//                            + "ungültige Zeichen & Ziffen.!";
+//                }
+//                if (!stromStand.equals("")
+//                        && !stromStand.matches("[\\d]+")) {
+//                    ausgabe = ausgabe + ""
+//                            + "Beim Stromstand sind nur Ziffern erlaubt.!";
+//                }
+//                if (!stromVerbrauch.equals("")
+//                        && !stromVerbrauch.matches("[\\d]+")) {
+//                    ausgabe = ausgabe + ""
+//                            + "Beim Stromverbrauch sind nur Ziffern erlaubt.!";
+//                }
+//                if (!stromPreis.equals("")
+//                        && stromPreis.matches("[\\d]+[,][\\d]+")) {
+//                    ausgabe = ausgabe
+//                            + "Beim Strompreis sind nur ganze Zahlen "
+//                            + "oder Fließkommazahlen erlaubt.!";
+//                }
+//                if (!stromPersonen.equals("")
+//                        && stromPersonen.matches("[\\d]")) {
+//                    ausgabe = ausgabe + "Bei der Personenangabe sind nur"
+//                            + "ganze Ziffern erlaubt.!";
+//                }
+//                if (!stromGrundPreis.equals("")
+//                        && stromGrundPreis.matches("[\\d]+[,][\\d]+")) {
+//                    ausgabe = ausgabe + "Ihr Grundpreis enthält "
+//                            + "ungültige Ziffern.!";
+//                }
+//                break;
+//            case "Gas":
+//                if (!gasNr.equals("")
+//                        && gasNr.matches("[\\d]+?[\\d\\w-./]")) {
+//                    ausgabe = "Ihr Gasnummer enthält "
+//                            + "ungültige Zeichen & Ziffen.!";
+//                }
+//                if (!gasStand.equals("")
+//                        && !gasStand.matches("[\\d]+")) {
+//                    ausgabe = ausgabe + ""
+//                            + "Beim Stromstand sind nur Ziffern erlaubt.!";
+//                }
+//                if (!gasVerbrauch.equals("")
+//                        && !gasVerbrauch.matches("[\\d]+")) {
+//                    ausgabe = ausgabe + ""
+//                            + "Beim Stromverbrauch sind nur Ziffern erlaubt.!";
+//                }
+//                if (!gasPreis.equals("")
+//                        && gasPreis.matches("[\\d]+[,][\\d]+")) {
+//                    ausgabe = ausgabe
+//                            + "Beim Strompreis sind nur ganze Zahlen "
+//                            + "oder Fließkommazahlen erlaubt.!";
+//                }
+//                if (!gasFlaeche.equals("")
+//                        && gasFlaeche.matches("[\\d]+[,][\\d]+")) {
+//                    ausgabe = ausgabe
+//                            + "Bei der Gasfläche sind nur ganze Zahlen "
+//                            + "oder Fließkommazahlen erlaubt.!";
+//                }
+//                break;
+//            case "Festnetz/DSL":
+//                break;
+//            case "Handy":
+//                if (!handyNr.equals("")
+//                        && handyNr.matches("[01]{2}[5-7][1-9]{1}[\\d]{6,}")) {
+//                    ausgabe = ausgabe + ""
+//                            + "Die Handynummer enthält ungültige Ziffern.!";
+//                }
+//                break;
+//            case "Zeitschriften":
+//                if (!zeitschriftIntervall.equals("")
+//                        && zeitschriftIntervall.matches("[0-9]")) {
+//                    ausgabe = ausgabe + ""
+//                            + "Der Zeitschriftenintervall akzeptiert "
+//                            + "nur Ziffern.!";
+//                }
+//                break;
+//        }
 
         // Wenn nichts im Ausgabestring steht, sind die Eingaben korrekt
         // und es kann fortgesetzt werden
@@ -326,7 +321,11 @@ public class VertragServlet extends HttpServlet {
                     neuStromvertrag.setVertragNr(vertragsNr);
                     neuStromvertrag.setVertragStatus(new DatenZugriffsObjekt().getVertragsStatus(Konstanten.ID_VERTRAGSSTATUS_AKTIV));
                     neuStromvertrag.setVertragBeginn(parseDateSqlvBeginn);
-                    neuStromvertrag.setLaufzeit(Integer.parseInt(laufzeit));
+                    if (laufzeit.equals("")) {
+                        neuStromvertrag.setLaufzeit(0);
+                    } else {
+                        neuStromvertrag.setLaufzeit(Integer.parseInt(laufzeit));
+                    }
                     neuStromvertrag.setLaufzeitEinheit(getZeitEinheit(laufzeitEinheit));
                     neuStromvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuStromvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
@@ -338,7 +337,7 @@ public class VertragServlet extends HttpServlet {
                         neuStromvertrag.setBenachrichtigungsfrist(0);
                     } else {
                         neuStromvertrag.setBenachrichtigungsfrist(Integer.parseInt(benachrichtigungsfrist));
-                    }                    
+                    }
                     neuStromvertrag.setBenachrichtigungsfristEinheit(getZeitEinheit(benachrichtigungsfristEinheit));
                     neuStromvertrag.setStromzaehlerNr(stromNr);
                     if (stromStand.equals("")) {
@@ -380,7 +379,11 @@ public class VertragServlet extends HttpServlet {
                     neuGasvertrag.setVertragNr(vertragsNr);
                     neuGasvertrag.setVertragStatus(new DatenZugriffsObjekt().getVertragsStatus(Konstanten.ID_VERTRAGSSTATUS_AKTIV));
                     neuGasvertrag.setVertragBeginn(parseDateSqlvBeginn);
-                    neuGasvertrag.setLaufzeit(Integer.parseInt(laufzeit));
+                    if (laufzeit.equals("")) {
+                        neuGasvertrag.setLaufzeit(0);
+                    } else {
+                        neuGasvertrag.setLaufzeit(Integer.parseInt(laufzeit));
+                    }
                     neuGasvertrag.setLaufzeitEinheit(getZeitEinheit(laufzeitEinheit));
                     neuGasvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuGasvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
@@ -392,7 +395,7 @@ public class VertragServlet extends HttpServlet {
                         neuGasvertrag.setBenachrichtigungsfrist(0);
                     } else {
                         neuGasvertrag.setBenachrichtigungsfrist(Integer.parseInt(benachrichtigungsfrist));
-                    }                    
+                    }
                     neuGasvertrag.setBenachrichtigungsfristEinheit(getZeitEinheit(benachrichtigungsfristEinheit));
                     neuGasvertrag.setGaszaehlerNr(gasNr);
                     if (gasStand.equals("")) {
@@ -404,17 +407,17 @@ public class VertragServlet extends HttpServlet {
                         neuGasvertrag.setVerbrauchProJahr(0);
                     } else {
                         neuGasvertrag.setVerbrauchProJahr(Integer.parseInt(gasVerbrauch));
-                    }                    
+                    }
                     if (gasPreis.equals("")) {
                         neuGasvertrag.setPreisProKhw(0);
                     } else {
                         neuGasvertrag.setPreisProKhw(Float.parseFloat(gasPreis));
-                    }  
+                    }
                     if (gasFlaeche.equals("")) {
                         neuGasvertrag.setVerbrauchsFlaeche(0);
                     } else {
                         neuGasvertrag.setVerbrauchsFlaeche(Float.parseFloat(gasFlaeche));
-                    }  
+                    }
 
                     // Zugriff auf DAO, damit die Daten in der DB
                     // gespeichert werden
@@ -430,6 +433,11 @@ public class VertragServlet extends HttpServlet {
                     neuFestnetzvertrag.setVertragStatus(new DatenZugriffsObjekt().getVertragsStatus(Konstanten.ID_VERTRAGSSTATUS_AKTIV));
                     neuFestnetzvertrag.setVertragBeginn(parseDateSqlvBeginn);
                     neuFestnetzvertrag.setVertragBeginn(parseDate);
+                    if (laufzeit.equals("")) {
+                        neuFestnetzvertrag.setLaufzeit(0);
+                    } else {
+                        neuFestnetzvertrag.setLaufzeit(Integer.parseInt(laufzeit));
+                    }
                     neuFestnetzvertrag.setLaufzeit(Integer.parseInt(laufzeit));
                     neuFestnetzvertrag.setLaufzeitEinheit(getZeitEinheit(laufzeitEinheit));
                     neuFestnetzvertrag.setVertragEnde(parseDateSqlvEnde);
@@ -443,7 +451,7 @@ public class VertragServlet extends HttpServlet {
                         neuFestnetzvertrag.setBenachrichtigungsfrist(0);
                     } else {
                         neuFestnetzvertrag.setBenachrichtigungsfrist(Integer.parseInt(benachrichtigungsfrist));
-                    }                    
+                    }
                     neuFestnetzvertrag.setBenachrichtigungsfristEinheit(getZeitEinheit(benachrichtigungsfristEinheit));
                     neuFestnetzvertrag.setTarifname(festnetzTarif);
                     neuFestnetzvertrag.setNetztypp(getNetztyp(festnetzEmpfang));
@@ -471,6 +479,11 @@ public class VertragServlet extends HttpServlet {
                     neuHandyvertrag.setVertragNr(vertragsNr);
                     neuHandyvertrag.setVertragStatus(new DatenZugriffsObjekt().getVertragsStatus(Konstanten.ID_VERTRAGSSTATUS_AKTIV));
                     neuHandyvertrag.setVertragBeginn(parseDateSqlvBeginn);
+                    if (laufzeit.equals("")) {
+                        neuHandyvertrag.setLaufzeit(0);
+                    } else {
+                        neuHandyvertrag.setLaufzeit(Integer.parseInt(laufzeit));
+                    }
                     neuHandyvertrag.setLaufzeit(Integer.parseInt(laufzeit));
                     neuHandyvertrag.setLaufzeitEinheit(getZeitEinheit(laufzeitEinheit));
                     neuHandyvertrag.setVertragEnde(parseDateSqlvEnde);
@@ -483,7 +496,7 @@ public class VertragServlet extends HttpServlet {
                         neuHandyvertrag.setBenachrichtigungsfrist(0);
                     } else {
                         neuHandyvertrag.setBenachrichtigungsfrist(Integer.parseInt(benachrichtigungsfrist));
-                    }                    
+                    }
                     neuHandyvertrag.setBenachrichtigungsfristEinheit(getZeitEinheit(benachrichtigungsfristEinheit));
                     neuHandyvertrag.setTarifname(handyTarif);
                     neuHandyvertrag.setNetztyp(getNetztyp(handyNetz));
@@ -502,7 +515,11 @@ public class VertragServlet extends HttpServlet {
                     neuZeitschriftvertrag.setVertragNr(vertragsNr);
                     neuZeitschriftvertrag.setVertragStatus(new DatenZugriffsObjekt().getVertragsStatus(Konstanten.ID_VERTRAGSSTATUS_AKTIV));
                     neuZeitschriftvertrag.setVertragBeginn(parseDateSqlvBeginn);
-                    neuZeitschriftvertrag.setLaufzeit(Integer.parseInt(laufzeit));
+                    if (laufzeit.equals("")) {
+                        neuZeitschriftvertrag.setLaufzeit(0);
+                    } else {
+                        neuZeitschriftvertrag.setLaufzeit(Integer.parseInt(laufzeit));
+                    }
                     neuZeitschriftvertrag.setLaufzeitEinheit(getZeitEinheit(laufzeitEinheit));
                     neuZeitschriftvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuZeitschriftvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
@@ -514,14 +531,14 @@ public class VertragServlet extends HttpServlet {
                         neuZeitschriftvertrag.setBenachrichtigungsfrist(0);
                     } else {
                         neuZeitschriftvertrag.setBenachrichtigungsfrist(Integer.parseInt(benachrichtigungsfrist));
-                    }                    
+                    }
                     neuZeitschriftvertrag.setBenachrichtigungsfristEinheit(getZeitEinheit(benachrichtigungsfristEinheit));
                     neuZeitschriftvertrag.setZeitschriftName(zeitschriftName);
                     if (zeitschriftIntervall.equals("")) {
                         neuZeitschriftvertrag.setLieferintervall(0);
                     } else {
                         neuZeitschriftvertrag.setLieferintervall(Integer.parseInt(zeitschriftIntervall));
-                    }                    
+                    }
                     neuZeitschriftvertrag.setLieferintervallEinheit(getZeitEinheit(zeitschriftEinheit));
                     neuZeitschriftvertrag.setInteressengebiet(getInteressengebiet(zeitschriftGebiet));
 
@@ -553,8 +570,6 @@ public class VertragServlet extends HttpServlet {
             request.getRequestDispatcher("/user.jsp").forward(request, response);
         }
     }
-    
-    
 
     public void searchContract(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
@@ -592,15 +607,13 @@ public class VertragServlet extends HttpServlet {
             request.getRequestDispatcher("/user.jsp").forward(request, response);
         }
     }
-    
+
     /**
-     * Ersteller: Sascha Jungenkrüger 
-     * Erstelldatum: 29.07.2015 
-     * Version: 1.0
-     * Änderungen: 1.0 - Erstellung 
-     * 
+     * Ersteller: Sascha Jungenkrüger Erstelldatum: 29.07.2015 Version: 1.0
+     * Änderungen: 1.0 - Erstellung
+     *
      * @param art Die gewählte Zeiteinheit aus dem Formular
-     * 
+     *
      * @return Das Objekt der ausgewählten Zeiteinheit
      */
     public Zeit_Einheit getZeitEinheit(String art) {
@@ -621,15 +634,13 @@ public class VertragServlet extends HttpServlet {
         }
         return new DatenZugriffsObjekt().getZeitEinheit(zeiteinheitID);
     }
-    
+
     /**
-     * Ersteller: Sascha Jungenkrüger 
-     * Erstelldatum: 29.07.2015 
-     * Version: 1.0
-     * Änderungen: 1.0 - Erstellung 
-     * 
-     * @param netztyp 
-     * @return 
+     * Ersteller: Sascha Jungenkrüger Erstelldatum: 29.07.2015 Version: 1.0
+     * Änderungen: 1.0 - Erstellung
+     *
+     * @param netztyp
+     * @return
      */
     public Netztyp getNetztyp(String netztyp) {
         int netztypID = 0;
@@ -658,15 +669,13 @@ public class VertragServlet extends HttpServlet {
         }
         return new DatenZugriffsObjekt().getNetztyp(netztypID);
     }
-    
+
     /**
-     * Ersteller: Sascha Jungenkrüger 
-     * Erstelldatum: 29.07.2015 
-     * Version: 1.0
-     * Änderungen: 1.0 - Erstellung 
-     * 
+     * Ersteller: Sascha Jungenkrüger Erstelldatum: 29.07.2015 Version: 1.0
+     * Änderungen: 1.0 - Erstellung
+     *
      * @param gebiet Die gewählte Zeiteinheit aus dem Formular
-     * 
+     *
      * @return Das Objekt der ausgewählten Zeiteinheit
      */
     public Interessengebiet getInteressengebiet(String gebiet) {
@@ -714,7 +723,7 @@ public class VertragServlet extends HttpServlet {
         }
         return new DatenZugriffsObjekt().getInteressengebiet(gebietID);
     }
-    
+
     public String aenderUmlaute(String begriff) {
         if (begriff.contains("Ã¤")) {
             begriff = begriff.replace("Ã¤", "ae");

@@ -98,7 +98,6 @@ public class DatenZugriffsObjekt {
     public Collection<Vertrag> searchContract(String suchText, Kunde k) {
         Collection<Vertrag> vertraegeErg = null, vertraegeErg2 = null;
         java.util.Date beginn = null, ende = null;
-        int kundenNr = 0;
         SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 
         try {
@@ -112,8 +111,8 @@ public class DatenZugriffsObjekt {
             ende = null;
         }
         
-        suchText = suchText.replace("*", "%");
-
+        suchText = "%" + suchText + "%";
+                // Hiermit werden alle Verträge des Kunden gesucht
         vertraegeErg = this.entityManager.createQuery(
                 "SELECT v FROM Vertrag v WHERE "
                 + "v.kunde.benutzerId = " + k.getBenutzerId() + " "
@@ -121,12 +120,6 @@ public class DatenZugriffsObjekt {
                 + "OR v.vertragsBezeichnung LIKE '" + suchText + "' "
                 + "OR v.kundenNr LIKE '" + suchText + "' "
                 + "OR v.vertragsPartner LIKE '" + suchText + "'").getResultList();
-        // Hiermit werden alle Verträge des Kunden gesucht
-        // um die Daten mit dem Suchbegriff einzeln abzugleichen
-//        vertraegeErg2
-//                = this.entityManager.createQuery("SELECT v FROM Vertrag v WHERE"
-//                        + " v.kunde.benutzerId = " + k.getBenutzerId() + "")
-//                .getResultList();
 
 //        if (!vertraegeErg2.isEmpty()) {
 //            for (Vertrag v : vertraegeErg2) {
