@@ -57,6 +57,8 @@ public class VertragServlet extends HttpServlet {
             this.saveContract(request, response);
         } else if (request.getParameter("search") != null) {
             this.searchContract(request, response);
+        } else if (request.getParameter("change") != null) {
+            
         }
 
     }
@@ -570,7 +572,20 @@ public class VertragServlet extends HttpServlet {
             request.getRequestDispatcher("/user.jsp").forward(request, response);
         }
     }
-
+    
+    /**
+     * Ersteller:   Sascha Jungenkrüger
+     * Datum:       12.06.2015
+     * Version:     1.0 Sascha Jungenkrüger
+     *              1.1 Sascha Jungenkrüger 15.07.2015
+     *              - Vertragssuche über die neuen Formulardaten angepasst
+     * Änderungen:  -
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     * @throws ParseException 
+     */
     public void searchContract(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
         HttpSession session = request.getSession();
