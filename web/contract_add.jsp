@@ -178,7 +178,7 @@ Veränderungen:	-
                         <p>
                             <span class="span_reg">Preis pro kWh (in Cent):</span>
                             <input class="contact" type="text" name="spreisKwh"
-                                   pattern="[\\d]+[,][\\d]+" title="Es sind nur Fließkommazahlen erlaubt!"
+                                   pattern="[1-9][0-9]{0,}[,][0-9]+" title="Es sind nur Fließkommazahlen erlaubt!"
                                    value="<%= request.getParameter("spreisKwh") != null
                                            ? request.getParameter("spreisKwh") : ""%>">
                         </p>
@@ -222,14 +222,14 @@ Veränderungen:	-
                         <p>
                             <span class="span_reg">Preis pro kWh:</span>
                             <input class="contact" type="text" name="gpreisKwh"
-                                   pattern="[\\d]+[,][\\d]+" title="Es sind nur Fließkommazahlen erlaubt!"
+                                   pattern="[1-9][0-9]{0,}[,][0-9]+" title="Es sind nur Fließkommazahlen erlaubt!"
                                    value="<%= request.getParameter("gpreisKwh") != null
                                            ? request.getParameter("gpreisKwh") : ""%>">
                         </p>
                         <p>
                             <span class="span_reg">Verbrauchsfläche (in m²):</span>
                             <input class="contact" type="text" name="gflaeche"
-                                   pattern="[0-9]" title="Es sind nur Ziffern erlaubt."
+                                   pattern="[1-9][0-9]{0,}" title="Es sind nur Ziffern erlaubt."
                                    value="<%= request.getParameter("gflaeche") != null
                                            ? request.getParameter("gflaeche") : ""%>">
                         </p>

@@ -109,7 +109,7 @@ public class Benutzer implements java.io.Serializable {
     }
 
     public void setPasswort(String passwort) {
-        this.passwort = passwort;
+        this.passwort = createHash(passwort);
     }
 
     @Override

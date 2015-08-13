@@ -58,24 +58,30 @@ public class Vertrag implements Serializable {
     @ManyToOne
     @JoinColumn(name = "BENACHRICHTIGUNGSFRIST_EINHEIT")
     private Zeit_Einheit benachrichtigungsfristEinheit;
-    
+
     @Column(name = "VERTRAGSBEZEICHNUNG")
     private String vertragsBezeichnung;
-    
+
     @ManyToOne
-    @JoinColumn (name = "LIEFERANSCHRIFT")
+    @JoinColumn(name = "LIEFERANSCHRIFT")
     private Adresse lieferAnschrift;
 
     @ManyToOne
-    @JoinColumn (name = "RECHNUNGSANSCHRIFT")
+    @JoinColumn(name = "RECHNUNGSANSCHRIFT")
     private Adresse rechnungsAnschrift;
-    
-    @Column (name = "VERTRAGS_PARTNER")
+
+    @Column(name = "VERTRAGS_PARTNER")
     private String vertragsPartner;
-    
-    @Column (name = "KUNDEN_NR")
+
+    @Column(name = "KUNDEN_NR")
     private String kundenNr;
+
+    @Column(name = "BENACHRICHTIGUNG_VERSAND", nullable = false, columnDefinition = "boolean default false")
+    private boolean benachrichtigungVersand;
     
+    @Column(name="IST_GELOESCHT", columnDefinition = "boolean default false")
+    private boolean istGeloescht;
+
     public int getVertragId() {
         return vertragId;
     }
@@ -103,7 +109,7 @@ public class Vertrag implements Serializable {
     public void setKundenNr(String kundenNr) {
         this.kundenNr = kundenNr;
     }
-    
+
     public Vertrag() {
     }
 
@@ -130,13 +136,19 @@ public class Vertrag implements Serializable {
     public void setVertragArt(Vertrag_Art vertragArt) {
         this.vertragArt = vertragArt;
     }
-    
+
     public Date getVertragEnde() {
         return vertragEnde;
     }
 
     public void setVertragEnde(Date vertragEnde) {
-        this.vertragEnde = vertragEnde;
+        if (this.vertragEnde == null) {
+            this.vertragEnde = vertragEnde;
+            this.benachrichtigungVersand = false;
+        } else if (vertragEnde.compareTo(this.vertragEnde) != 0) {
+            this.vertragEnde = vertragEnde;
+            this.benachrichtigungVersand = false;
+        }
     }
 
     public Date getVertragBeginn() {
@@ -160,7 +172,10 @@ public class Vertrag implements Serializable {
     }
 
     public void setKuendigungsfrist(int kuendigungsfrist) {
-        this.kuendigungsfrist = kuendigungsfrist;
+        if (this.kuendigungsfrist != kuendigungsfrist) {
+            this.kuendigungsfrist = kuendigungsfrist;
+            this.benachrichtigungVersand = false;
+        }
     }
 
     public int getLaufzeit() {
@@ -168,7 +183,10 @@ public class Vertrag implements Serializable {
     }
 
     public void setLaufzeit(int laufzeit) {
-        this.laufzeit = laufzeit;
+        if (this.laufzeit != laufzeit) {
+            this.laufzeit = laufzeit;
+            this.benachrichtigungVersand = false;
+        }
     }
 
     public Zeit_Einheit getKuendigungsfristEinheit() {
@@ -176,7 +194,10 @@ public class Vertrag implements Serializable {
     }
 
     public void setKuendigungsfristEinheit(Zeit_Einheit kuendigungsfristEinheit) {
-        this.kuendigungsfristEinheit = kuendigungsfristEinheit;
+        if (this.kuendigungsfristEinheit != kuendigungsfristEinheit) {
+            this.kuendigungsfristEinheit = kuendigungsfristEinheit;
+            this.benachrichtigungVersand = false;
+        }
     }
 
     public Zeit_Einheit getLaufzeitEinheit() {
@@ -184,7 +205,10 @@ public class Vertrag implements Serializable {
     }
 
     public void setLaufzeitEinheit(Zeit_Einheit laufzeitEinheit) {
-        this.laufzeitEinheit = laufzeitEinheit;
+        if (this.laufzeitEinheit != laufzeitEinheit) {
+            this.laufzeitEinheit = laufzeitEinheit;
+            this.benachrichtigungVersand = false;
+        }
     }
 
     public int getBenachrichtigungsfrist() {
@@ -192,7 +216,10 @@ public class Vertrag implements Serializable {
     }
 
     public void setBenachrichtigungsfrist(int benachrichtigungsfrist) {
-        this.benachrichtigungsfrist = benachrichtigungsfrist;
+        if (this.benachrichtigungsfrist != benachrichtigungsfrist) {
+            this.benachrichtigungsfrist = benachrichtigungsfrist;
+            this.benachrichtigungVersand = false;
+        }
     }
 
     public Zeit_Einheit getBenachrichtigungsfristEinheit() {
@@ -200,7 +227,44 @@ public class Vertrag implements Serializable {
     }
 
     public void setBenachrichtigungsfristEinheit(Zeit_Einheit benachrichtigungsfristEinheit) {
-        this.benachrichtigungsfristEinheit = benachrichtigungsfristEinheit;
+        if (this.benachrichtigungVersand != false) {
+            this.benachrichtigungsfristEinheit = benachrichtigungsfristEinheit;
+            this.benachrichtigungVersand = false;
+        } else {
+            this.benachrichtigungsfristEinheit = benachrichtigungsfristEinheit;
+        }
+    }
+
+    public Adresse getLieferAnschrift() {
+        return lieferAnschrift;
+    }
+
+    public void setLieferAnschrift(Adresse lieferAnschrift) {
+        this.lieferAnschrift = lieferAnschrift;
+    }
+
+    public Adresse getRechnungsAnschrift() {
+        return rechnungsAnschrift;
+    }
+
+    public void setRechnungsAnschrift(Adresse rechnungsAnschrift) {
+        this.rechnungsAnschrift = rechnungsAnschrift;
+    }
+
+    public boolean isBenachrichtigungVersand() {
+        return benachrichtigungVersand;
+    }
+
+    public void setBenachrichtigungVersand(boolean benachrichtigungVersand) {
+        this.benachrichtigungVersand = benachrichtigungVersand;
+    }
+    
+    public boolean isIstGeloescht() {
+        return istGeloescht;
+    }
+
+    public void setIstGeloescht(boolean istGeloescht) {
+        this.istGeloescht = istGeloescht;
     }
 
     @Override

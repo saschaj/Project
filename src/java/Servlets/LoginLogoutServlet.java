@@ -15,7 +15,9 @@ package Servlets;
 
 import Entitys.Benutzer;
 import Hilfsklassen.Konstanten;
+import Hilfsklassen.PasswortErzeuger;
 import Manager.DatenZugriffsObjekt;
+import Manager.EmailHandler;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -41,18 +43,17 @@ public class LoginLogoutServlet extends HttpServlet {
             throws ServletException, IOException {
 
         // Deklaration des Hilfsvariablen für die demenstprechenden Funktionen
-
         String meta = "", ausgabe = "";
+        boolean sendeMail = false;
 
         // Initialisierung der verschiedenen Verlinkungen
         String login = request.getParameter("login");
         String register = request.getParameter("register");
         String getPassword = request.getParameter("get_pw");
         String logout = request.getParameter("logout");
-        
+        String email = request.getParameter("login_email");
         //Aktion die das Servlet anstoßen soll.
         String aktion = request.getParameter(Konstanten.URL_PARAM_AKTION);
-        
 
         // Überprüfung, welcher Button gedrückt wurde
         if (register != null) {
@@ -63,7 +64,14 @@ public class LoginLogoutServlet extends HttpServlet {
             //LogIn durchführen
             this.logIn(request, response);
         } else if (getPassword != null) {
-            ausgabe = "Ihnen wurde ein neues Passwort zugeschickt und werden automatisch weitergeleitet!";
+            if (email != null && !email.equals("")) {
+                sendeMail = true;
+                meta = "<meta http-equiv='refresh' content='2; URL=index.jsp'>";
+                ausgabe = "Ihnen wurde ein neues Passwort zugeschickt. Sie werden automatisch weitergeleitet!";
+
+            } else {
+                ausgabe = "Geben Sie ihre E-Mail-Adresse an.";
+            }
         } else if (aktion != null && aktion.equals(Konstanten.URL_AKTION_LOGOUT)) {
             //Ausloggen
             this.logOut(request, response);
@@ -87,14 +95,26 @@ public class LoginLogoutServlet extends HttpServlet {
             out.println("</body>");
             out.println("</html>");
         }
+        if (sendeMail) {
+            passwortZuruecksetzen(email);
+
+        }
+    }
+
+    private void passwortZuruecksetzen(String email) {
+        DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+        PasswortErzeuger p = new PasswortErzeuger();
+        String neuesPasswort = p.getNewPasswort();
+        Benutzer b = dao.getBenutzer(email);
+        b.setPasswort(neuesPasswort);
+        dao.addBenutzer(b);
+        EmailHandler emailer = new EmailHandler();
+        emailer.sendPasswortMail(email);
     }
 
     /**
-     * Ersteller:       Sascha Jungenkrüger
-     * Erstelldatum:    01.06.2015
-     * Methode:         register
-     * Version:         1.0
-     * Änderungen:      -
+     * Ersteller: Sascha Jungenkrüger Erstelldatum: 01.06.2015 Methode: register
+     * Version: 1.0 Änderungen: -
      *
      * @param request
      * @param response
@@ -183,7 +203,7 @@ public class LoginLogoutServlet extends HttpServlet {
             if (eMailIsAvailable) {
                 // Registrierung wird durchgeführt
                 // Boolscher Rückgabewert wird in isRegister gespeichert
-                isRegister = dao.register(vname, name, email1, ben.createHash(pw1));
+                isRegister = dao.register(vname, name, email1, pw1);
                 // Überprüfung, ob die Registrierung erfolgreich war
                 if (isRegister) {
                     meta = "<meta http-equiv='refresh' content='2; URL=index.jsp'>";
@@ -206,6 +226,9 @@ public class LoginLogoutServlet extends HttpServlet {
                         out.println("</body>");
                         out.println("</html>");
                     }
+                    EmailHandler emailer = new EmailHandler();
+                    emailer.sendRegisterMail("Registrierung für " + vname + " "
+                            + name + " erfolgt", email1, pw1);
                 }
             } else {
                 ausgabe = "Ihre E-Mail-Adresse ist schon vorhanden!";
@@ -237,11 +260,8 @@ public class LoginLogoutServlet extends HttpServlet {
     }
 
     /**
-     * Ersteller:	René Kanzenbach
-     * Erstelldatum:    02.06.2015
-     * Methode:         logIn
-     * Version:         1.0 
-     * Änderungen:      -
+     * Ersteller:	René Kanzenbach Erstelldatum: 02.06.2015 Methode: logIn
+     * Version: 1.0 Änderungen: -
      *
      * @param request
      * @param response
@@ -293,11 +313,8 @@ public class LoginLogoutServlet extends HttpServlet {
 
     /**
      *
-     * Ersteller:       René Kanzenbach 
-     * Erstelldatum:    11.06.2015 
-     * Methode:         logOut
-     * Version:         1.0 
-     * Veränderungen:   -
+     * Ersteller: René Kanzenbach Erstelldatum: 11.06.2015 Methode: logOut
+     * Version: 1.0 Veränderungen: -
      *
      * Liest die aktuelle Session aus dem request und löst diese auf.
      *

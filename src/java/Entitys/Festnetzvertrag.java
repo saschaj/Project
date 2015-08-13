@@ -17,10 +17,10 @@ public class Festnetzvertrag extends Vertrag implements Serializable{
     @JoinColumn (name="NETZTYP_ID")
     private Netztyp netztypp;
     
-    @Column (name = "IST_ISDN")
+    @Column (name = "IST_ISDN", columnDefinition = "boolean default false")
     private boolean istISDN;
     
-    @Column (name = "IST_VOIP")
+    @Column (name = "IST_VOIP", columnDefinition = "boolean default false")
     private boolean istVOIP;
 
     public Festnetzvertrag() {

@@ -8,13 +8,10 @@ import java.util.Collection;
 import Hilfsklassen.Konstanten;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.PiePlot;
-import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 /**
@@ -65,6 +62,26 @@ public class DatenZugriffsObjekt {
 
     }
 
+    public boolean addBenutzer(Benutzer b) {
+        boolean addComplete = false;
+
+        try {
+            this.entityManager.getTransaction().begin();
+            this.entityManager.persist(b);
+            this.entityManager.getTransaction().commit();
+            addComplete = true;
+
+        } catch (RollbackException re) {
+
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
+        } catch (Throwable th) {
+            this.entityManager.getTransaction().rollback();
+        }
+
+        return addComplete;
+    }
+    
     public boolean isEmailAvailable(String email) {
         boolean isAvailable = false;
         String query = "select count(b) from Benutzer b where "
@@ -133,7 +150,6 @@ public class DatenZugriffsObjekt {
 //                }
 //            }
 //        }
-
         return vertraegeErg;
     }
 
@@ -213,14 +229,17 @@ public class DatenZugriffsObjekt {
     public Benutzer getBenutzer(String eMail) {
 
         List<Benutzer> benutzerListe;
+        Query query;
         Iterator iterator;
         Benutzer benutzer;
 
         //Benutzer mit gleicher EMail-Adresse suchen
-        benutzerListe = this.entityManager.createQuery(""
+        query = this.entityManager.createQuery(""
                 + "SELECT ben "
                 + "FROM Benutzer ben "
-                + "WHERE ben.email LIKE '" + eMail + "' ").getResultList();
+                + "WHERE ben.email LIKE '" + eMail + "' ");
+        query.setMaxResults(1);
+        benutzerListe = query.getResultList();
 
         //Iterator holen
         iterator = benutzerListe.iterator();
@@ -235,8 +254,8 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger 
-     * Datum: 29.07.2015 
+     * Ersteller: Sascha Jungenkrüger
+     * Datum: 29.07.2015
      * Methode: getEinheiten
      * Version: 1.0
      *
@@ -249,10 +268,10 @@ public class DatenZugriffsObjekt {
                 "SELECT einheit FROM Zeit_Einheit einheit"
         ).getResultList();
     }
-    
+
     /**
-     * Ersteller: Sascha Jungenkrüger 
-     * Datum: 29.07.2015 
+     * Ersteller: Sascha Jungenkrüger
+     * Datum: 29.07.2015
      * Methode: getEinheit
      * Version: 1.0
      *
@@ -266,9 +285,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger 
-     * Datum: 29.07.2015 
-     * Methode: getInteressengebiete 
+     * Ersteller: Sascha Jungenkrüger
+     * Datum: 29.07.2015
+     * Methode: getInteressengebiete
      * Version: 1.0
      *
      * Liest alle Interessengebiete aus der Datenbank und gibt Sie zurück.
@@ -280,10 +299,10 @@ public class DatenZugriffsObjekt {
                 "SELECT gebiet FROM Interessengebiet gebiet"
         ).getResultList();
     }
-    
+
     /**
-     * Ersteller: Sascha Jungenkrüger 
-     * Datum: 29.07.2015 
+     * Ersteller: Sascha Jungenkrüger
+     * Datum: 29.07.2015
      * Methode: getInteressengebiet
      * Version: 1.0
      *
@@ -295,27 +314,28 @@ public class DatenZugriffsObjekt {
     public Interessengebiet getInteressengebiet(int gebietID) {
         return this.entityManager.find(Interessengebiet.class, gebietID);
     }
-    
+
     /**
-     * Ersteller: Sascha Jungenkrüger 
-     * Datum: 29.07.2015 
-     * Methode: getNetztyp 
+     * Ersteller: Sascha Jungenkrüger
+     * Datum: 29.07.2015
+     * Methode: getNetztyp
      * Version: 1.0
-     * 
+     *
      * @param netztypID Primärschlüssel für ein Netztyp-Objekt
      * @return Liefert ein Objekt der übergebenen ID zurück
      */
     public Netztyp getNetztyp(int netztypID) {
-        return this.entityManager.find(Netztyp.class,netztypID);
+        return this.entityManager.find(Netztyp.class, netztypID);
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger 
-     * Datum: 29.07.2015 
+     * Ersteller: Sascha Jungenkrüger
+     * Datum: 29.07.2015
      * Methode: getNetztypen
      * Version: 1.0
      *
      * Liest alle Netztypen aus der Datenbank und gibt Sie zurück.
+     *
      * @param istHandyTyp true oder false
      * @param istFestnetzTyp true oder false
      * @return Eine Liste mit allen Netztypen der Datenbank
@@ -323,15 +343,15 @@ public class DatenZugriffsObjekt {
     public List<Netztyp> getNetztypen(boolean istHandyTyp, boolean istFestnetzTyp) {
         Query query = this.entityManager.createQuery(
                 "SELECT typ FROM Netztyp typ "
-                        + "WHERE typ.istHandyTyp = :HandyTyp "
-                        + "OR typ.istFestnetzTyp = :FestnetzTyp"
+                + "WHERE typ.istHandyTyp = :HandyTyp "
+                + "OR typ.istFestnetzTyp = :FestnetzTyp"
         );
         query.setParameter("HandyTyp", istHandyTyp);
         query.setParameter("FestnetzTyp", istFestnetzTyp);
 
         return query.getResultList();
-    }    
-    
+    }
+
     /**
      * Ersteller: Sascha Jungenkrüger 
      * Datum: 29.07.2015 
@@ -356,33 +376,35 @@ public class DatenZugriffsObjekt {
      *
      * Liest eine Vertragsart über den übergebenen Index aus der Datenbank
      * und liefert das entsprechende Objekt zurück.
-     * 
+     *
      * @param artID Primärschlüssel für ein Objekt der Vertragsart
      * @return Ein Objekt der gewünschten VertragsArt der Datenbank
      */
     public Vertrag_Art getVertragsArt(int artID) {
         return this.entityManager.find(Vertrag_Art.class, artID);
     }
-    
+
     /**
-     * Ersteller: Sascha Jungenkrüger 
-     * Datum: 29.07.2015 
+     * Ersteller: Sascha Jungenkrüger
+     * Datum: 29.07.2015
      * Methode: getVertragsStatus
      * Version: 1.0
      *
      * Liest eine VertragsStatus über den übergebenen Index aus der Datenbank
      * und liefert das entsprechende Objekt zurück.
-     * 
+     *
      * @param statusID Primärschlüssel für ein Objekt der VertragsStatus
      * @return Ein Objekt des gewünschten VertragsStatus
      */
     public Vertrag_Status getVertragsStatus(int statusID) {
         return this.entityManager.find(Vertrag_Status.class, statusID);
     }
-    
 
     /**
-     * Ersteller: René Kanzenbach Datum: 28.07.2015 Version: 1.0 Änderungen: -
+     * Ersteller: René Kanzenbach 
+     * Datum: 28.07.2015 
+     * Version: 1.0 
+     * Änderungen: -
      *
      * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Benutzer im System
      * registriert sind und welchen Status diese besitzen.
@@ -429,7 +451,10 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach Datum: 28.07.2015 Version: 1.0 Änderungen: -
+     * Ersteller: René Kanzenbach 
+     * Datum: 28.07.2015 
+     * Version: 1.0 
+     * Änderungen: -
      *
      * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Vertraege im
      * System registriert sind und was es fuer Vertraege sind.
@@ -479,7 +504,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach Erstelldatum: 27.07.2015 Version: 1.0
+     * Ersteller: René Kanzenbach 
+     * Erstelldatum: 27.07.2015 
+     * Version: 1.0
      * Veränderungen: -
      *
      * Gibt alle Benutzer zurück, die sich in der Datenbank befinden, unabhängig
@@ -503,7 +530,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach Erstelldatum: 28.07.2015 Version: 1.0
+     * Ersteller: René Kanzenbach 
+     * Erstelldatum: 28.07.2015 
+     * Version: 1.0
      * Veränderungen: -
      *
      * Gibt alle Vertraege zurück, die sich in der Datenbank befinden.
@@ -526,7 +555,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach Erstelldatum: 04.08.2015 Version: 1.0
+     * Ersteller: René Kanzenbach
+     * Erstelldatum: 04.08.2015
+     * Version: 1.0
      * Veränderungen: -
      *
      * Sucht Benutzer mit Hilfe der eingegebenen Suche und gibt diese in einer
@@ -540,13 +571,21 @@ public class DatenZugriffsObjekt {
     public List<Benutzer> sucheBenutzer(String suche) {
 
         Query query;
+        
+        if(suche.isEmpty()){
+            suche = "%";
+        }
+        
         query = this.entityManager.createQuery(""
-                + "SELECT * "
-                + "FROM Benutzer"
-                + "WHERE email LIKE :emailName ", Benutzer.class);
+                + "SELECT b "
+                + "FROM Benutzer b "
+                + "WHERE b.email LIKE :emailName ", Benutzer.class);
+        //Suche auf 25 Ergebnisse beschränken.
+        query.setMaxResults(25);
         query.setParameter("emailName", suche);
         return query.getResultList();
     }
+    
 
     /**
      * Methode zum schließen des EntityManagers.

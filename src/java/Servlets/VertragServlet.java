@@ -57,8 +57,6 @@ public class VertragServlet extends HttpServlet {
             this.saveContract(request, response);
         } else if (request.getParameter("search") != null) {
             this.searchContract(request, response);
-        } else if (request.getParameter("change") != null) {
-            
         }
 
     }
