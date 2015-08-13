@@ -5,7 +5,6 @@
  */
 package Manager;
 
-import Entitys.Benutzer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.BodyPart;
@@ -47,7 +46,6 @@ public class EmailHandler {
      * @param subject Text der Betreffzeile
      * @param recipient Empfänger
      * @param passwort Passwort
-     * @param url Loginseiten URL
      *  
      */
     public void sendRegisterMail(String subject, String recipient, String passwort) {
