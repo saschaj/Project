@@ -9,10 +9,14 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Kontakformular erstellt und eingefügt
                 1.1 (René Kanzenbach) 07.06.2015
                 - Navigationsbereich ausgelagert
+                1.2(Julie Kenfack)
+                - Kontaktformular angepasst
+                - Automatische erzeugung von Captcha.
+                - Button "Zuruecksetzen" hinzugefügt.
                 
 
 --%>
-
+<% String fehler[]; %>
 <%@page import="Hilfsklassen.Konstanten"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -56,15 +60,43 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                         <div id="form_settings">
                             <!--Der Sascha ist voll doof -->
                             <form method="POST" action="KontaktServlet">
-                                <p><span class="span_contract">Name:</span><input class="contact" type="text" name="your_name" value="" /></p>
-                                <p><span class="span_contract">Email Adresse*:</span><input class="contact" type="text" name="your_email" value="" /></p>
-                                <p><span class="span_contract">Mitteilung*:</span><textarea class="contact textarea" rows="4" cols="50" name="your_message"></textarea></p>
+                                <% //if (formular.getAttribute("fehler") != null) {
+                                    if (request.getAttribute("fehler") != null) {
+                                        //fehler = (String[])formular.getAttribute("fehler");
+                                        fehler = (String[]) request.getAttribute("fehler");
+                                        for (int i = 0; i < fehler.length; i++) {%>
+                                <span style="color:#FF0000"><%= fehler[i]%></span><br>
+                                <%}
+                                        request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, null);
+                                    }
+                                    int op1 = (int) (10 * Math.random());
+                                    int op2 = (int) (10 * Math.random());
+                                    if (request.getParameter("your_name") != null) {%>
+                                <p><span class="span_contact">Name*:</span><input class="contact" type="text" name="your_name" value="<%= request.getParameter("your_name")%>" /></p>
+                                    <% } else {%>
+                                <p><span class="span_contact">Name*:</span><input class="contact" type="text" name="your_name" value="" /></p>
+                                    <% }
+                                        if (request.getParameter("your_email") != null) {%>
+                                <p><span class="span_contact">Email Adresse*:</span><input class="contact" type="text" name="your_email" value="<%= request.getParameter("your_email")%>" /></p>
+                                    <% } else {%>
+                                <p><span class="span_contact">Email Adresse*:</span><input class="contact" type="text" name="your_email" value="" /></p>
+                                    <% }
+                                    if (request.getParameter("your_message") != null) {%>
+                                <p><span class="span_contact">Mitteilung*:</span><textarea class="contact textarea" rows="4" cols="50" name="your_message"></textarea></p>
+                                    <% } else {%>
+                                <p><span class="span_contact">Mitteilung*:</span><textarea class="contact textarea" rows="4" cols="50" name="your_message"></textarea></p>
+                                    <% }%>
                                 <p><span>Bitte beantworten Sie die folgende einfache Aufgabe:</span></p>
-                                <p><span class="span_contract">17 + 25 = ?</span><input class="contact" type="text" name="benutzer_antwort" /><input type="hidden" name="antwort" value="42" /></p>                                    
+                                <p><span class="span_contact"><%=op1%> + <%=op2%> = ?</span><input class="contact" type="text" name="benutzer_antwort" /><input type="hidden" name="antwort" value="<%=(op1 + op2)%>" /></p>                                    
                                 <p>* Bitte füllen Sie die Felder aus</p>
-                                <p style="padding-top: 15px"><span>&nbsp;</span><input class="submit" type="submit" name="contact_submitted" value="Abschicken" /></p>
+                                <p style="padding-top: 15px"><span>&nbsp;</span><input class="submit" type="submit" name="contact_submitted" value="Abschicken" /><input class="submit" type="reset" name="contact_reset" value="Zuruecksetzen" /></p>
                             </form>
                         </div><!--close form_settings-->
+                        <%
+
+                            request.setAttribute("opResult", String.valueOf(op1 + op2));
+
+                        %>
                     </div><!--close content_item-->
 
                 </div><!--close content-->                

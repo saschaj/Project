@@ -54,11 +54,14 @@ public class VertragServlet extends HttpServlet {
 
         if (request.getParameter("contract_save") != null) {
             // Methode zum Abspeichern eines Vertrags
-            this.saveContract(request, response);
+            this.speichereVertrag(request, response);
         } else if (request.getParameter("search") != null) {
-            this.searchContract(request, response);
+            // Methode zum Suchen eines Vertrags
+            this.sucheVertrag(request, response);
+        } else if (request.getParameter("change") != null) {
+            // Methode zum Ändern eines Vertrags
+            this.aendereVertrag(request, response);
         }
-
     }
 
     /**
@@ -77,7 +80,7 @@ public class VertragServlet extends HttpServlet {
      * @throws IOException
      * @throws ParseException 
      */
-    public void saveContract(HttpServletRequest request, HttpServletResponse response)
+    public void speichereVertrag(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
 
         // Initialisierung der obligatorischen Formulardaten
@@ -330,6 +333,7 @@ public class VertragServlet extends HttpServlet {
                     neuStromvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuStromvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
                     neuStromvertrag.setKuendigungsfristEinheit(getZeitEinheit(kuendigungsfristEinheit));
+                    neuStromvertrag.setIstGeloescht(false);
                     neuStromvertrag.setKundenNr(kundennr);
                     neuStromvertrag.setVertragsBezeichnung(aenderUmlaute(vertragsBez));
                     neuStromvertrag.setVertragsPartner(aenderUmlaute(vertragsPartner));
@@ -388,6 +392,7 @@ public class VertragServlet extends HttpServlet {
                     neuGasvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuGasvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
                     neuGasvertrag.setKuendigungsfristEinheit(getZeitEinheit(kuendigungsfristEinheit));
+                    neuGasvertrag.setIstGeloescht(false);
                     neuGasvertrag.setKundenNr(kundennr);
                     neuGasvertrag.setVertragsBezeichnung(aenderUmlaute(vertragsBez));
                     neuGasvertrag.setVertragsPartner(aenderUmlaute(vertragsPartner));
@@ -444,6 +449,7 @@ public class VertragServlet extends HttpServlet {
                     neuFestnetzvertrag.setVertragEnde(parseDate);
                     neuFestnetzvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
                     neuFestnetzvertrag.setKuendigungsfristEinheit(getZeitEinheit(kuendigungsfristEinheit));
+                    neuFestnetzvertrag.setIstGeloescht(false);
                     neuFestnetzvertrag.setKundenNr(kundennr);
                     neuFestnetzvertrag.setVertragsBezeichnung(aenderUmlaute(vertragsBez));
                     neuFestnetzvertrag.setVertragsPartner(aenderUmlaute(vertragsPartner));
@@ -489,6 +495,7 @@ public class VertragServlet extends HttpServlet {
                     neuHandyvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuHandyvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
                     neuHandyvertrag.setKuendigungsfristEinheit(getZeitEinheit(kuendigungsfristEinheit));
+                    neuHandyvertrag.setIstGeloescht(false);
                     neuHandyvertrag.setKundenNr(kundennr);
                     neuHandyvertrag.setVertragsBezeichnung(aenderUmlaute(vertragsBez));
                     neuHandyvertrag.setVertragsPartner(aenderUmlaute(vertragsPartner));
@@ -524,6 +531,7 @@ public class VertragServlet extends HttpServlet {
                     neuZeitschriftvertrag.setVertragEnde(parseDateSqlvEnde);
                     neuZeitschriftvertrag.setKuendigungsfrist(Integer.parseInt(kuendigungsfrist));
                     neuZeitschriftvertrag.setKuendigungsfristEinheit(getZeitEinheit(kuendigungsfristEinheit));
+                    neuZeitschriftvertrag.setIstGeloescht(false);
                     neuZeitschriftvertrag.setKundenNr(kundennr);
                     neuZeitschriftvertrag.setVertragsBezeichnung(aenderUmlaute(vertragsBez));
                     neuZeitschriftvertrag.setVertragsPartner(aenderUmlaute(vertragsPartner));
@@ -584,7 +592,7 @@ public class VertragServlet extends HttpServlet {
      * @throws IOException
      * @throws ParseException 
      */
-    public void searchContract(HttpServletRequest request, HttpServletResponse response)
+    public void sucheVertrag(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
         HttpSession session = request.getSession();
         Collection<Vertrag> vertraege = null;
@@ -619,6 +627,57 @@ public class VertragServlet extends HttpServlet {
             request.setAttribute(Konstanten.REQUEST_ATTR_SUCHTEXT, null);
             request.getRequestDispatcher("/user.jsp").forward(request, response);
         }
+    }
+    
+    public void aendereVertrag(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, ParseException {
+        // Initialisierung der obligatorischen Formulardaten
+        String vertragsNr = request.getParameter("vertragsNr"),
+                vertragsBeginn = request.getParameter("vertragsBeginn"),
+                laufzeit = request.getParameter("laufzeit"),
+                laufzeitEinheit = request.getParameter("laufzeiteinheit"),
+                vertragsEnde = request.getParameter("vertragsEnde"),
+                kuendigungsfrist = request.getParameter("kuendigungsfrist"),
+                kuendigungsfristEinheit
+                = request.getParameter("kuendigungsfristeinheit"),
+                kategorie = request.getParameter("cat");
+
+        // Initialisierung der optionalen Formulardaten
+        String kundennr = request.getParameter("kundennr"),
+                vertragsBez = request.getParameter("vertragsbez"),
+                vertragsPartner = request.getParameter("vertragspartner"),
+                benachrichtigungsfrist
+                = request.getParameter("benachrichtigungsfrist"),
+                benachrichtigungsfristEinheit
+                = request.getParameter("benachrichtigungsfristeinheit"),
+                stromNr = request.getParameter("snr"),
+                stromStand = request.getParameter("sstand"),
+                stromVerbrauch = request.getParameter("sverbrauch"),
+                stromPreis = request.getParameter("spreisKwh"),
+                stromPersonen = request.getParameter("sanzPers"),
+                stromGrundPreis = request.getParameter("gPreisMonat"),
+                gasNr = request.getParameter("gnr"),
+                gasStand = request.getParameter("gstand"),
+                gasVerbrauch = request.getParameter("gverbrauch"),
+                gasPreis = request.getParameter("gpreisKwh"),
+                gasFlaeche = request.getParameter("gflaeche"),
+                festnetzTarif = request.getParameter("ftarifname"),
+                festnetzEmpfang = request.getParameter("fempfangstyp"),
+                festnetzIstISDN = request.getParameter("fistISDN"),
+                festnetzIstVOIP = request.getParameter("fistVOIP"),
+                handyTarif = request.getParameter("htarifname"),
+                handyNetz = request.getParameter("hnetztyp"),
+                handyNr = request.getParameter("hrufnummer"),
+                zeitschriftName = request.getParameter("zname"),
+                zeitschriftIntervall = request.getParameter("zintervall"),
+                zeitschriftEinheit = request.getParameter("zeinheit"),
+                zeitschriftGebiet = request.getParameter("zinteressen");
+        
+        String ausgabe = null;
+        
+        if (ausgabe.equals("")) {
+            
+        }        
     }
 
     /**

@@ -78,6 +78,13 @@ h5, h6
   text-shadow: none;
   color: #000;}
 
+.span_contact
+{ float: left; 
+  width: 200px; 
+  text-align: left;
+  text-shadow: none;
+  color: #000;}
+
 .span_contract
 { float: left; 
   width: 160px; 

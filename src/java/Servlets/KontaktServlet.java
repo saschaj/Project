@@ -6,15 +6,25 @@
  * Veränderungen:   1.0 (Sascha Jungenkrüger)
  *                  - Überprüfung der Verlinkungen mit passender Ausgabe 
  *                    eingebunden
+ *                  1.1 (Julie Kenfack) 20.07.2015
+ *                    - Prüfungen ob die Pflichtfelder leer sind.
+ *                    - Lexikalische und syntaktische Korrektheit der Eingaben.
+ *                    - Vollständigkeitsprüfungen der Eingaben.
+                      - Wenn die Felder nicht korrekt ausgefüllt sind, werden 
+                        entsprechende Fehlern ausgewerfen.Sonst erscheint eine Meldung 
+                        , dass alle Daten erfolgreich gesendet wurden.
+ *                  
  */
 package Servlets;
 
+import Hilfsklassen.Konstanten;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class KontaktServlet extends HttpServlet {
 
@@ -29,25 +39,75 @@ public class KontaktServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Automatisch generiert
-        response.setContentType("text/html;charset=UTF-8");
         
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet KontaktServlet</title>");   
-            out.println("<meta http-equiv='refresh' content='5; URL=index.jsp'>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Ihre Anfrage wurde verschickt und Sie werden zur Startseite weitergeleitet</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        HttpSession session = request.getSession();
+        String ausgabe = "", meta = "";
+        String fehler[];
+
+        // Formulardaten in Variablen speichern
+        String name = request.getParameter("your_name");
+        String email = request.getParameter("your_email");
+        String mitteilung = request.getParameter("your_message");
+
+        //Abschicken wurde geklickt
+        if (request.getParameter("contact_submitted") != null) {
+            // Überprüfung, ob der Name leer ist
+            if (name.equals("")) {
+                ausgabe = "Bitte geben Sie Ihrer Name ein.<br/>";
+            }
+            // Überprüfung, ob die email leer ist
+            if (email.equals("")) {
+                ausgabe += "Bitte geben Sie Ihre E-Mail-Adresse ein.<br/>";
+            } // Überprüfung, ob die email konform ist
+            else if (!email.matches("^[a-zA-Z0-9][\\w\\.-]*@(?:[a-zA-Z0-9][a-zA-Z0-9_-]+\\.)+[A-Z,a-z]{2,5}$")) {
+                ausgabe += "Deine Email entspricht das Format nicht.<br/>";
+            }
+            // Überprüfung, ob die Mitteilung leer ist
+            if (mitteilung.equals("")) {
+                ausgabe += "Bitte geben Sie Ihre Mitteilung ein.<br/>";
+            }
+            // Überprüfung, ob bei dem Captcha die richtige Antwort eingetragen wurde.
+            if (!(request.getParameter("benutzer_antwort") != null && request.getParameter("antwort") != null
+                    && request.getParameter("antwort").equals(request.getParameter("benutzer_antwort")))) {
+                ausgabe += "captcha falsch, ewartet ist:" + request.getParameter("antwort") + ", Deine Antwort ist aber:" + request.getParameter("benutzer_antwort");
+            }
+            if (!ausgabe.equals("")) {
+                // Fehlermeldung wird gesplittet und im Array gespeichert
+                // und auf der contact.jsp ausgegeben.
+                fehler = ausgabe.split("!");
+                // Setzen der Fehler in den Request                    
+                request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, fehler);
+                request.getRequestDispatcher("/contact.jsp").forward(request, response);
+            } else {
+                meta = "<meta http-equiv='refresh' content='2; URL=index.jsp'>";
+                ausgabe = "Daten wurden erfolgreich gesendet";
+                session.invalidate();
+
+                response.setContentType("text/html;charset=UTF-8");
+
+                try (PrintWriter out = response.getWriter()) {
+                    /* TODO output your page here. You may use following sample code. */
+                    out.println("<!DOCTYPE html>");
+                    out.println("<html>");
+                    out.println("<head>");
+                    out.println("<title>Servlet KontaktServlet</title>");
+                    out.println(meta);
+                    out.println("</head>");
+                    out.println("<body>");
+                    out.println(ausgabe);
+                    out.println("</body>");
+                    out.println("</html>");
+                }
+            }
         }
+        //Kontaktdaten in den Session laden
+//        session.setAttribute(name, name);
+//        session.setAttribute(email, email);
+//        session.setAttribute(mitteilung, mitteilung);
+
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+// <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

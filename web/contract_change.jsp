@@ -91,7 +91,7 @@ Veränderungen:	-
                                    type="text" name="vertragsBeginn"
                                    pattern="[0-3][0-9].[0-1][0-9].[1-2][0-9]{3}" title="Datumsformat lautet: DD.MM.YYYY"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("vertragsBeginn") : dateFormatter.format(vertrag.getVertragBeginn())%>">
+                                ? request.getParameter("vertragsBeginn") : dateFormatter.format(vertrag.getVertragBeginn())%>" readonly>
                         </p>
                         <p>
                             <span class="span_reg">Laufzeit*:</span>
@@ -116,7 +116,7 @@ Veränderungen:	-
                                    type="text" name="vertragsEnde"
                                    pattern="[0-3][0-9].[0-1][0-9].[1-2][0-9]{3}" title="Datumsformat lautet: DD.MM.YYYY"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("vertragsEnde") : dateFormatter.format(vertrag.getVertragEnde())%>">
+                                ? request.getParameter("vertragsEnde") : dateFormatter.format(vertrag.getVertragEnde())%>" readonly>
                         </p>
                         * Hier können Sie entweder nur das Vertragsende 
                         oder den Vertragsbeginn & die Laufzeit eingeben<br>

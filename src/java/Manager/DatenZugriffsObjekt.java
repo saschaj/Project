@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import Hilfsklassen.Konstanten;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import org.jfree.chart.ChartFactory;
@@ -60,6 +61,65 @@ public class DatenZugriffsObjekt {
             this.entityManager.getTransaction().rollback();
         }
 
+    }
+    
+    /**
+ * Die Methode soll den in der Datenbank,bestehenden Kunden mit den übergebenen Kundendaten aktualisieren.
+ * @param vorname
+ * @param nachname
+ * @param straße
+ * @param hausnummer
+ * @param plz
+ * @param wohnort
+ * @param nummer 
+ */
+    public boolean updateKundeDaten( String vorname, String nachname,
+            Adresse adresse, Date gebdt, String nummer, int benutzerId ) {
+        boolean istAktualisiert = false;
+     
+        Kunde k = entityManager.find(Kunde.class, benutzerId);
+        try {
+//            entityManager.flush();
+//            this.entityManager.persist(k);
+         entityManager.getTransaction().begin();   
+        
+//       Kunde k= new Kunde();
+        k.setGeburtsdatum(gebdt);
+        k.setVorname(vorname);
+        k.setNachname(nachname);
+        k.setAdresse(adresse);
+        k.setGeburtsdatum(gebdt);
+        k.setTelefonnummer(nummer);
+
+            entityManager.getTransaction().commit();
+            istAktualisiert=true;
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
+
+        }
+        return istAktualisiert;
+    }
+/**
+ * Die Methode soll den in der Datenbank,bestehenden benutzer mit den übergebenen Benutzerdaten aktualisieren.
+ * @param email
+ * @param passwort 
+ */
+        public boolean updateBenutzerDaten( String email, String passwort, int id) {
+        Benutzer ben = entityManager.find(Benutzer.class,id);
+        boolean istAktualisiert = false;
+        
+        entityManager.getTransaction().begin();
+        try {
+        ben.setEmail(email);
+        ben.setPasswort(passwort);
+            entityManager.getTransaction().commit();
+            
+      istAktualisiert = true;
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
+
+        }
+        return istAktualisiert;
     }
 
     public boolean addBenutzer(Benutzer b) {
