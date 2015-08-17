@@ -83,9 +83,9 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                                 <% } %>
                             
                                <% if (k != null && k.getGeburtsdatum() != null) {%>
-                            <p><span class="span_contact">Geburtsdatum:</span><input type="text" name="acc_gebdat" value="<%= k.getGeburtsdatum()%>"></p> 
+                            <p><span class="span_contact">Geburtsdatum:</span><input type="text" pattern="[0-3][0-9].[0-1][0-9].[1-2][0-9]{3}" title="Datumsformat lautet: DD.MM.YYYY" name="acc_gebdat" value="<%= k.getGeburtsdatum()%>"></p> 
                                 <% } else { %>
-                            <p><span class="span_contact">Geburtsdatum:</span><input type="text" name="acc_gebdat" value=""></p>
+                            <p><span class="span_contact">Geburtsdatum:</span><input type="text" pattern="[0-3][0-9].[0-1][0-9].[1-2][0-9]{3}" title="Datumsformat lautet: DD.MM.YYYY" name="acc_gebdat" value=""></p>
                                 <% }%> 
 
                             <p><span class="span_contact">Strasse & Hausnummer:</span>
