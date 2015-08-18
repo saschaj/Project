@@ -6,9 +6,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import Hilfsklassen.Konstanten;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import javax.servlet.http.HttpSession;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
@@ -62,64 +64,195 @@ public class DatenZugriffsObjekt {
         }
 
     }
-    
+
     /**
- * Die Methode soll den in der Datenbank,bestehenden Kunden mit den übergebenen Kundendaten aktualisieren.
- * @param vorname
- * @param nachname
- * @param straße
- * @param hausnummer
- * @param plz
- * @param wohnort
- * @param nummer 
- */
-    public boolean updateKundeDaten( String vorname, String nachname,
-            Adresse adresse, Date gebdt, String nummer, int benutzerId ) {
+     * Die Methode soll den in der Datenbank,bestehenden Kunden mit den
+     * übergebenen Kundendaten aktualisieren.
+     *
+     * @param vorname
+     * @param nachname
+     * @param straße
+     * @param hausnummer
+     * @param plz
+     * @param wohnort
+     * @param nummer
+     */
+    public boolean updateKundeDaten(String vorname, String nachname,
+            Adresse adresse, Date gebdt, String nummer, int benutzerId) {
         boolean istAktualisiert = false;
-     
+
         Kunde k = entityManager.find(Kunde.class, benutzerId);
         try {
 //            entityManager.flush();
 //            this.entityManager.persist(k);
-         entityManager.getTransaction().begin();   
-        
+            entityManager.getTransaction().begin();
+
 //       Kunde k= new Kunde();
-        k.setGeburtsdatum(gebdt);
-        k.setVorname(vorname);
-        k.setNachname(nachname);
-        k.setAdresse(adresse);
-        k.setGeburtsdatum(gebdt);
-        k.setTelefonnummer(nummer);
+            k.setGeburtsdatum(gebdt);
+            k.setVorname(vorname);
+            k.setNachname(nachname);
+            k.setAdresse(adresse);
+            k.setGeburtsdatum(gebdt);
+            k.setTelefonnummer(nummer);
 
             entityManager.getTransaction().commit();
-            istAktualisiert=true;
+            istAktualisiert = true;
         } catch (PersistenceException pe) {
             this.entityManager.getTransaction().rollback();
 
         }
         return istAktualisiert;
     }
-/**
- * Die Methode soll den in der Datenbank,bestehenden benutzer mit den übergebenen Benutzerdaten aktualisieren.
- * @param email
- * @param passwort 
- */
-        public boolean updateBenutzerDaten( String email, String passwort, int id) {
-        Benutzer ben = entityManager.find(Benutzer.class,id);
+
+    /**
+     * Die Methode soll den in der Datenbank,bestehenden benutzer mit den
+     * übergebenen Benutzerdaten aktualisieren.
+     *
+     * @param email
+     * @param passwort
+     */
+    public boolean updateBenutzerDaten(String email, String passwort, int id) {
+        Benutzer ben = entityManager.find(Benutzer.class, id);
         boolean istAktualisiert = false;
-        
+
         entityManager.getTransaction().begin();
         try {
-        ben.setEmail(email);
-        ben.setPasswort(passwort);
+            ben.setEmail(email);
+            ben.setPasswort(passwort);
             entityManager.getTransaction().commit();
-            
-      istAktualisiert = true;
+
+            istAktualisiert = true;
         } catch (PersistenceException pe) {
             this.entityManager.getTransaction().rollback();
 
         }
         return istAktualisiert;
+    }
+
+    /**
+     * Methode zum Update eines Vertrags, wenn der Kunde ihn ändern möchte.
+     *
+     * @param vertrag Zu verändernde Vertrag
+     * @return true, bei Erfolg.. false, bei Nicht-Erfolg
+     */
+    public boolean updateVertrag(Vertrag vertrag) {
+        // Initialisierung der benötigten Variablen
+        boolean istAktualisiert = false;
+        Vertrag alterVertrag = 
+                this.entityManager.find(Vertrag.class, vertrag.getVertragId());
+
+        // Starten der Transaktion
+        this.entityManager.getTransaction().begin();
+
+        try {
+            // Setze die Vertragsdaten
+            alterVertrag.setVertragsBezeichnung(
+                    vertrag.getVertragsBezeichnung());
+//            alterVertrag.setVertragNr(vertrag.getVertragNr());
+//            alterVertrag.setVertragBeginn(vertrag.getVertragBeginn());
+//            alterVertrag.setVertragEnde(vertrag.getVertragEnde());
+//            alterVertrag.setLaufzeit(vertrag.getLaufzeit());
+//            alterVertrag.setLaufzeitEinheit(vertrag.getLaufzeitEinheit());
+//            alterVertrag.setKuendigungsfrist(vertrag.getKuendigungsfrist());
+//            alterVertrag.setKuendigungsfristEinheit(
+//                    vertrag.getKuendigungsfristEinheit());
+            alterVertrag.setVertragsPartner(vertrag.getVertragsPartner());
+            alterVertrag.setBenachrichtigungsfrist(
+                    vertrag.getBenachrichtigungsfrist());
+            alterVertrag.setBenachrichtigungsfristEinheit(
+                    vertrag.getBenachrichtigungsfristEinheit());
+            alterVertrag.setKundenNr(vertrag.getKundenNr());
+
+            // Setze die vertragsspezifischen Daten
+            switch (alterVertrag.getVertragArt().getVertragArtId()) {
+                case Konstanten.ID_VERTRAG_ART_STROM:
+                    ((Stromvertrag) alterVertrag).setStromzaehlerNr(
+                            ((Stromvertrag) vertrag).getStromzaehlerNr());
+                    ((Stromvertrag) alterVertrag).setStromzaehlerStand(
+                            ((Stromvertrag) vertrag).getStromzaehlerStand());
+                    ((Stromvertrag) alterVertrag).setVerbrauchProJahr(
+                            ((Stromvertrag) vertrag).getVerbrauchProJahr());
+                    ((Stromvertrag) alterVertrag).setPreisProKwh(
+                            ((Stromvertrag) vertrag).getPreisProKwh());
+                    ((Stromvertrag) alterVertrag).setGrundpreisMonat(
+                            ((Stromvertrag) vertrag).getGrundpreisMonat());
+                    ((Stromvertrag) alterVertrag).setAnzPersonenHaushalt(
+                            ((Stromvertrag) vertrag).getAnzPersonenHaushalt());
+                    break;
+                case Konstanten.ID_VERTRAG_ART_GAS:
+                    ((Gasvertrag) alterVertrag).setGaszaehlerNr(
+                            ((Gasvertrag) vertrag).getGaszaehlerNr());
+                    ((Gasvertrag) alterVertrag).setGaszaehlerStand(
+                            ((Gasvertrag) vertrag).getGaszaehlerStand());
+                    ((Gasvertrag) alterVertrag).setPreisProKhw(
+                            ((Gasvertrag) vertrag).getPreisProKhw());
+                    ((Gasvertrag) alterVertrag).setVerbrauchProJahr(
+                            ((Gasvertrag) vertrag).getVerbrauchProJahr());
+                    ((Gasvertrag) alterVertrag).setVerbrauchsFlaeche(
+                            ((Gasvertrag) vertrag).getVerbrauchsFlaeche());
+                    break;
+                case Konstanten.ID_VERTRAG_ART_FESTNETZ:
+                    ((Festnetzvertrag) alterVertrag).setTarifname(
+                            ((Festnetzvertrag) vertrag).getTarifname());
+                    ((Festnetzvertrag) alterVertrag).setNetztypp(
+                            ((Festnetzvertrag) vertrag).getNetztypp());
+                    ((Festnetzvertrag) alterVertrag).setIstISDN(
+                            ((Festnetzvertrag) vertrag).isIstISDN());
+                    ((Festnetzvertrag) alterVertrag).setIstVOIP(
+                            ((Festnetzvertrag) vertrag).isIstVOIP());
+                    break;
+                case Konstanten.ID_VERTRAG_ART_HANDY:
+                    ((Handyvertrag) alterVertrag).setTarifname(
+                            ((Handyvertrag) vertrag).getTarifname());
+                    ((Handyvertrag) alterVertrag).setRufnummer(
+                            ((Handyvertrag) vertrag).getRufnummer());
+                    ((Handyvertrag) alterVertrag).setNetztyp(
+                            ((Handyvertrag) vertrag).getNetztyp());
+                    break;
+                case Konstanten.ID_VERTRAG_ART_ZEITSCHRIFT:
+                    ((Zeitschriftvertrag) alterVertrag).setZeitschriftName(
+                            ((Zeitschriftvertrag) vertrag).
+                                    getZeitschriftName());
+                    ((Zeitschriftvertrag) alterVertrag).
+                            setLieferintervall(
+                            ((Zeitschriftvertrag) vertrag).
+                                    getLieferintervall());
+                    ((Zeitschriftvertrag) alterVertrag).
+                            setLieferintervallEinheit(
+                            ((Zeitschriftvertrag) vertrag).
+                                    getLieferintervallEinheit());
+                    ((Zeitschriftvertrag) alterVertrag).setInteressengebiet(
+                            ((Zeitschriftvertrag) vertrag).
+                                    getInteressengebiet());
+                    break;
+            }
+            // Abschließen der Transaktion
+            entityManager.getTransaction().commit();
+            istAktualisiert = true;
+        } catch (PersistenceException pe) {
+            // Rollback, falls etwas schief,gelaufen ist
+            this.entityManager.getTransaction().rollback();
+            istAktualisiert = false;
+        }
+
+        return istAktualisiert;
+    }
+    
+    public boolean loescheVertrag(int vertragID) { 
+        boolean istGeloescht = false;        
+        Vertrag vertrag = this.entityManager.find(Vertrag.class, vertragID);
+        
+        this.entityManager.getTransaction().begin();
+        try {
+            vertrag.setIstGeloescht(true); 
+            this.entityManager.getTransaction().commit();
+            istGeloescht = true;
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
+            istGeloescht = false;
+        }
+        
+        return istGeloescht;
     }
 
     public boolean addBenutzer(Benutzer b) {
@@ -142,8 +275,14 @@ public class DatenZugriffsObjekt {
         return addComplete;
     }
     
+
+    /**
+     * Methode zur Überprüfung, ob die E-Mail Adresse schon existiert 
+     * 
+     * @param email Zu überprüfende E-Mail
+     * @return true, wenn sie existiert.. false, wenn sie nicht existiert
+     */
     public boolean isEmailAvailable(String email) {
-        boolean isAvailable = false;
         String query = "select count(b) from Benutzer b where "
                 + "b.email like '" + email + "'";
         long i = 0;
@@ -152,6 +291,12 @@ public class DatenZugriffsObjekt {
         return i == 0;
     }
 
+    /**
+     * Methode zum Hinzufügen eines Vertrags
+     * 
+     * @param vertrag Der hinzuzufügende Vertrag
+     * @return true, wenn erfolgreich.. false, wenn nicht erfolgreich
+     */
     public boolean addContract(Vertrag vertrag) {
         boolean addComplete = false;
 
@@ -172,6 +317,13 @@ public class DatenZugriffsObjekt {
         return addComplete;
     }
 
+    /**
+     * Methode dient zur textuellen Suche eines Vertrags
+     * 
+     * @param suchText Der zu suchende Text
+     * @param k Das Kundenobjekt
+     * @return Eine Collection der Verträge unter dem Suchbegriff
+     */
     public Collection<Vertrag> searchContract(String suchText, Kunde k) {
         Collection<Vertrag> vertraegeErg = null, vertraegeErg2 = null;
         java.util.Date beginn = null, ende = null;
@@ -187,9 +339,9 @@ public class DatenZugriffsObjekt {
         } catch (ParseException ex) {
             ende = null;
         }
-        
+
         suchText = "%" + suchText + "%";
-                // Hiermit werden alle Verträge des Kunden gesucht
+        // Hiermit werden alle Verträge des Kunden gesucht
         vertraegeErg = this.entityManager.createQuery(
                 "SELECT v FROM Vertrag v WHERE "
                 + "v.kunde.benutzerId = " + k.getBenutzerId() + " "
@@ -213,6 +365,13 @@ public class DatenZugriffsObjekt {
         return vertraegeErg;
     }
 
+    /**
+     * Methode dient zur kategorisierten Suche der hinzugefügten Verträge
+     * 
+     * @param kategorie spezielle Kategorie
+     * @param k Kundenobjekt
+     * @return Collection mit den speziellen Verträgen
+     */
     public Collection<Vertrag> searchContractCategory(String kategorie, Kunde k) {
         Collection<Vertrag> vertraegeErg = null;
 
@@ -238,7 +397,8 @@ public class DatenZugriffsObjekt {
      * @return true, wenn die Registrierung erfolgreich war false, wenn die
      * Registrierung fehlgeschlagen ist
      */
-    public boolean register(String vname, String name, String email, String passwort) {
+    public boolean register(String vname, String name, 
+            String email, String passwort) {
         boolean istRegistriert = false;
         Kunde neuerKunde = new Kunde();
         Benutzer_Recht recht = this.entityManager.find(Benutzer_Recht.class,
@@ -314,9 +474,7 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger
-     * Datum: 29.07.2015
-     * Methode: getEinheiten
+     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getEinheiten
      * Version: 1.0
      *
      * Liest alle Zeiteinheiten aus der Datenbank und gibt Sie zurück.
@@ -330,9 +488,7 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger
-     * Datum: 29.07.2015
-     * Methode: getEinheit
+     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getEinheit
      * Version: 1.0
      *
      * Liest Zeiteinheiten aus der Datenbank und gibt es zurück.
@@ -345,10 +501,8 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger
-     * Datum: 29.07.2015
-     * Methode: getInteressengebiete
-     * Version: 1.0
+     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode:
+     * getInteressengebiete Version: 1.0
      *
      * Liest alle Interessengebiete aus der Datenbank und gibt Sie zurück.
      *
@@ -361,10 +515,8 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger
-     * Datum: 29.07.2015
-     * Methode: getInteressengebiet
-     * Version: 1.0
+     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode:
+     * getInteressengebiet Version: 1.0
      *
      * Liest ein Interessengebiet aus der Datenbank und gibt das Objekt zurück.
      *
@@ -376,9 +528,7 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger
-     * Datum: 29.07.2015
-     * Methode: getNetztyp
+     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getNetztyp
      * Version: 1.0
      *
      * @param netztypID Primärschlüssel für ein Netztyp-Objekt
@@ -389,9 +539,7 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger
-     * Datum: 29.07.2015
-     * Methode: getNetztypen
+     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getNetztypen
      * Version: 1.0
      *
      * Liest alle Netztypen aus der Datenbank und gibt Sie zurück.
@@ -413,29 +561,25 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger 
-     * Datum: 29.07.2015 
-     * Methode: getVertrag
+     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getVertrag
      * Version: 1.0
      *
-     * Liest einen Vertrag über den übergebenen Index aus der Datenbank
-     * und liefert das entsprechende Objekt zurück.
-     * 
+     * Liest einen Vertrag über den übergebenen Index aus der Datenbank und
+     * liefert das entsprechende Objekt zurück.
+     *
      * @param vertragID Primärschlüssel für ein Objekt des Vertrags
      * @return Ein Objekt den gewünschten Vertrag der Datenbank
      */
     public Vertrag getVertrag(int vertragID) {
         return this.entityManager.find(Vertrag.class, vertragID);
     }
-    
+
     /**
-     * Ersteller: Sascha Jungenkrüger 
-     * Datum: 29.07.2015 
-     * Methode: getVertragsArt
+     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getVertragsArt
      * Version: 1.0
      *
-     * Liest eine Vertragsart über den übergebenen Index aus der Datenbank
-     * und liefert das entsprechende Objekt zurück.
+     * Liest eine Vertragsart über den übergebenen Index aus der Datenbank und
+     * liefert das entsprechende Objekt zurück.
      *
      * @param artID Primärschlüssel für ein Objekt der Vertragsart
      * @return Ein Objekt der gewünschten VertragsArt der Datenbank
@@ -445,10 +589,8 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger
-     * Datum: 29.07.2015
-     * Methode: getVertragsStatus
-     * Version: 1.0
+     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode:
+     * getVertragsStatus Version: 1.0
      *
      * Liest eine VertragsStatus über den übergebenen Index aus der Datenbank
      * und liefert das entsprechende Objekt zurück.
@@ -461,10 +603,7 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach 
-     * Datum: 28.07.2015 
-     * Version: 1.0 
-     * Änderungen: -
+     * Ersteller: René Kanzenbach Datum: 28.07.2015 Version: 1.0 Änderungen: -
      *
      * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Benutzer im System
      * registriert sind und welchen Status diese besitzen.
@@ -511,10 +650,7 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach 
-     * Datum: 28.07.2015 
-     * Version: 1.0 
-     * Änderungen: -
+     * Ersteller: René Kanzenbach Datum: 28.07.2015 Version: 1.0 Änderungen: -
      *
      * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Vertraege im
      * System registriert sind und was es fuer Vertraege sind.
@@ -564,9 +700,7 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach 
-     * Erstelldatum: 27.07.2015 
-     * Version: 1.0
+     * Ersteller: René Kanzenbach Erstelldatum: 27.07.2015 Version: 1.0
      * Veränderungen: -
      *
      * Gibt alle Benutzer zurück, die sich in der Datenbank befinden, unabhängig
@@ -590,9 +724,7 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach 
-     * Erstelldatum: 28.07.2015 
-     * Version: 1.0
+     * Ersteller: René Kanzenbach Erstelldatum: 28.07.2015 Version: 1.0
      * Veränderungen: -
      *
      * Gibt alle Vertraege zurück, die sich in der Datenbank befinden.
@@ -615,9 +747,7 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach
-     * Erstelldatum: 04.08.2015
-     * Version: 1.0
+     * Ersteller: René Kanzenbach Erstelldatum: 04.08.2015 Version: 1.0
      * Veränderungen: -
      *
      * Sucht Benutzer mit Hilfe der eingegebenen Suche und gibt diese in einer
@@ -631,11 +761,11 @@ public class DatenZugriffsObjekt {
     public List<Benutzer> sucheBenutzer(String suche) {
 
         Query query;
-        
-        if(suche.isEmpty()){
+
+        if (suche.isEmpty()) {
             suche = "%";
         }
-        
+
         query = this.entityManager.createQuery(""
                 + "SELECT b "
                 + "FROM Benutzer b "
@@ -645,7 +775,6 @@ public class DatenZugriffsObjekt {
         query.setParameter("emailName", suche);
         return query.getResultList();
     }
-    
 
     /**
      * Methode zum schließen des EntityManagers.

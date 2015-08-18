@@ -71,6 +71,14 @@ h5, h6
   text-shadow: none;
   color: #000;}
 
+.span_search_marked
+{ float: left; 
+  width: 300px; 
+  text-align: left;
+  text-shadow: none;
+  color: #000;
+  background-color: grey;}
+
 .span_login
 { float: left; 
   width: 140px; 
@@ -356,6 +364,22 @@ footer a:hover
   background: -moz-linear-gradient(#FE9962, #E25506);
   background: -o-linear-gradient(#FE9962, #E25506);
   background: -webkit-linear-gradient(#FE9962, #E25506);
+  border-radius: 7px 7px 7px 7px;
+  -moz-border-radius: 7px 7px 7px 7px;
+  -webkit-border: 7px 7px 7px 7px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 5px;
+  -moz-box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 5px;
+  color: #FFF;
+  text-shadow: 1px 1px #000;}
+
+.submit_marked
+{ font: 110% arial; 
+  border: 0px solid #FFF; 
+  width: 165px;  
+  height: 26px;
+  padding: 2px 0 3px 0;
+  cursor: pointer; 
+  background: #939393;
   border-radius: 7px 7px 7px 7px;
   -moz-border-radius: 7px 7px 7px 7px;
   -webkit-border: 7px 7px 7px 7px;

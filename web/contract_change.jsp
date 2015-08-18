@@ -4,9 +4,12 @@ Ersteller:	Sascha Jungenkrüger
 Erstelldatum:   03.06.2015
 Dokument:	contract_add.jsp
 Version:	1.0
+                1.1 Sascha Jungenkrüger
+                - Formular implementiert
 Veränderungen:	-
 
 --%>
+<%@page import="Entitys.Kunde"%>
 <%@page import="Entitys.Zeitschriftvertrag"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="Entitys.Handyvertrag"%>
@@ -25,9 +28,14 @@ Veränderungen:	-
     String isVOIP = "";
     List<Interessengebiet> gebiete = null;
     List<Netztyp> typen = null;
-    String test = request.getParameter("vertrag");
-    Vertrag vertrag = 
-            new DatenZugriffsObjekt().getVertrag(Integer.parseInt(test));
+    Vertrag vertrag = null;
+    int vertragID = Integer.parseInt(request.getParameter("vertrag"));
+    Kunde k = (Kunde)session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
+    for (Vertrag v : k.getVertraege()) {
+        if (v.getVertragId() == vertragID) {
+            vertrag = v;
+        }
+    }    
     SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
     // Liest alles Zeiteinheiten aus der DB und gibt
     // diese in einer Auswahlbox aus
@@ -83,7 +91,7 @@ Veränderungen:	-
                             <input class="contact" type="text" name="vertragsNr"
                                    pattern="[0-9]{5,10}" title="Die Nummer darf minimal 5 und maximal 10 Ziffern beinhalten."
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("vertragsNr") : vertrag.getVertragNr()%>">
+                                           ? request.getParameter("vertragsNr") : vertrag.getVertragNr()%>" readonly>
                         </p>
                         <p>
                             <span class="span_reg">Vertragsbeginn*:</span>
@@ -98,7 +106,7 @@ Veränderungen:	-
                             <input class="contact" type="text" name="laufzeit"
                                    pattern="[1-9]{1}[0-9]*" title="Die Laufzeit darf nur Ziffern enthalten und nicht mit einer 0 beginnen!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("laufzeit") : vertrag.getLaufzeit()%>">
+                                ? request.getParameter("laufzeit") : vertrag.getLaufzeit()%>" readonly>
                             <select name="laufzeiteinheit">
                                 <%
                                 for (Zeit_Einheit einheit : einheiten) {
@@ -125,7 +133,7 @@ Veränderungen:	-
                             <input class="contact" type="text" name="kuendigungsfrist"
                                    pattern="[1-9]{1}[0-9]*" title="Die Kündigungsfrist darf nur Ziffern enthalten und nicht mit einer 0 beginnen!"  
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("kuendigungsfrist") : vertrag.getKuendigungsfrist()%>">
+                                ? request.getParameter("kuendigungsfrist") : vertrag.getKuendigungsfrist()%>" readonly>
                             <select name="kuendigungsfristeinheit">
                                 <% for (Zeit_Einheit einheit : einheiten) {
                                     if (einheit.getName().equals(vertrag.getKuendigungsfristEinheit().getName())) {%>
@@ -166,6 +174,7 @@ Veränderungen:	-
                                 <% } %>    
                             </select>
                         </p>
+                        <input type="hidden" name="vertrag" value="">
                         <br><u>Vertragsspezifische Daten</u>
                             <%
                             if (vertrag.getVertragArt().getVertragArtId() == Konstanten.ID_VERTRAG_ART_STROM) {%>                        
@@ -351,7 +360,15 @@ Veränderungen:	-
                             </select>
                         </p>
                         <% } %>
-                        <input class="submit" type="submit" name="contract_change" value="Vertrag ändern">        
+                        <input type="hidden" name="kategorie" value="<%= vertrag.getVertragArt().getName() %>">
+                        <input type="hidden" name="vertragID" value="<%= vertrag.getVertragId() %>">
+                        <input type="hidden" name="kundenEmail" value="<%= k.getEmail() %>" >
+                        <% if (!vertrag.isIstGeloescht()) { %>
+                        <input class="submit" type="submit" name="contract_change" value="Vertrag ändern"> 
+                        <% } else { %>
+                        <input type="hidden" name="search" value="<%= vertrag.getVertragArt().getName() %>">
+                        <input class="submit" type="submit" name="back" value="Zurück">     
+                        <% } %>
                     </form>
                 </div> 
 

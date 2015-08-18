@@ -9,7 +9,7 @@ Veränderungen:	-
 --%>
 <%@page import="java.util.Collection"%>
 <%@page import="Entitys.Vertrag"%>
-<% Collection<Vertrag> vertraege = null;%>
+<% Collection<Vertrag> vertraege = null; %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -32,13 +32,19 @@ Veränderungen:	-
                         <%  vertraege = (Collection<Vertrag>) request.getAttribute("vertraege");
                             for (Vertrag vertrag : vertraege) { %>
                             <p>
-                            <form method="POST" action="user.jsp">                            
+                            <form method="POST" action="user.jsp">
+                             <% if (!vertrag.isIstGeloescht()) { %>
                             <span class="span_search"><%= aenderUmlaute(vertrag.getVertragsBezeichnung())%></span>                           
                             <input class="submit" style="width:150px" type="submit" name="aendern" value="Anzeigen/Ändern" />
                             <input class="submit" style="width:150px" type="submit" name="loeschen" value="Löschen" />
+                            <% } else { %>
+                            <span class="span_search"><%= aenderUmlaute(vertrag.getVertragsBezeichnung())%></span>                           
+                            <input class="submit_marked" style="width:150px" type="submit" name="aendern" value="Anzeigen" />
+                            <% } %>
                             <input type="hidden" name="vertrag" value="<%= vertrag.getVertragId()%>">
                             <input type="hidden" name="change" value="1">
                             </form>
+            
                         <% } %>        
                 <% } else { %>
                 Es wurde keine passenden Ergebnisse gefunden!

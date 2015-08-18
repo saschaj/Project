@@ -81,4 +81,8 @@ public class Kunde extends Benutzer{
     public Collection<Vertrag> getVertraege() {
         return vertraege;
     } 
+    
+    public void setVertraege(Collection<Vertrag> vertraege) {
+        this.vertraege = vertraege;
+    }
 }

@@ -54,6 +54,11 @@ public class Konstanten {
     public static final String REQUEST_ATTR_VERTRAEGE = "vertraege";
     
     /**
+     * Attributname für den veränderten Vertrag in einem HttpRequest Objekt. 
+     */
+    public static final String REQUEST_ATTR_VERTRAG = "vertrag";
+    
+    /**
      * Attributname für eine Kategorie in einem HttpRequest Objekt. 
      */
     public static final String REQUEST_ATTR_KATEGORIE = "kategorie";
