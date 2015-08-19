@@ -22,6 +22,9 @@ public class Festnetzvertrag extends Vertrag implements Serializable{
     
     @Column (name = "IST_VOIP", columnDefinition = "boolean default false")
     private boolean istVOIP;
+    
+    @Column (name = "GRUNDPREIS_MONAT")
+    private float grundpreisMonat;
 
     public Festnetzvertrag() {
     }
@@ -56,5 +59,13 @@ public class Festnetzvertrag extends Vertrag implements Serializable{
 
     public void setIstVOIP(boolean istVOIP) {
         this.istVOIP = istVOIP;
+    }
+    
+    public float getGrundpreisMonat() {
+        return grundpreisMonat;
+    }
+
+    public void setGrundpreisMonat(float grundpreisMonat) {
+        this.grundpreisMonat = grundpreisMonat;
     }
 }

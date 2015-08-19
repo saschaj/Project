@@ -206,29 +206,14 @@ public class LoginLogoutServlet extends HttpServlet {
                 isRegister = dao.register(vname, name, email1, pw1);
                 // Überprüfung, ob die Registrierung erfolgreich war
                 if (isRegister) {
-                    meta = "<meta http-equiv='refresh' content='2; URL=index.jsp'>";
-                    ausgabe = "Ihre Registrierung war erfolgreich!";
                     // Zurücksetzen der Session
                     session.invalidate();
 
-                    response.setContentType("text/html;charset=UTF-8");
-
-                    try (PrintWriter out = response.getWriter()) {
-                        /* TODO output your page here. You may use following sample code. */
-                        out.println("<!DOCTYPE html>");
-                        out.println("<html>");
-                        out.println("<head>");
-                        out.println("<title>Servlet LoginServlet</title>");
-                        out.println(meta);
-                        out.println("</head>");
-                        out.println("<body>");
-                        out.println(ausgabe);
-                        out.println("</body>");
-                        out.println("</html>");
-                    }
                     EmailHandler emailer = new EmailHandler();
                     emailer.sendRegisterMail("Registrierung für " + vname + " "
                             + name + " erfolgt", email1, pw1);
+                    request.getRequestDispatcher("/register_complete.jsp")
+                        .forward(request, response);
                 }
             } else {
                 ausgabe = "Ihre E-Mail-Adresse ist schon vorhanden!";

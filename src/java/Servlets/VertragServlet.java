@@ -52,38 +52,42 @@ public class VertragServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
-
-        if (request.getParameter("contract_save") != null) {
+        
+        if (request.getParameter("contract_save") != null 
+                || request.getParameter("anlegen") != null 
+                && request.getParameter("anlegen").equals("1")) {
             // Methode zum Abspeichern eines Vertrags
             this.speichereVertrag(request, response);
+        } else if (request.getParameter("cat") != null) {
+            request.getRequestDispatcher("/user.jsp").forward(request, response);
         } else if (request.getParameter("search") != null) {
             // Methode zum Suchen eines Vertrags
             this.sucheVertrag(request, response);
-        } else if (request.getParameter("aendern") != null) {
+        } else if (request.getParameter("change") != null) {
             // Methode zum Ändern eines Vertrags
             this.aendereVertrag(request, response);
+        } else if (request.getParameter("aendern") != null) {
+            request.getRequestDispatcher("/user.jsp").forward(request, response);
         } else if (request.getParameter("loeschen") != null) {
-            this.loescheVertrag(request,response);
+            // Methode zum Löschen eines Vertrags
+            this.loescheVertrag(request, response);
         } else if (request.getParameter("back") != null) {
             request.getRequestDispatcher("/user.jsp").forward(request, response);
         }
     }
 
     /**
-     * Ersteller:   Sascha Jungenkrüger
-     * Datum:       04.06.2015
-     * Version:     1.0 Sascha Jungenkrüger
-     *              1.1 Sascha Jungenkrüger 15.06.2015
-     *              - Datepicker eingefügt und angepasst
-     *              1.2 Sascha Jungenkrüger 02.08.2015
-     *              - Datumsberechnung überarbeitet
-     *              - Obligatorische Daten eingefügt (Vertragsbezeichnung)
-     * Änderungen:  -
+     * Ersteller: Sascha Jungenkrüger Datum: 04.06.2015 Version: 1.0 Sascha
+     * Jungenkrüger 1.1 Sascha Jungenkrüger 15.06.2015 - Datepicker eingefügt
+     * und angepasst 1.2 Sascha Jungenkrüger 02.08.2015 - Datumsberechnung
+     * überarbeitet - Obligatorische Daten eingefügt (Vertragsbezeichnung)
+     * Änderungen: -
+     *
      * @param request
      * @param response
      * @throws ServletException
      * @throws IOException
-     * @throws ParseException 
+     * @throws ParseException
      */
     public void speichereVertrag(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
@@ -112,16 +116,18 @@ public class VertragServlet extends HttpServlet {
                 stromVerbrauch = request.getParameter("sverbrauch"),
                 stromPreis = request.getParameter("spreisKwh"),
                 stromPersonen = request.getParameter("sanzPers"),
-                stromGrundPreis = request.getParameter("gPreisMonat"),
+                stromGrundPreis = request.getParameter("sPreisMonat"),
                 gasNr = request.getParameter("gnr"),
                 gasStand = request.getParameter("gstand"),
                 gasVerbrauch = request.getParameter("gverbrauch"),
                 gasPreis = request.getParameter("gpreisKwh"),
                 gasFlaeche = request.getParameter("gflaeche"),
+                gasPreisMonat = request.getParameter("gPreisMonat"),
                 festnetzTarif = request.getParameter("ftarifname"),
                 festnetzEmpfang = request.getParameter("fempfangstyp"),
                 festnetzIstISDN = request.getParameter("fistISDN"),
                 festnetzIstVOIP = request.getParameter("fistVOIP"),
+                festnetzPreisMonat = request.getParameter("fPreisMonat"),
                 handyTarif = request.getParameter("htarifname"),
                 handyNetz = request.getParameter("hnetztyp"),
                 handyNr = request.getParameter("hrufnummer"),
@@ -144,12 +150,12 @@ public class VertragServlet extends HttpServlet {
         Festnetzvertrag neuFestnetzvertrag = null;
         Handyvertrag neuHandyvertrag = null;
         Zeitschriftvertrag neuZeitschriftvertrag = null;
-        Vertrag neuerVertrag = null;
-        Kunde k = (Kunde)session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
+        Vertrag neuerVertrag = new Vertrag();
+        Kunde k = (Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
         Collection<Vertrag> alleVertraege = null;
         Vertrag_Art art = null;
         String ausgabe = "", fehler[] = null;
-        
+
         // Überprüfung der Vertragsbezeichnung, ob es gefüllt ist
         // Der Text wird innerhalb der Suche angezeigt
         if (vertragsBez.equals("")) {
@@ -317,11 +323,10 @@ public class VertragServlet extends HttpServlet {
 //                }
 //                break;
 //        }
-
         // Wenn nichts im Ausgabestring steht, sind die Eingaben korrekt
         // und es kann fortgesetzt werden
         if (ausgabe.equals("")) {
-
+            
             // Überprüfung, welche Kategorie gewählt wurde
             switch (kategorie) {
                 case "Strom":
@@ -432,6 +437,11 @@ public class VertragServlet extends HttpServlet {
                     } else {
                         neuGasvertrag.setVerbrauchsFlaeche(Float.parseFloat(gasFlaeche));
                     }
+                    if (gasPreisMonat.equals("")) {
+                        neuGasvertrag.setGrundpreisMonat(0);
+                    } else {
+                        neuGasvertrag.setGrundpreisMonat(Float.parseFloat(gasPreisMonat));
+                    }
 
                     // Zugriff auf DAO, damit die Daten in der DB
                     // gespeichert werden
@@ -480,6 +490,12 @@ public class VertragServlet extends HttpServlet {
                         neuFestnetzvertrag.setIstVOIP(false);
                     } else {
                         neuFestnetzvertrag.setIstVOIP(true);
+                    }
+
+                    if (festnetzPreisMonat.equals("")) {
+                        neuFestnetzvertrag.setGrundpreisMonat(0);
+                    } else {
+                        neuFestnetzvertrag.setGrundpreisMonat(Float.parseFloat(festnetzPreisMonat));
                     }
 
                     // Zugriff auf DAO, damit die Daten in der DB
@@ -576,12 +592,14 @@ public class VertragServlet extends HttpServlet {
                 k.setVertraege(alleVertraege);
                 session.setAttribute(Konstanten.SESSION_ATTR_BENUTZER, k);
                 request.setAttribute(Konstanten.REQUEST_ATTR_ERFOLG, ausgabe);
+                request.setAttribute("gespeichert", "test");
                 request.setAttribute("check", null);
                 request.setAttribute("cat", null);
                 request.getRequestDispatcher("/user.jsp").forward(request, response);
             } else {
                 ausgabe = "Vertrag konnte nicht gespeichert werden. (Ausklammern des Zugriffs der DAO)";
                 request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, ausgabe);
+                request.setAttribute("gespeichert", null);
                 request.setAttribute("check", request.getParameter("check"));
                 request.setAttribute("cat", request.getParameter("cat"));
                 request.getRequestDispatcher("/user.jsp").forward(request, response);
@@ -590,29 +608,28 @@ public class VertragServlet extends HttpServlet {
             // Fehler in den obligatorischen Feldern
             fehler = ausgabe.split("!");
             request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, fehler);
+            request.setAttribute("gespeichert", null);
             request.setAttribute("check", request.getParameter("check"));
             request.setAttribute("cat", request.getParameter("cat"));
             request.getRequestDispatcher("/user.jsp").forward(request, response);
         }
     }
-    
+
     /**
-     * Ersteller:   Sascha Jungenkrüger
-     * Datum:       12.06.2015
-     * Version:     1.0 Sascha Jungenkrüger
-     *              1.1 Sascha Jungenkrüger 15.07.2015
-     *              - Vertragssuche über die neuen Formulardaten angepasst
-     * Änderungen:  -
+     * Ersteller: Sascha Jungenkrüger Datum: 12.06.2015 Version: 1.0 Sascha
+     * Jungenkrüger 1.1 Sascha Jungenkrüger 15.07.2015 - Vertragssuche über die
+     * neuen Formulardaten angepasst Änderungen: -
+     *
      * @param request
      * @param response
      * @throws ServletException
      * @throws IOException
-     * @throws ParseException 
+     * @throws ParseException
      */
     public void sucheVertrag(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
         HttpSession session = request.getSession();
-        Kunde k = (Kunde)session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
+        Kunde k = (Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
         // Alte Suche über Datenbank
 //        Collection<Vertrag> vertraege = null;
         Collection<Vertrag> vertraege = new ArrayList<Vertrag>();
@@ -626,9 +643,9 @@ public class VertragServlet extends HttpServlet {
                 if (k.getVertraege() != null) {
                     for (Vertrag v : k.getVertraege()) {
                         if (v.getVertragsBezeichnung().
-                                contains(aenderUmlaute(suchText)) 
-                                || v.getVertragNr().contains(suchText) 
-                                || v.getKundenNr().contains(suchText) 
+                                contains(aenderUmlaute(suchText))
+                                || v.getVertragNr().contains(suchText)
+                                || v.getKundenNr().contains(suchText)
                                 || v.getVertragsPartner().contains(suchText)) {
                             vertraege.add(v);
                         }
@@ -648,7 +665,7 @@ public class VertragServlet extends HttpServlet {
             request.setAttribute(Konstanten.REQUEST_ATTR_SUCHTEXT, aenderUmlaute(suchText));
             request.getRequestDispatcher("/user.jsp").forward(request, response);
         } else if (kategorie != null) {
-            
+
             if (k.getVertraege() != null) {
                 for (Vertrag v : k.getVertraege()) {
                     if (v.getVertragArt().getName().equals(kategorie)) {
@@ -670,7 +687,7 @@ public class VertragServlet extends HttpServlet {
             request.getRequestDispatcher("/user.jsp").forward(request, response);
         }
     }
-    
+
     public void aendereVertrag(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
         // Initialisierung der obligatorischen Formulardaten
@@ -715,7 +732,7 @@ public class VertragServlet extends HttpServlet {
                 zeitschriftIntervall = request.getParameter("zintervall"),
                 zeitschriftEinheit = request.getParameter("zeinheit"),
                 zeitschriftGebiet = request.getParameter("zinteressen");
-        
+
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
         Stromvertrag neuStromvertrag = null;
         Gasvertrag neuGasvertrag = null;
@@ -724,15 +741,15 @@ public class VertragServlet extends HttpServlet {
         Zeitschriftvertrag neuZeitschriftvertrag = null;
         java.util.Date parseDateBeginn = null, parseDateEnde = null;
         HttpSession session = request.getSession();
-        Kunde k = (Kunde)session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
+        Kunde k = (Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
         Collection<Vertrag> alteVertraege = k.getVertraege();
         Collection<Vertrag> neueVertraege = new ArrayList<Vertrag>();
         Vertrag neuerVertrag = null;
         String kundenEmail = request.getParameter("kundenEmail");
         boolean vertragAktualisiert = false;
-        String[] fehler = null;        
+        String[] fehler = null;
         String ausgabe = "";
-        
+
         // Überprüfung der Vertragsbezeichnung, ob es gefüllt ist
         // Der Text wird innerhalb der Suche angezeigt
         if (vertragsBez.equals("")) {
@@ -744,26 +761,26 @@ public class VertragServlet extends HttpServlet {
         if (vertragsNr.equals("")) {
             ausgabe = ausgabe + "Bitte geben Sie eine Vertragsnummer ein.!";
         }
-        
+
         // Überprüft, ob die Kündigungsfrist nicht leer und nur Ziffern enthält
         if (kuendigungsfrist.equals("")) {
             ausgabe = ausgabe + ""
                     + "Bitte geben Sie die vertragliche Kündigungsfrist ein.!";
         }
-        
+
         if (!vertragsBeginn.equals("") && !laufzeit.equals("")
-                || !vertragsEnde.equals("")) { 
+                || !vertragsEnde.equals("")) {
             parseDateBeginn = format.parse(vertragsBeginn);
             parseDateEnde = format.parse(vertragsEnde);
         }
-        
+
         if (ausgabe.equals("")) {
-            
+
             switch (kategorie) {
                 case "Stromvertrag":
                     // Vertragsdaten setzen
 //                    neuStromvertrag = new Stromvertrag();
-                    neuStromvertrag = (Stromvertrag) new DatenZugriffsObjekt().getVertrag(vertragID);                    
+                    neuStromvertrag = (Stromvertrag) new DatenZugriffsObjekt().getVertrag(vertragID);
 //                    neuStromvertrag.setVertragArt(new DatenZugriffsObjekt().getVertragsArt(Konstanten.ID_VERTRAG_ART_STROM));
 //                    neuStromvertrag.setKunde((Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER));
 //                    neuStromvertrag.setVertragNr(vertragsNr);
@@ -1010,7 +1027,7 @@ public class VertragServlet extends HttpServlet {
             }
             if (vertragAktualisiert) {
                 ausgabe = "Ihr Vertrag wurde geändert!";
-                for(Vertrag v : alteVertraege) {
+                for (Vertrag v : alteVertraege) {
                     if (v.getVertragId() == vertragID) {
                         neueVertraege.add(neuerVertrag);
                     } else {
@@ -1038,18 +1055,18 @@ public class VertragServlet extends HttpServlet {
             request.setAttribute("check", request.getParameter("check"));
             request.setAttribute("cat", request.getParameter("cat"));
             request.getRequestDispatcher("/user.jsp").forward(request, response);
-        }       
+        }
     }
-    
+
     public void loescheVertrag(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, ParseException {
         int vertragID = Integer.parseInt(request.getParameter("vertrag"));
         HttpSession session = request.getSession();
         String ausgabe = "";
-        Kunde k = (Kunde)session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
+        Kunde k = (Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
         Collection<Vertrag> vertraege = k.getVertraege(), neueVertraege = new ArrayList<Vertrag>();
         boolean istGeloescht = new DatenZugriffsObjekt().loescheVertrag(vertragID);
-        
+
         if (istGeloescht) {
             for (Vertrag v : vertraege) {
                 if (v.getVertragId() == vertragID) {

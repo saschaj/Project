@@ -24,6 +24,9 @@ public class Gasvertrag extends Vertrag implements Serializable {
     
     @Column (name = "VERBRAUCHSFLAECHE")
     private float verbrauchsFlaeche;
+    
+    @Column (name = "GRUNDPREIS_MONAT")
+    private float grundpreisMonat;
 
     public Gasvertrag() {
     }
@@ -66,5 +69,13 @@ public class Gasvertrag extends Vertrag implements Serializable {
 
     public void setVerbrauchsFlaeche(float verbrauchsFlaeche) {
         this.verbrauchsFlaeche = verbrauchsFlaeche;
+    }
+    
+    public float getGrundpreisMonat() {
+        return grundpreisMonat;
+    }
+
+    public void setGrundpreisMonat(float grundpreisMonat) {
+        this.grundpreisMonat = grundpreisMonat;
     }
 }

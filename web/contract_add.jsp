@@ -42,19 +42,21 @@ Veränderungen:	-
 
         <div id="main" style="width:800px">
             <h2>Vertrag hinzufügen</h2>
-            <form method="POST" action="user.jsp"> 
+            <form method="POST" action="VertragServlet"> 
                 <input class="submit_add" type="submit" name="cat" value="Strom" />
                 <input class="submit_add" type="submit" name="cat" value="Gas" />
                 <input class="submit_add" type="submit" name="cat" value="Festnetz/DSL" />
                 <input class="submit_add" type="submit" name="cat" value="Handy" />
                 <input class="submit_add" type="submit" name="cat" value="Zeitschriften" />
                 <input type="hidden" name="check" value="check" />
-                <input type="hidden" name="add" value="Neuen Vertrag anlegen" />
-            </form>
-            <div id="site_content">    
-
-                <% if (request.getParameter("check") != null
-                            || request.getAttribute("check") != null) {
+                <input type="hidden" name="anlegen" value="0" />
+            <%  if (request.getParameter("cat") != null) {
+                if (request.getParameter("cat").equals("Strom") ||
+                    request.getParameter("cat").equals("Gas") ||
+                    request.getParameter("cat").equals("Festnetz/DSL") ||
+                    request.getParameter("cat").equals("Handy") ||
+                    request.getParameter("cat").equals("Zeitschriften") ||
+                             request.getAttribute("check") != null) {
                         if (request.getAttribute(Konstanten.REQUEST_ATTR_FEHLER) != null) {
                             fehler = (String[]) request.getAttribute(Konstanten.REQUEST_ATTR_FEHLER);
                             for (int i = 0; i < fehler.length; i++) {%>
@@ -62,8 +64,7 @@ Veränderungen:	-
                 <% }
                     }%>
 
-                <div id="content">
-                    <form method="POST" action="VertragServlet"> 
+                        <h3><%= request.getParameter("cat") %></h3>
                         <!-- Pflichtdaten eines Vertrags -->
                         <u>Obligatorische Vertragsdaten</u>
                         <p>
@@ -124,7 +125,9 @@ Veränderungen:	-
                                 <option><%= einheit.getName()%></option>
                                 <% }%>    
                             </select>
-                        </p>
+                        <br>
+                            Die Kündigungsfrist ist die Frist wann Sie Ihren Vertrag spätestens kündigen können. 
+                        </p>                        
                         <br><u>Optionale Vertragsdaten</u>
                         <p>
                             <span class="span_reg">Kundennummer:</span>
@@ -150,6 +153,8 @@ Veränderungen:	-
                                 <option><%= einheit.getName()%></option>
                                 <% } %>    
                             </select>
+                            <br>
+                            Damit wir Sie benachrichtigen benötigen wir in der Benachrichtigungsfrist eine numersiche Eingabe!
                         </p>
                         <br><u>Vertragsspezifische Daten</u>
                         <%
@@ -178,7 +183,7 @@ Veränderungen:	-
                         <p>
                             <span class="span_reg">Preis pro kWh (in Cent):</span>
                             <input class="contact" type="text" name="spreisKwh"
-                                   pattern="[1-9][0-9]{0,}[,][0-9]+" title="Es sind nur Fließkommazahlen erlaubt!"
+                                   pattern="[1-9][0-9]{0,}[,0-9]*" title="Es sind nur Fließkommazahlen erlaubt!"
                                    value="<%= request.getParameter("spreisKwh") != null
                                            ? request.getParameter("spreisKwh") : ""%>">
                         </p>
@@ -191,8 +196,8 @@ Veränderungen:	-
                         </p>
                         <p>
                             <span class="span_reg">Grundpreis(pro Monat in €):</span>
-                            <input class="contact" type="text" name="gPreisMonat"
-                                   pattern="[\\d]+[,][\\d]+" title="Es sind nur Fließkommazahlen erlaubt!"
+                            <input class="contact" type="text" name="sPreisMonat"
+                                   pattern="[1-9][0-9]*[,0-9]*" title="Es sind nur Fließkommazahlen erlaubt!"
                                    value="<%= request.getParameter("sPreisMonat") != null
                                            ? request.getParameter("sPreisMonat") : ""%>">
                         </p>
@@ -222,7 +227,7 @@ Veränderungen:	-
                         <p>
                             <span class="span_reg">Preis pro kWh:</span>
                             <input class="contact" type="text" name="gpreisKwh"
-                                   pattern="[1-9][0-9]{0,}[,][0-9]+" title="Es sind nur Fließkommazahlen erlaubt!"
+                                   pattern="[1-9][0-9]{0,}[,0-9]*" title="Es sind nur Fließkommazahlen erlaubt!"
                                    value="<%= request.getParameter("gpreisKwh") != null
                                            ? request.getParameter("gpreisKwh") : ""%>">
                         </p>
@@ -232,6 +237,13 @@ Veränderungen:	-
                                    pattern="[1-9][0-9]{0,}" title="Es sind nur Ziffern erlaubt."
                                    value="<%= request.getParameter("gflaeche") != null
                                            ? request.getParameter("gflaeche") : ""%>">
+                        </p>
+                        <p>
+                            <span class="span_reg">Grundpreis(pro Monat in €):</span>
+                            <input class="contact" type="text" name="gPreisMonat"
+                                   pattern="[1-9][0-9]*[,0-9]*" title="Es sind nur Fließkommazahlen erlaubt!"
+                                   value="<%= request.getParameter("gPreisMonat") != null
+                                           ? request.getParameter("gPreisMonat") : ""%>">
                         </p>
                         <% } else if (request.getParameter("cat").equals("Festnetz/DSL")) {%>
                         <p>
@@ -256,6 +268,13 @@ Veränderungen:	-
                         <p>
                             <span class="span_reg">VOIP:</span>  
                             <input type="checkbox" name="fistVOIP">
+                        </p>
+                        <p>
+                            <span class="span_reg">Grundpreis(pro Monat in €):</span>
+                            <input class="contact" type="text" name="fPreisMonat"
+                                   pattern="[1-9][0-9]*[,0-9]*" title="Es sind nur Fließkommazahlen erlaubt!"
+                                   value="<%= request.getParameter("fPreisMonat") != null
+                                           ? request.getParameter("fPreisMonat") : ""%>">
                         </p>
                         <% } else if (request.getParameter("cat").equals("Handy")) {%>
                         <p>
@@ -311,12 +330,11 @@ Veränderungen:	-
                         <% }%>
                         <input type="hidden" name="check" value="<%= request.getParameter("check")%>">
                         <input type="hidden" name="cat" value="<%= request.getParameter("cat")%>">
+                        <input type="hidden" name="anlegen" value="1" />
                         <input class="submit" type="submit" name="contract_save" value="Vertrag speichern">        
-                    </form>
-                </div>               
-                <% }%>
+                    </form> 
+                        <% }}%>
 
-            </div>
         </div>
 
     </body>

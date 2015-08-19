@@ -60,10 +60,14 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                                     <%@include file="contract_search.jsp"%>
                                 <% } %> 
                                 <% if (request.getParameter("add") != null
-                                    || request.getAttribute("check") != null) { %>
+                                    || request.getAttribute("check") != null
+                                    || request.getParameter("cat") != null
+                                    && request.getAttribute("gespeichert") == null) { %>
                                     <%@include file="contract_add.jsp"%>
-                                <% }
-                                    if (request.getParameter("change") != null) { %>
+                                <% } else {
+                                    request.setAttribute("gespeichert", null);
+                                    }
+                                    if (request.getParameter("aendern") != null) { %>
                                     <%@include file="contract_change.jsp"%>    
                                 <%    }%>
                                 
