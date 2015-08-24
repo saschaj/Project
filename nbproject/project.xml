@@ -16,14 +16,15 @@
                 </library>
                 <library dirs="200">
                     <file>${file.reference.jcommon-1.0.23.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
                     <file>${file.reference.jfreechart-1.0.19.jar}</file>
-                    <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
                 <library dirs="200">
                     <file>${file.reference.javax.mail.jar}</file>
+                </library>
+                <library dirs="200">
+                    <file>${libs.JFreeChart.classpath}</file>
                     <path-in-war>WEB-INF/lib</path-in-war>
                 </library>
             </web-module-libraries>

@@ -72,7 +72,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                         
                     </div>
                     
-                    <%-- Button für Statistiken --%>
+                    <%-- Buttons für Statistiken --%>
                     <div id="form_settings">
                         
                         <%-- Formular der Statistiken --%>
@@ -80,13 +80,36 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                             <p>
                                 <input class="submit" type="submit" 
                                  name="BenutzerStatistik" value="Benutzerübersicht" />
-                                <p>
+							</p>
+                            <p>
                                 <input class="submit" type="submit" 
                                  name="VertragStatistik" value="Vertragsübersicht" />
                             </p>
                         </form>
                         
                     </div>
+						
+					<br>
+					
+					<!--Button um neuen Admin hinzuzufügen-->	
+					<div>
+						<form method="POST" action="admin.jsp">
+							<button type="submit" class="submit"
+									name="Zeige_Admin_anlegen">
+								Neuen Admin anlegen
+							</button>
+						</form>
+					</div>
+						
+					<br>
+					
+					<!-- Adminpasswort ändern Button -->
+					<div>
+						<form method="POST" action="admin.jsp">
+							<input class="submit" type="submit" name="Zeige_Admin_pw_aendern" 
+								   value="Adminpasswort ändern">
+						</form>
+					</div>
                     
                 </div><!--close content-->                
             </div><!--close site_content-->

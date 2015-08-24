@@ -776,6 +776,129 @@ public class DatenZugriffsObjekt {
         return query.getResultList();
     }
 
+	/**
+	 * Ersteller:	René Kanzenbach
+	 * Datum:		19.08.2015
+	 * Version:		1.0
+	 * 
+	 * Ändert den Status des übergebenen Benutzers auf den Status, mit der  
+	 * übergebenen Id.
+	 * 
+	 * @param benutzer
+	 * @param statusId 
+	 */
+	public void setBenutzerStatus(Benutzer benutzer, int statusId) {
+
+		//Status mit gesuchter Id finden.
+		Benutzer_Status status = this.entityManager.find(Benutzer_Status.class,
+				statusId);
+		//Sicherstellen, dass sich der Benutzer im PersistenceContext des
+		//EntityManagers befindet
+		Benutzer updateBenutzer = this.entityManager.merge(benutzer);
+		
+		try {
+			//Transaktion beginnen.
+			this.entityManager.getTransaction().begin();
+			//Benutzerstatus ändern.
+			updateBenutzer.setStatus(status);
+			//Transaktion bestätigen.
+			this.entityManager.getTransaction().commit();
+		} catch (RollbackException rbe) {
+			System.out.println("Fehler Rollback musste ausgeführt werden.");
+		} catch (Exception e) {
+			this.entityManager.getTransaction().rollback();
+			System.out.println("Fehler Rollback musste ausgeführt werden.");
+		}
+	}
+	
+	/**
+	 * Ersteller:	René Kanzenbach
+	 * Datum:		20.08.2015
+	 * Version:		1.0
+	 * 
+	 * Änder das Passwort des übergebenen Benutzers, innerhalb einer Transaktion.
+	 * 
+	 * @param benutzer
+	 * @param pw 
+	 */
+	public void setBenutzerPW(Benutzer benutzer, String pw) {
+		
+		EntityTransaction tr = this.entityManager.getTransaction();
+		//Sicherstellen, dass sich der Benutzer im PersistenceContext
+		//des EntityManagers befindet
+		Benutzer updateBenutzer = this.entityManager.merge(benutzer);
+		
+		try {
+			//Transaktion beginnen.
+			tr.begin();
+			//Benutzerstatus ändern.
+			updateBenutzer.setPasswort(pw);
+			//Transaktion bestätigen.
+			tr.commit();
+		} catch (RollbackException rbe) {
+			System.out.println("RollbackException aufgetreten in "
+					+ "DatenZugriffsObjekt -> setBenutzerPW() \n" 
+					+ rbe.getMessage());
+		} catch (Exception e) {
+			this.entityManager.getTransaction().rollback();
+			System.out.println("Allgemeine Exception aufgetreten in "
+					+ "DatenZugriffsObjekt -> setBenutzerPW()" 
+					+ e.getMessage());
+		}
+	}
+	
+	/**
+	 * Ersteller:	René Kanzenbach
+	 * Datum:		24.08.2015
+	 * Version:		1.0
+	 * 
+	 * Erstellt einen neuen Adminaccount und fügt ihn in die Datenbank ein.
+	 * Der neu erzeugte Admin erhält sofort den Status "aktiv".
+	 * 
+	 * @param name
+	 * @param pw 
+	 * @return 'true' wenn der Admin angelegt wurde; 'false' wenn der Admin 
+	 *			nicht angelegt werden konnte
+	 */
+	public boolean addAdmin(String name, String pw) {
+		
+		EntityTransaction tr = this.entityManager.getTransaction();
+		boolean istAdminAngelegt = false;
+		
+		//Neuen Benutzer erstellen
+		Benutzer neuerAdmin = new Benutzer();
+		//Status "aktiv" aus der Datenbank laden
+		Benutzer_Status statusAktiv = this.entityManager.find(
+				Benutzer_Status.class, Konstanten.ID_BEN_STATUS_AKTIV);
+		//Adminrecht aus der Datenbank laden
+		Benutzer_Recht adminRecht = this.entityManager.find(
+				Benutzer_Recht.class, Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT);
+		
+		//Adminobjekt mit Daten füllen
+		neuerAdmin.setEmail(name);
+		neuerAdmin.setPasswort(pw);
+		neuerAdmin.addRecht(adminRecht);
+		neuerAdmin.setStatus(statusAktiv);
+		
+		//Admin in die Datenbank einfügen
+		try {
+			//Transaktion beginnen
+			tr.begin();
+			//Adminobjekt dem EntityManager übergeben
+			this.entityManager.persist(neuerAdmin);
+			//Transaktion abschließen
+			tr.commit();
+			istAdminAngelegt = true;
+		} catch (RollbackException e) {
+			System.out.println("Fehler in DatenZugriffsObjekt -> addAdmin() \n"
+					+ e.getMessage());
+		} catch (Exception e) {
+			System.out.println("Fehler in DatenZugriffsObjekt -> addAdmin() \n"
+					+ e.getMessage());
+		}
+		return istAdminAngelegt;
+	}
+
     /**
      * Methode zum schließen des EntityManagers.
      */
