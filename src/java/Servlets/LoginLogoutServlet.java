@@ -245,9 +245,14 @@ public class LoginLogoutServlet extends HttpServlet {
     }
 
     /**
-     * Ersteller:	René Kanzenbach Erstelldatum: 02.06.2015 Methode: logIn
-     * Version: 1.0 Änderungen: -
-     *
+     * Ersteller:	René Kanzenbach 
+	 * Datum:		02.06.2015 
+	 * Methode:		logIn
+     * Version:		1.0 
+	 *				-1.1 René Kanzenbach 20.08.2015
+	 *				Wenn sich ein Admin einloggt, wird er jetzt direkt auf die
+	 *				"admin.jsp" weitergeleitet
+	 *
      * @param request
      * @param response
      * @throws ServletException
@@ -278,9 +283,21 @@ public class LoginLogoutServlet extends HttpServlet {
 
             //BenutzerObjekt in Session laden
             session.setAttribute(Konstanten.SESSION_ATTR_BENUTZER, benutzer);
-            //Weiterleitung auf Benutzerstartseite
-            request.getRequestDispatcher("/user.jsp")
-                    .forward(request, response);
+
+            //Prüfen ob Benutzer ein Kunde oder Admin ist.
+            if (benutzer.besitztRecht(
+					Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT)) {
+                //Benutzer besitzt Benutzerrechte.
+                //Weiterleitung auf Benutzerstartseite
+                request.getRequestDispatcher("/user.jsp")
+                        .forward(request, response);
+            } else if (benutzer.besitztRecht(
+					Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT)) {
+				//Benutzer besitzt Adminrechte.
+				//Weiterleitung auf Adminstartseite.
+				request.getRequestDispatcher("/admin.jsp")
+						.forward(request, response);
+            }
 
         } else { //Falls LogIn nicht erfolgreich
 
