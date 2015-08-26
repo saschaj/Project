@@ -103,13 +103,13 @@ public class LoginLogoutServlet extends HttpServlet {
 
     private void passwortZuruecksetzen(String email) {
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
-        ZufallsStringErzeuger p = new ZufallsStringErzeuger();
-        String neuesPasswort = p.holeNeuesPasswort();
+        ZufallsStringErzeuger p = new ZufallsStringErzeuger();        
+        String passwortBestaetigung = p.erzeugeBestaetigungsReferenz();        
         Benutzer b = dao.getBenutzer(email);
-        b.setPasswort(neuesPasswort);
+        b.setPasswortZuruecksetzen(passwortBestaetigung);
         dao.addBenutzer(b);
         EmailHandler emailer = new EmailHandler();
-        emailer.sendPasswortMail(email);
+        emailer.sendePasswortBestaetigung(email, passwortBestaetigung);
     }
 
     /**

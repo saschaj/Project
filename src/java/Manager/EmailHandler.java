@@ -5,8 +5,10 @@
  */
 package Manager;
 
+import Entitys.Benutzer;
 import Entitys.Kunde;
 import Entitys.Vertrag;
+import Hilfsklassen.ZufallsStringErzeuger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -128,18 +130,19 @@ public class EmailHandler {
      * sendPasswortMail sendet eine E-Mail an die übergebene E-Mail-Adresse in
      * der ein neuerzeugtes Passwort für den Benutzeraccount eben dieser steht.
      *
-     * @param recipient
+     * @param b
      */
-    public void sendPasswortMail(String recipient) {
+    public void sendPasswortMail(Benutzer b) {
         try {
             Message msg = new MimeMessage(session);
             msg.setSubject("Neues Passwort für SWPSS2015 Vertragsverwaltung");
-            msg.setRecipient(RecipientType.TO, new InternetAddress(recipient));
+            msg.setRecipient(RecipientType.TO, new InternetAddress(b.getEmail()));
 
             // Body text.
             BodyPart messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setText("Leider ist diese Funktion noch nicht"
-                    + " implementiert.");
+            messageBodyPart.setText("\nIhre Zugangsdaten: \n"
+                    + "\nEmail-Adresse: " + b.getEmail()
+                    + "\nPasswort: " + b.getPasswort());
 
             // Multipart message.
             Multipart multipart = new MimeMultipart();
@@ -155,6 +158,13 @@ public class EmailHandler {
         }
     }
 
+    /**
+     * Diese Methode versendet eine E-Mail. Der Inhalt sind alle in kürze ab-
+     * laufenden Vertäge eines Kunden.
+     * 
+     * @param k In der E-Mail erwähnte Kunde
+     * @param l Liste alle Verträge die Ablaufen
+     */
     public void sendeAblaufbenachrichtigung(Kunde k, ArrayList<Vertrag> l) {
         try {
             Message msg = new MimeMessage(session);
@@ -176,6 +186,35 @@ public class EmailHandler {
             // Body text.
             BodyPart messageBodyPart = new MimeBodyPart();
             messageBodyPart.setText(msgBody);
+
+            // Multipart message.
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPart);
+
+            // Add multipart message to email.
+            msg.setContent(multipart);
+
+            // Send email.
+            Transport.send(msg);
+        } catch (MessagingException ex) {
+            Logger.getLogger(EmailHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+     public void sendePasswortBestaetigung(String recipient, String ref) {
+        try {
+            Message msg = new MimeMessage(session);
+            msg.setSubject("Bestätigung erforderlich - Passwort zurücksetzen");
+            msg.setRecipient(RecipientType.TO, new InternetAddress(recipient));
+
+            // Body text.
+            BodyPart messageBodyPart = new MimeBodyPart();
+            String msgBody = "Sie haben die \"Passwort vergessen\"-Funktion"
+                    + " aufgerufen. Klicken Sie auf den folgenden Link um das"
+                    + " Passwort zurückzusetzen. Dieses wird Ihnen dann in einer"
+                    + " seperaten E-Mail zugesendet. \n";            
+            String link = "http://192.168.198.101:8080/SWPSS2015/ConfirmationServlet?user=recipient?action=";                        
+            messageBodyPart.setText(msgBody + "\n" + link + ref);
 
             // Multipart message.
             Multipart multipart = new MimeMultipart();
