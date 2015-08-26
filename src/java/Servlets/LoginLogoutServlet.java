@@ -15,7 +15,7 @@ package Servlets;
 
 import Entitys.Benutzer;
 import Hilfsklassen.Konstanten;
-import Hilfsklassen.PasswortErzeuger;
+import Hilfsklassen.ZufallsStringErzeuger;
 import Manager.DatenZugriffsObjekt;
 import Manager.EmailHandler;
 import java.io.IOException;
@@ -103,8 +103,8 @@ public class LoginLogoutServlet extends HttpServlet {
 
     private void passwortZuruecksetzen(String email) {
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
-        PasswortErzeuger p = new PasswortErzeuger();
-        String neuesPasswort = p.getNewPasswort();
+        ZufallsStringErzeuger p = new ZufallsStringErzeuger();
+        String neuesPasswort = p.holeNeuesPasswort();
         Benutzer b = dao.getBenutzer(email);
         b.setPasswort(neuesPasswort);
         dao.addBenutzer(b);

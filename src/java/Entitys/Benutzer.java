@@ -15,174 +15,187 @@ import javax.persistence.*;
 @Inheritance(strategy = javax.persistence.InheritanceType.JOINED)
 public class Benutzer implements java.io.Serializable {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int benutzerId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int benutzerId;
 
-	@ManyToOne
-	@JoinColumn(name = "BENUTZER_STATUS_ID")
-	private Benutzer_Status status;
+    @ManyToOne
+    @JoinColumn(name = "BENUTZER_STATUS_ID")
+    private Benutzer_Status status;
 
-	@ManyToMany(cascade = CascadeType.PERSIST)
-	@JoinTable(name = "BENUTZER_RECHT_ZUORDNUNG")
-	private Collection<Benutzer_Recht> rechte;
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(name = "BENUTZER_RECHT_ZUORDNUNG")
+    private Collection<Benutzer_Recht> rechte;
 
-	@Column(name = "EMAIL")
-	private String email;
+    @Column(name = "EMAIL")
+    private String email;
 
-	@Column(name = "PASSWORT")
-	private String passwort;
+    @Column(name = "PASSWORT")
+    private String passwort;
 
-	public Benutzer() {
-	}
+    @Column(name = "PASSWORTZURUECKSETZEN")
+    private String passwortZuruecksetzen;
 
-	public int getBenutzerId() {
-		return benutzerId;
-	}
+    @Column(name = "EMAILBESTAETIGUNG")
+    private String emailBestaetigung;
 
-	public Benutzer_Status getStatus() {
-		return status;
-	}
+    public Benutzer() {
+    }
 
-	public void setStatus(Benutzer_Status status) {
-		this.status = status;
-	}
+    public int getBenutzerId() {
+        return benutzerId;
+    }
 
-	public Collection<Benutzer_Recht> getRechte() {
-		return rechte;
-	}
+    public Benutzer_Status getStatus() {
+        return status;
+    }
 
-	public void setRechte(Collection<Benutzer_Recht> rechte) {
-		this.rechte = rechte;
-	}
+    public void setStatus(Benutzer_Status status) {
+        this.status = status;
+    }
 
-	/**
-	 * Ersteller:	René Kanzenbach
-	 * Erstelldatum: 11.06.2015
-	 * Methode: addRecht
-	 * Version: 1.0
-	 * Änderungen: -
-	 *
-	 * Fügt dem Benutzer das übergebene Recht hinzu.
-	 *
-	 * Prüft ob schon eine Collection mit Rechten existiert, falls nicht wird
-	 * eine neues HashSet angelegt und das Recht diesem hinzugefügt.
-	 *
-	 * @param recht Wird den Rechten des Benutzers hinzugefügt.
-	 */
-	public void addRecht(Benutzer_Recht recht) {
+    public Collection<Benutzer_Recht> getRechte() {
+        return rechte;
+    }
 
-		if (this.rechte != null) {
-			this.rechte.add(recht);
-		} else {
-			this.rechte = new HashSet();
-			this.rechte.add(recht);
-		}
-	}
+    public void setRechte(Collection<Benutzer_Recht> rechte) {
+        this.rechte = rechte;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    /**
+     * Ersteller:	René Kanzenbach Erstelldatum: 11.06.2015 Methode: addRecht
+     * Version: 1.0 Änderungen: -
+     *
+     * Fügt dem Benutzer das übergebene Recht hinzu.
+     *
+     * Prüft ob schon eine Collection mit Rechten existiert, falls nicht wird
+     * eine neues HashSet angelegt und das Recht diesem hinzugefügt.
+     *
+     * @param recht Wird den Rechten des Benutzers hinzugefügt.
+     */
+    public void addRecht(Benutzer_Recht recht) {
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+        if (this.rechte != null) {
+            this.rechte.add(recht);
+        } else {
+            this.rechte = new HashSet();
+            this.rechte.add(recht);
+        }
+    }
 
-	public String getPasswort() {
-		return passwort;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	/**
-	 * Ersteller:		René Kanzenbach
-	 * Erstelldatum:	02.06.2015
-	 * Methode:			pruefePasswort
-	 * Version:			1.0
-	 * Änderungen:		-
-	 *
-	 * Gleicht das übergebene Klartext Passwort mit dem Passwort des Benutzers
-	 * ab und gibt TRUE zurück falls diese identisch sind.
-	 *
-	 * Diese Methode nutzt die Benutzer.createHash() Methode.
-	 *
-	 * @param passwort Passwort in Klartext.
-	 * @return TRUE falls die Passwörter identisch sind und FALSE falls nicht.
-	 */
-	public boolean pruefePasswort(String passwort) {
-		return this.passwort.equals(Benutzer.createHash(passwort));
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public void setPasswort(String passwort) {
-		this.passwort = createHash(passwort);
-	}
+    public String getPasswort() {
+        return passwort;
+    }
 
-	@Override
-	public int hashCode() {
-		int hash = 7;
-		hash = 53 * hash + this.benutzerId;
-		return hash;
-	}
+    /**
+     * Ersteller:	René Kanzenbach Erstelldatum:	02.06.2015 Methode:
+     * pruefePasswort Version:	1.0 Änderungen:	-
+     *
+     * Gleicht das übergebene Klartext Passwort mit dem Passwort des Benutzers
+     * ab und gibt TRUE zurück falls diese identisch sind.
+     *
+     * Diese Methode nutzt die Benutzer.createHash() Methode.
+     *
+     * @param passwort Passwort in Klartext.
+     * @return TRUE falls die Passwörter identisch sind und FALSE falls nicht.
+     */
+    public boolean pruefePasswort(String passwort) {
+        return this.passwort.equals(Benutzer.createHash(passwort));
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		final Benutzer other = (Benutzer) obj;
-		if (this.benutzerId != other.benutzerId) {
-			return false;
-		}
-		return true;
-	}
+    public void setPasswort(String passwort) {
+        this.passwort = createHash(passwort);
+    }
 
-	/**
-	 * Ersteller:		René Kanzenbach
-	 * Erstelldatum:	18.08.2015
-	 * Methode:			besitztRecht
-	 * Version:			1.0
-	 * Änderungen:		-
-	 * 
-	 * Prüft ob der Benutzer ein bestimmtes Recht besitzt.
-	 * 
-	 * @param rechtId benutzerRechtId des Benutzerrechtes, welches geprüft 
-	 * werden soll.
-	 * @return 
-	 */
-	public boolean besitztRecht(int rechtId) {
+    public String getPasswortZuruecksetzen() {
+        return passwortZuruecksetzen;
+    }
 
-		boolean besitztRecht = false;
+    public void setPasswortZuruecksetzen(String passwortZuruecksetzen) {
+        this.passwortZuruecksetzen = passwortZuruecksetzen;
+    }
 
-		for (Benutzer_Recht recht : this.rechte) {
-			if (recht.getBenutzerRechtId() == rechtId) {
-				besitztRecht = true;
-			}
-		}
+    public String getEmailBestaetigung() {
+        return emailBestaetigung;
+    }
 
-		return besitztRecht;
-	}
+    public void setEmailBestaetigung(String emailBestaetigung) {
+        this.emailBestaetigung = emailBestaetigung;
+    }
 
-	public static String createHash(String text) {
-		MessageDigest md5;
-		StringBuffer sb = new StringBuffer();
-		try {
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 53 * hash + this.benutzerId;
+        return hash;
+    }
 
-			md5 = MessageDigest.getInstance("MD5");
-			byte[] hash = md5.digest(text.getBytes());
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Benutzer other = (Benutzer) obj;
+        if (this.benutzerId != other.benutzerId) {
+            return false;
+        }
+        return true;
+    }
 
-			for (int i = 0; i < hash.length; i++) {
-				sb.append(Integer.toHexString(
-						(hash[i] & 0xFF) | 0x100
-				).toLowerCase().substring(1, 3)
-				);
-			}
-			return sb.toString();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return sb.toString();
-		}
-	}
+    /**
+     * Ersteller:	René Kanzenbach Erstelldatum:	18.08.2015 Methode:	besitztRecht
+     * Version:	1.0 Änderungen:	-
+     *
+     * Prüft ob der Benutzer ein bestimmtes Recht besitzt.
+     *
+     * @param rechtId benutzerRechtId des Benutzerrechtes, welches geprüft
+     * werden soll.
+     * @return
+     */
+    public boolean besitztRecht(int rechtId) {
+
+        boolean besitztRecht = false;
+
+        for (Benutzer_Recht recht : this.rechte) {
+            if (recht.getBenutzerRechtId() == rechtId) {
+                besitztRecht = true;
+            }
+        }
+
+        return besitztRecht;
+    }
+
+    public static String createHash(String text) {
+        MessageDigest md5;
+        StringBuffer sb = new StringBuffer();
+        try {
+
+            md5 = MessageDigest.getInstance("MD5");
+            byte[] hash = md5.digest(text.getBytes());
+
+            for (int i = 0; i < hash.length; i++) {
+                sb.append(Integer.toHexString(
+                        (hash[i] & 0xFF) | 0x100
+                ).toLowerCase().substring(1, 3)
+                );
+            }
+            return sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return sb.toString();
+        }
+    }
 
 }
