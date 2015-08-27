@@ -65,6 +65,10 @@ public class DatenZugriffsObjekt {
 
     }
 
+    public Kunde getKunde(int benutzerId) {
+        return entityManager.find(Kunde.class, benutzerId);
+    }
+    
     /**
      * Die Methode soll den in der Datenbank,bestehenden Kunden mit den
      * übergebenen Kundendaten aktualisieren.

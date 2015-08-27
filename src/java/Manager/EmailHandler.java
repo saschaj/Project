@@ -201,7 +201,7 @@ public class EmailHandler {
         }
     }
     
-     public void sendePasswortBestaetigung(String recipient, String ref) {
+     public void sendePasswortBestaetigung(String recipient, String ref, String pfad) {
         try {
             Message msg = new MimeMessage(session);
             msg.setSubject("Bestätigung erforderlich - Passwort zurücksetzen");
@@ -213,7 +213,38 @@ public class EmailHandler {
                     + " aufgerufen. Klicken Sie auf den folgenden Link um das"
                     + " Passwort zurückzusetzen. Dieses wird Ihnen dann in einer"
                     + " seperaten E-Mail zugesendet. \n";            
-            String link = "http://192.168.198.101:8080/SWPSS2015/ConfirmationServlet?user=recipient?action=";                        
+           
+            String link = pfad + "?user=" + recipient + "?action=password?ref=";                        
+            messageBodyPart.setText(msgBody + "\n" + link + ref);
+
+            // Multipart message.
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPart);
+
+            // Add multipart message to email.
+            msg.setContent(multipart);
+
+            // Send email.
+            Transport.send(msg);
+        } catch (MessagingException ex) {
+            Logger.getLogger(EmailHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+     
+     public void sendeRegistrierungsBestaetigung(String recipient, String ref, String pfad) {
+        try {
+            Message msg = new MimeMessage(session);
+            msg.setSubject("Registrierung SWP SS 2015");
+            msg.setRecipient(RecipientType.TO, new InternetAddress(recipient));
+
+            // Body text.
+            BodyPart messageBodyPart = new MimeBodyPart();
+            String msgBody = "Sie haben sich mit dieser E-Mail-Adresse bei "
+                    + " der SWP SS 2015 Vertragsverwaltung angemeldet."
+                    + " Klicken Sie auf den folgenden Link um die Registrierung "
+                    + "abzuschließen.";
+           
+            String link = pfad + "?user=" + recipient + "?action=register?ref=";                        
             messageBodyPart.setText(msgBody + "\n" + link + ref);
 
             // Multipart message.

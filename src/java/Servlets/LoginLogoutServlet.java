@@ -95,13 +95,12 @@ public class LoginLogoutServlet extends HttpServlet {
             out.println("</body>");
             out.println("</html>");
         }
-        if (sendeMail) {
-            passwortZuruecksetzen(email);
-
+        if (sendeMail) {           
+            passwortZuruecksetzen(email, request.getRequestURL().toString());
         }
     }
 
-    private void passwortZuruecksetzen(String email) {
+    private void passwortZuruecksetzen(String email, String pfad) {
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
         ZufallsStringErzeuger p = new ZufallsStringErzeuger();        
         String passwortBestaetigung = p.erzeugeBestaetigungsReferenz();        
@@ -109,7 +108,7 @@ public class LoginLogoutServlet extends HttpServlet {
         b.setPasswortZuruecksetzen(passwortBestaetigung);
         dao.addBenutzer(b);
         EmailHandler emailer = new EmailHandler();
-        emailer.sendePasswortBestaetigung(email, passwortBestaetigung);
+        emailer.sendePasswortBestaetigung(email, passwortBestaetigung, pfad);
     }
 
     /**
