@@ -35,12 +35,13 @@ public class ConfirmationServlet extends HttpServlet {
             throws ServletException, IOException {
 
         String ref = request.getParameter("action");
-        String user = request.getParameter("action");
+        String user = request.getParameter("user");
         if (user != null && !user.equals("") && ref != null && !ref.equals("")) {
             DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
             Benutzer b = dao.getBenutzer(user);
             if (b != null && b.getPasswortZuruecksetzen().equals(ref)) {
                 sendeNeuesPasswort(b);
+                request.getRequestDispatcher("/confirmation.jsp").forward(request, response);
             }
         }
     }
