@@ -36,31 +36,43 @@ public class ConfirmationServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String ref = request.getParameter("ref");
-        String action = request.getParameter("action");
-        String user = request.getParameter("user");
+        String info = "Unglütiger Link. Es gab Probleme mit der Verarbeitung "
+                + "ihrer Daten. Versuchen Sie es erneut oder lassen Sie sich "
+                + "eine neue E-Mail zusenden.";
+        String urlParameter = request.getQueryString();
+        String ref = belegeParameter(urlParameter, "ref");
+        String action = belegeParameter(urlParameter, "action");
+        String user = belegeParameter(urlParameter, "user");
         if (user != null && !user.equals("") && action != null
                 && !action.equals("") && ref != null && !ref.equals("")) {
             DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
             Benutzer b = dao.getBenutzer(user);
             if (b != null) {
                 if (action.equals("password") && b.getPasswortZuruecksetzen().equals(ref)) {
+                    info = "Ihre Bestätigung war erfolgreich.\n"
+                            + "In Kürze erhalten Sie eine E-Mail mit ihren Daten.";
+                    ZufallsStringErzeuger z = new ZufallsStringErzeuger();
+                    b.setPasswort(z.holeNeuesPasswort());
+                    b.setEmailBestaetigung("");
+                    dao.updateBenutzerDaten(b.getEmail(), b.getPasswort(), b.getBenutzerId());
                     sendeNeuesPasswort(b);
                 } else if (action.equals("register") && b.getEmailBestaetigung().equals(ref)) {
+                    info = "Ihre Bestätigung war erfolgreich.\n"
+                            + "In Kürze erhalten Sie eine E-Mail mit ihren Daten.";
                     Kunde k = dao.getKunde(b.getBenutzerId());
+                    b.setPasswortZuruecksetzen("");
+                    dao.updateBenutzerDaten(b.getEmail(), b.getPasswort(), b.getBenutzerId());
                     sendeRegistrierungsMail(k);
-                } else {
-
-                }
-                request.getRequestDispatcher("/confirmation.jsp").forward(request, response);
+                } 
+                
             }
         }
+        request.setAttribute("info", info);
+        request.getRequestDispatcher("/confirmation.jsp").forward(request, response);
     }
 
     private void sendeNeuesPasswort(Benutzer b) {
-        ZufallsStringErzeuger z = new ZufallsStringErzeuger();
-        b.setPasswort(z.holeNeuesPasswort());
+        
         EmailHandler e = new EmailHandler();
         e.sendPasswortMail(b);
     }
@@ -110,4 +122,19 @@ public class ConfirmationServlet extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    private String belegeParameter(String urlParameter, String feldname) {
+        String parameter = null;
+        if (urlParameter != null) {
+            StringTokenizer st1 = new StringTokenizer(urlParameter, "?");
+            while (st1.hasMoreTokens()) {
+                StringTokenizer st2 = new StringTokenizer(st1.nextToken(), "=");
+                while (st2.hasMoreTokens()) {
+                    if (feldname.equals(st2.nextToken())) {
+                        parameter = st2.nextToken();
+                    }
+                }
+            }
+        }
+        return parameter;
+    }
 }

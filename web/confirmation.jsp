@@ -45,9 +45,8 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
             <%-- Inhalt --%>
             <div id="site_content">                
                 <div id="content">
-
-                    <p>Ihre Bestätigung war erfolgreich.</p>
-                    <p>In Kürze erhalten Sie eine E-Mail mit ihren Daten.</p>
+                    <% String info = request.getParameter("info");%>
+                    <p>%= info%</p>
 
                 </div><!--close content-->                  
             </div><!--close site_content-->
