@@ -62,7 +62,7 @@ public class EmailHandler {
      * @param passwort Passwort
      *
      */
-    public void sendRegisterMail(String subject, String recipient, String passwort) {
+    public void sendRegisterMail(String subject, String recipient) {
 
         try {
             Message msg = new MimeMessage(session);
@@ -71,13 +71,11 @@ public class EmailHandler {
 
             // Body text.
             BodyPart messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setText("Herzlich Willkommen bei der SWPSS2015 "
-                    + "Vertragsverwaltung."
-                    + "\n"
-                    + ""
-                    + "\nIhre Zugangsdaten: \n"
-                    + "\nEmail-Adresse: " + recipient
-                    + "\nPasswort: " + passwort
+            messageBodyPart.setText("Ihre Registrierung wurde erfolgreich abgeschlossen."
+                    + "\nSollten ihr Benutzername lautet:\n\n"
+                    + recipient + "\n\n"
+                    + "Sollten Sie ihr Passwort vergessen haben nutzen Sie die"
+                    + "\"Passwort vergessen\"-Funktion."
             );
 
             // Multipart message.
@@ -132,7 +130,7 @@ public class EmailHandler {
      *
      * @param b
      */
-    public void sendPasswortMail(Benutzer b) {
+    public void sendPasswortMail(Benutzer b, String passwort) {
         try {
             Message msg = new MimeMessage(session);
             msg.setSubject("Neues Passwort für SWPSS2015 Vertragsverwaltung");
@@ -142,7 +140,7 @@ public class EmailHandler {
             BodyPart messageBodyPart = new MimeBodyPart();
             messageBodyPart.setText("\nIhre Zugangsdaten: \n"
                     + "\nEmail-Adresse: " + b.getEmail()
-                    + "\nPasswort: " + b.getPasswort());
+                    + "\nPasswort: " + passwort);
 
             // Multipart message.
             Multipart multipart = new MimeMultipart();
@@ -231,19 +229,24 @@ public class EmailHandler {
         }
     }
      
-     public void sendeRegistrierungsBestaetigung(String recipient, String ref, String pfad) {
+     public void sendeRegistrierungsBestaetigung(String subject, String recipient, String ref, 
+             String pfad, String passwort) {
         try {
             Message msg = new MimeMessage(session);
-            msg.setSubject("Registrierung SWP SS 2015");
+            msg.setSubject(subject);
             msg.setRecipient(RecipientType.TO, new InternetAddress(recipient));
 
             // Body text.
             BodyPart messageBodyPart = new MimeBodyPart();
-            String msgBody = "Sie haben sich mit dieser E-Mail-Adresse bei "
-                    + " der SWP SS 2015 Vertragsverwaltung angemeldet."
-                    + " Klicken Sie auf den folgenden Link um die Registrierung "
-                    + "abzuschließen.";
-           
+            String msgBody = "Herzlich Willkommen bei der SWPSS2015 "
+                    + "Vertragsverwaltung."
+                    + "\n"
+                    + ""
+                    + "\nIhre Zugangsdaten: \n"
+                    + "\nEmail-Adresse: " + recipient
+                    + "\nPasswort: " + passwort + "\n\n";
+            
+            pfad = pfad.replace("LoginLogout", "Confirmation");
             String link = pfad + "?user=" + recipient + "?action=register?ref=";                        
             messageBodyPart.setText(msgBody + "\n" + link + ref);
 

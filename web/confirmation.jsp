@@ -11,13 +11,13 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page import="Hilfsklassen.Konstanten"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta http-equiv='refresh' content='4; URL=index.jsp'>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">        
         <link rel="stylesheet" type="text/css" href="css/style.css" />
         <title>SWP SS 2015</title>
     </head>
@@ -46,7 +46,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
             <div id="site_content">                
                 <div id="content">
                     <% String info = request.getParameter("info");%>
-                    <p>%= info%</p>
+                    <p><c:out value="${info}"></c:out></p>
 
                 </div><!--close content-->                  
             </div><!--close site_content-->

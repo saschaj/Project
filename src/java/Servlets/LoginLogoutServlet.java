@@ -14,6 +14,7 @@
 package Servlets;
 
 import Entitys.Benutzer;
+import Entitys.Kunde;
 import Hilfsklassen.Konstanten;
 import Hilfsklassen.ZufallsStringErzeuger;
 import Manager.DatenZugriffsObjekt;
@@ -109,6 +110,19 @@ public class LoginLogoutServlet extends HttpServlet {
         dao.addBenutzer(b);
         EmailHandler emailer = new EmailHandler();
         emailer.sendePasswortBestaetigung(email, passwortBestaetigung, pfad);
+    }
+    
+        private void registrierungsBestaetigung(String email, String pfad, String password) {
+        DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+        ZufallsStringErzeuger p = new ZufallsStringErzeuger();        
+        String registrierungsBestaetigung = p.erzeugeBestaetigungsReferenz();        
+        Benutzer b = dao.getBenutzer(email);
+        b.setEmailBestaetigung(registrierungsBestaetigung);
+        dao.addBenutzer(b);
+        Kunde k = dao.getKunde(b.getBenutzerId());
+        EmailHandler emailer = new EmailHandler();
+        emailer.sendeRegistrierungsBestaetigung("Registrierung für " + k.getVorname() + " "
+                            + k.getNachname(), email, registrierungsBestaetigung, pfad, password);
     }
 
     /**
@@ -206,11 +220,9 @@ public class LoginLogoutServlet extends HttpServlet {
                 // Überprüfung, ob die Registrierung erfolgreich war
                 if (isRegister) {
                     // Zurücksetzen der Session
-                    session.invalidate();
-
+                    session.invalidate();                    
                     EmailHandler emailer = new EmailHandler();
-                    emailer.sendRegisterMail("Registrierung für " + vname + " "
-                            + name + " erfolgt", email1, pw1);
+                    registrierungsBestaetigung(email1, request.getRequestURL().toString(), pw1);
                     request.getRequestDispatcher("/register_complete.jsp")
                         .forward(request, response);
                 }

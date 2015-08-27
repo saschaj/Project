@@ -49,18 +49,18 @@ public class ConfirmationServlet extends HttpServlet {
             Benutzer b = dao.getBenutzer(user);
             if (b != null) {
                 if (action.equals("password") && b.getPasswortZuruecksetzen().equals(ref)) {
-                    info = "Ihre Bestätigung war erfolgreich.\n"
-                            + "In Kürze erhalten Sie eine E-Mail mit ihren Daten.";
+                    info = "Ihre Bestätigung war erfolgreich.";
                     ZufallsStringErzeuger z = new ZufallsStringErzeuger();
-                    b.setPasswort(z.holeNeuesPasswort());
-                    b.setEmailBestaetigung("");
-                    dao.updateBenutzerDaten(b.getEmail(), b.getPasswort(), b.getBenutzerId());
-                    sendeNeuesPasswort(b);
+                    String password = z.holeNeuesPasswort();
+                    b.setPasswort(password);
+                    b.setPasswortZuruecksetzen("");
+                    dao.updateBenutzerDaten(b.getEmail(), password, b.getBenutzerId());
+                    sendeNeuesPasswort(b, password);
                 } else if (action.equals("register") && b.getEmailBestaetigung().equals(ref)) {
                     info = "Ihre Bestätigung war erfolgreich.\n"
-                            + "In Kürze erhalten Sie eine E-Mail mit ihren Daten.";
+                            + "In Kürze erhalten Sie eine E-Mail mit dem neuen Passwort.";
                     Kunde k = dao.getKunde(b.getBenutzerId());
-                    b.setPasswortZuruecksetzen("");
+                    b.setEmailBestaetigung("");
                     dao.updateBenutzerDaten(b.getEmail(), b.getPasswort(), b.getBenutzerId());
                     sendeRegistrierungsMail(k);
                 } 
@@ -71,16 +71,16 @@ public class ConfirmationServlet extends HttpServlet {
         request.getRequestDispatcher("/confirmation.jsp").forward(request, response);
     }
 
-    private void sendeNeuesPasswort(Benutzer b) {
+    private void sendeNeuesPasswort(Benutzer b, String password) {
         
         EmailHandler e = new EmailHandler();
-        e.sendPasswortMail(b);
+        e.sendPasswortMail(b, password);
     }
 
     private void sendeRegistrierungsMail(Kunde k) {
        EmailHandler e = new EmailHandler();
        e.sendRegisterMail("Registrierung für " + k.getVorname() + " "
-                            + k.getNachname() + " erfolgt", k.getEmail(), k.getPasswort());
+                            + k.getNachname() + " abgeschlossen", k.getEmail());
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
