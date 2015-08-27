@@ -71,7 +71,13 @@ public class LoginLogoutServlet extends HttpServlet {
                 ausgabe = "Ihnen wurde ein neues Passwort zugeschickt. Sie werden automatisch weitergeleitet!";
 
             } else {
-                ausgabe = "Geben Sie ihre E-Mail-Adresse an.";
+                String fehler[] = {"Geben Sie ihre E-Mail-Adresse an."};
+                request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehler);
+                // Da es Fehler im Formular gibt stellt man dem Besucher seine
+                // eingegebenen Daten zur Verfügung, damit er sie
+                // überarbeiten bzw. ergänzen kann.                
+                request.getRequestDispatcher("/login_register.jsp")
+                        .forward(request, response);                              
             }
         } else if (aktion != null && aktion.equals(Konstanten.URL_AKTION_LOGOUT)) {
             //Ausloggen
