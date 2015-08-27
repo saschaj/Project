@@ -49,7 +49,8 @@ public class ConfirmationServlet extends HttpServlet {
             Benutzer b = dao.getBenutzer(user);
             if (b != null) {
                 if (action.equals("password") && b.getPasswortZuruecksetzen().equals(ref)) {
-                    info = "Ihre Bestätigung war erfolgreich.";
+                    info = "Ihre Bestätigung war erfolgreich.\n\n"
+                            + "In Kürze erhalten Sie eine E-Mail mit dem neuen Passwort.";
                     ZufallsStringErzeuger z = new ZufallsStringErzeuger();
                     String password = z.holeNeuesPasswort();
                     b.setPasswort(password);
@@ -57,8 +58,8 @@ public class ConfirmationServlet extends HttpServlet {
                     dao.updateBenutzerDaten(b.getEmail(), password, b.getBenutzerId());
                     sendeNeuesPasswort(b, password);
                 } else if (action.equals("register") && b.getEmailBestaetigung().equals(ref)) {
-                    info = "Ihre Bestätigung war erfolgreich.\n"
-                            + "In Kürze erhalten Sie eine E-Mail mit dem neuen Passwort.";
+                    info = "Ihre Bestätigung war erfolgreich.";
+                            
                     Kunde k = dao.getKunde(b.getBenutzerId());
                     b.setEmailBestaetigung("");
                     dao.updateBenutzerDaten(b.getEmail(), b.getPasswort(), b.getBenutzerId());

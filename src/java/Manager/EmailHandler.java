@@ -159,7 +159,7 @@ public class EmailHandler {
     /**
      * Diese Methode versendet eine E-Mail. Der Inhalt sind alle in kürze ab-
      * laufenden Vertäge eines Kunden.
-     * 
+     *
      * @param k In der E-Mail erwähnte Kunde
      * @param l Liste alle Verträge die Ablaufen
      */
@@ -198,8 +198,8 @@ public class EmailHandler {
             Logger.getLogger(EmailHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-     public void sendePasswortBestaetigung(String recipient, String ref, String pfad) {
+
+    public void sendePasswortBestaetigung(String recipient, String ref, String pfad) {
         try {
             Message msg = new MimeMessage(session);
             msg.setSubject("Bestätigung erforderlich - Passwort zurücksetzen");
@@ -210,9 +210,10 @@ public class EmailHandler {
             String msgBody = "Sie haben die \"Passwort vergessen\"-Funktion"
                     + " aufgerufen. Klicken Sie auf den folgenden Link um das"
                     + " Passwort zurückzusetzen. Dieses wird Ihnen dann in einer"
-                    + " seperaten E-Mail zugesendet. \n";            
-           
-            String link = pfad + "?user=" + recipient + "?action=password?ref=";                        
+                    + " seperaten E-Mail zugesendet. \n";
+
+            pfad = pfad.replace("LoginLogout", "Confirmation");
+            String link = pfad + "?user=" + recipient + "?action=password?ref=";
             messageBodyPart.setText(msgBody + "\n" + link + ref);
 
             // Multipart message.
@@ -228,9 +229,9 @@ public class EmailHandler {
             Logger.getLogger(EmailHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-     
-     public void sendeRegistrierungsBestaetigung(String subject, String recipient, String ref, 
-             String pfad, String passwort) {
+
+    public void sendeRegistrierungsBestaetigung(String subject, String recipient, String ref,
+            String pfad, String passwort) {
         try {
             Message msg = new MimeMessage(session);
             msg.setSubject(subject);
@@ -245,9 +246,9 @@ public class EmailHandler {
                     + "\nIhre Zugangsdaten: \n"
                     + "\nEmail-Adresse: " + recipient
                     + "\nPasswort: " + passwort + "\n\n";
-            
+
             pfad = pfad.replace("LoginLogout", "Confirmation");
-            String link = pfad + "?user=" + recipient + "?action=register?ref=";                        
+            String link = pfad + "?user=" + recipient + "?action=register?ref=";
             messageBodyPart.setText(msgBody + "\n" + link + ref);
 
             // Multipart message.
