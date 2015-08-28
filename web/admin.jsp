@@ -65,9 +65,12 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                         <form method="POST" action="AdminServlet" >
                             <span>Benutzer suchen: </span>
                             <p>
-                            <input class="search_text" type="text" name="SucheBenutzerText" value="" />
+                            <input class="search_text" type="text" 
+								   name="SucheBenutzerText" value="" />
                             <span>&nbsp;</span>
-                            <input class="submit" type="submit" name="SucheBenutzer" value="Suchen" /></p>
+                            <input class="submit" type="submit" 
+								   name="Zeige_BenutzerListe" value="Suchen" />
+							</p>
                         </form>
                         
                     </div>

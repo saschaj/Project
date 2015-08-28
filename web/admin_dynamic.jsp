@@ -25,15 +25,15 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 	String adminAusgabe;
 	String adminFehler;
 
-	//URL fuer die BenutzerStatistik auslesen.
+	//URL fuer die BenutzerStatistik auslesen
 	statistikURL = (String) request.getAttribute("StatistikURL");
-	//Liste aller gefundenen Benutzer auslesen.
-	benutzerListe = (List<Benutzer>) request.getAttribute("BenutzerListe");
-	//Aktuell eingeloggten Benutzer aus Session lesen.
+	//Liste aller gefundenen Benutzer aus der Session lesen
+	benutzerListe = (List<Benutzer>) session.getAttribute("BenutzerListe");
+	//Aktuell eingeloggten Benutzer aus Session lesen
 	aktuellerBenutzer = (Benutzer) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
-	//Textausgaben für das Ändern des Adminpassworts auslesen.
+	//Textausgaben für das Ändern des Adminpassworts auslesen
 	pwAusgabe = (String) request.getAttribute("PW_Ausgabe");
-	//Fehlerausgabe für das Ändern des Adminpassworts auslesen.
+	//Fehlerausgabe für das Ändern des Adminpassworts auslesen
 	pwFehler = (String) request.getAttribute("PW_Fehler");
 	//Textausagbe für das Anlegen eines neuen Admins
 	adminAusgabe = (String) request.getAttribute("admin_ausgabe");
@@ -54,11 +54,12 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
     <body>
 
         <% if (statistikURL != null) {%>
-
+		
 		<!--Statistik ausgeben-->
 		<IMG src='<%= statistikURL%>' width='500' height='500' border='0'>
 
-        <% } else if (benutzerListe != null) { %>
+        <% } else if (request.getParameter("Zeige_BenutzerListe") != null 
+				|| request.getAttribute("Zeige_BenutzerListe") != null) { %>
 
 		<!--Tabelle mit Benutzern ausgeben-->
 		<TABLE rules="groups" border="2">
@@ -66,8 +67,13 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
             <% for (Benutzer benutzer : benutzerListe) {%>
 
 			<form method="POST" action="AdminServlet">
+				
 				<!--Benutzer-Email übergeben-->
 				<input type="hidden" name="Ben_Email" value="<%= benutzer.getEmail()%>">
+				<!--Index des Benutzers innerhalb der benutzerListe übergeben-->
+				<input type="hidden" name="Ben_Index" 
+					   value="<%= benutzerListe.indexOf(benutzer) %>">
+				
 				<tbody>
 
 					<tr>

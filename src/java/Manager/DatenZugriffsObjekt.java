@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import Hilfsklassen.Konstanten;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -607,7 +608,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach Datum: 28.07.2015 Version: 1.0 Änderungen: -
+     * Ersteller: René Kanzenbach 
+	 * Datum: 28.07.2015 
+	 * Version: 1.0 Änderungen: -
      *
      * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Benutzer im System
      * registriert sind und welchen Status diese besitzen.
@@ -644,17 +647,23 @@ public class DatenZugriffsObjekt {
 
         //Diagramm erstellen.
         chart = ChartFactory.createPieChart("Benutzerübersicht", dataset);
-
         //Anpassen des Labelformates im Diagramm.
         plot = (PiePlot) chart.getPlot();
         plot.setLabelGenerator(
                 new StandardPieSectionLabelGenerator("{0} Anzahl: {1} ({2})"));
-
+		//Diagrammhintergrund transparent setzen
+		plot.setBackgroundPaint( new Color(255,255,255,0) );
+		plot.setBackgroundImageAlpha(0.0f);
+		//Rand um das Diagramm deaktivieren
+		plot.setOutlineVisible(false);
+		
         return chart;
     }
 
     /**
-     * Ersteller: René Kanzenbach Datum: 28.07.2015 Version: 1.0 Änderungen: -
+     * Ersteller: René Kanzenbach 
+	 * Datum: 28.07.2015 
+	 * Version: 1.0 Änderungen: -
      *
      * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Vertraege im
      * System registriert sind und was es fuer Vertraege sind.
@@ -699,6 +708,11 @@ public class DatenZugriffsObjekt {
         plot = (PiePlot) chart.getPlot();
         plot.setLabelGenerator(
                 new StandardPieSectionLabelGenerator("{0} Anzahl: {1} ({2})"));
+		//Diagrammhintergrund transparent setzen
+		plot.setBackgroundPaint( new Color(255,255,255,0) );
+		plot.setBackgroundImageAlpha(0.0f);
+		//Rand um das Diagramm deaktivieren
+		plot.setOutlineVisible(false);
 
         return chart;
     }
@@ -776,7 +790,7 @@ public class DatenZugriffsObjekt {
                 + "WHERE b.email LIKE :emailName ", Benutzer.class);
         //Suche auf 25 Ergebnisse beschränken.
         query.setMaxResults(25);
-        query.setParameter("emailName", suche);
+        query.setParameter("emailName", "%" + suche + "%");
         return query.getResultList();
     }
 

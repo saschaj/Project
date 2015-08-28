@@ -29,7 +29,28 @@ import javax.servlet.http.HttpSession;
 
 public class LoginLogoutServlet extends HttpServlet {
 
-    private final String LOGINFEHLER_TEXT = "Login fehlgeschlagen! Überprüfen Sie ihre Login-Daten!";
+    /**
+	 * Fehlertext, der ausgegeben wird, wenn der Loginvorgang, aufgrund eines 
+	 * falschen Passworts oder falscher Email fehlschlägt.
+	 */
+	private final String LOGINFEHLER_TEXT = "Login fehlgeschlagen! Überprüfen "
+			+ "Sie ihre Login-Daten!";
+
+	/**
+	 * Fehlertext, der ausgegeben wird, wenn der Loginvorgang fehlschlägt, weil
+	 * der Benutzeraccount gelöscht wurde.
+	 */
+	private final String FEHLER_ACCOUNT_GELOESCHT = "Ihr Account wurde gelöscht! "
+			+ "Um ihn wiederherzustellen, melden Sie sich bitte bei uns über "
+			+ "das Kontaktformular.";
+
+	/**
+	 * Fehlertext, der ausgegeben wird, wenn der Benutzer seinen Account noch
+	 * nicht über die Bestätigungsemail aktiviert hat.
+	 */
+	private final String FEHLER_ACCOUNT_NICHT_AKTIVIERT = "Ihr Account wurde "
+			+ "noch nicht aktiviert! Bitte bestätigen Sie zu erst den Link in "
+			+ "der Email, die Ihnen zugeschickt wurde!";
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -262,73 +283,113 @@ public class LoginLogoutServlet extends HttpServlet {
     }
 
     /**
-     * Ersteller:	René Kanzenbach 
+	 * Ersteller:	René Kanzenbach 
 	 * Datum:		02.06.2015 
 	 * Methode:		logIn
-     * Version:		1.0 
+	 * Version:		1.0 
 	 *				-1.1 René Kanzenbach 20.08.2015
 	 *				Wenn sich ein Admin einloggt, wird er jetzt direkt auf die
 	 *				"admin.jsp" weitergeleitet
 	 *
-     * @param request
-     * @param response
-     * @throws ServletException
-     * @throws IOException
-     */
-    private void logIn(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void logIn(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 
-        Benutzer benutzer;
-        DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
-        HttpSession session = request.getSession();
+		Benutzer benutzer;
+		DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+		HttpSession session = request.getSession();
 
-        String loginEmail;
-        String loginPasswort;
-        String fehlerText[] = {this.LOGINFEHLER_TEXT};
+		String loginEmail;
+		String loginPasswort;
+		String fehlerText[];
 
-        //Eingegebene Benutzer-Email auslesen
-        loginEmail = request.getParameter("login_email");
-        //Eingegebenes Passwort auslesen
-        loginPasswort = request.getParameter("login_passwort");
+		//Eingegebene Benutzer-Email auslesen
+		loginEmail = request.getParameter("login_email");
+		//Eingegebenes Passwort auslesen
+		loginPasswort = request.getParameter("login_passwort");
 
-        //BenutzerObjekt mit Hilfe der Email laden
-        benutzer = dao.getBenutzer(loginEmail);
+		//BenutzerObjekt mit Hilfe der Email laden
+		benutzer = dao.getBenutzer(loginEmail);
 
-        //Prüfen ob Benutzer gefunden wurde und das Passwort korrekt ist
-        if (benutzer != null
-                && benutzer.pruefePasswort(loginPasswort)) {//Falls LogIn erfolgreich
+		//Prüfen ob Benutzer gefunden wurde und das Passwort korrekt ist
+		if (benutzer != null
+				&& benutzer.pruefePasswort(loginPasswort)) {
 
-            //BenutzerObjekt in Session laden
-            session.setAttribute(Konstanten.SESSION_ATTR_BENUTZER, benutzer);
+			//Prüfen welchen Status der Benutzer besitzt
+			switch (benutzer.getStatus().getBenutzerStatusId()) {
 
-            //Prüfen ob Benutzer ein Kunde oder Admin ist.
-            if (benutzer.besitztRecht(
-					Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT)) {
-                //Benutzer besitzt Benutzerrechte.
-                //Weiterleitung auf Benutzerstartseite
-                request.getRequestDispatcher("/user.jsp")
-                        .forward(request, response);
-            } else if (benutzer.besitztRecht(
-					Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT)) {
-				//Benutzer besitzt Adminrechte.
-				//Weiterleitung auf Adminstartseite.
-				request.getRequestDispatcher("/admin.jsp")
-						.forward(request, response);
-            }
+				case Konstanten.ID_BEN_STATUS_AKTIV:
+				//Benutzer ist Aktiv. Login war erfolgreich
 
-        } else { //Falls LogIn nicht erfolgreich
+					//BenutzerObjekt in Session laden
+					session.setAttribute(Konstanten.SESSION_ATTR_BENUTZER, benutzer);
 
-            //Übergabe des Fehlertextes
-            request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehlerText);
+					//Prüfen ob Benutzer ein Kunde oder Admin ist.
+					if (benutzer.besitztRecht(
+							Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT)) {
+						//Benutzer besitzt Benutzerrechte.
+						//Weiterleitung auf Benutzerstartseite
+						request.getRequestDispatcher("/user.jsp")
+								.forward(request, response);
+					} else if (benutzer.besitztRecht(
+							Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT)) {
+						//Benutzer besitzt Adminrechte.
+						//Weiterleitung auf Adminstartseite.
+						request.getRequestDispatcher("/admin.jsp")
+								.forward(request, response);
+					}
+					break;
 
-            //Weiterleitung auf login_register.jsp
-            request.getRequestDispatcher("/login_register.jsp")
-                    .forward(request, response);
-        }
+				case Konstanten.ID_BEN_STATUS_UNBESTAETIGT:
+					//Benutzer hat die Bestätigungsemail noch nicht bearbeitet
 
-        //DatenZugriffsObjekt schließen
-        dao.close();
-    }
+					//Übergabe des entsprechenden Fehlertextes an 
+					//das "login_register.jsp"
+					fehlerText = new String[1];
+					fehlerText[0] = this.FEHLER_ACCOUNT_NICHT_AKTIVIERT;
+					request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehlerText);
+
+					//Weiterleitung auf login_register.jsp
+					request.getRequestDispatcher("/login_register.jsp")
+							.forward(request, response);
+					break;
+
+				case Konstanten.ID_BEN_STATUS_GELOESCHT:
+					//Benutzeraccount besitzt den Status gelöscht
+					
+					//Benutzer hat die Bestätigungsemail noch nicht bearbeitet
+
+					//Übergabe des entsprechenden Fehlertextes an 
+					//das "login_register.jsp"
+					fehlerText = new String[1];
+					fehlerText[0] = this.FEHLER_ACCOUNT_GELOESCHT;
+					request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehlerText);
+
+					//Weiterleitung auf login_register.jsp
+					request.getRequestDispatcher("/login_register.jsp")
+							.forward(request, response);
+					break;
+			}
+
+		} else { //Falls LogIn nicht erfolgreich
+
+			//Übergabe des Fehlertextes an das "login_register.jsp"
+			fehlerText = new String[1];
+			fehlerText[0] = this.LOGINFEHLER_TEXT;
+			request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehlerText);
+
+			//Weiterleitung auf login_register.jsp
+			request.getRequestDispatcher("/login_register.jsp")
+					.forward(request, response);
+		}
+
+		//DatenZugriffsObjekt schließen
+		dao.close();
+	}
 
     /**
      *

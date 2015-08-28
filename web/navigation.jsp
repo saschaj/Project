@@ -42,7 +42,7 @@ Veränderungen:	-
 <nav>
     <ul id="nav">
 
-
+		<!--BENUTZER-->
         <% if (benRechte.contains(Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT)) { %>
 
         <!-- Benutzerstartseite -->
@@ -52,38 +52,16 @@ Veränderungen:	-
             <% } %>>
             <a href="user.jsp">Benutzer</a>
         </li>
-        
-        <!-- BenutzerAccountSeite -->
+		
+		<!-- BenutzerAccountSeite -->
         <li 
             <% if (highlightLink.equals("BENUTZER_ACCOUNT")) { %>
             class="current" 
             <% } %>>
             <a href="user_account.jsp">Benutzer Account</a>
         </li>
-
-        <% } else if (benRechte.contains(Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT)) { %>
-
-        <!-- Adminstartseite -->
-        <li <% if (highlightLink.equals("ADMIN")) {
-            %> class="current" <%
-                }
-            %>>
-            <a href="admin.jsp">Admin</a>
-        </li>
-
-        <% } else { %>
-
-        <!-- Startseite -->
-        <li <% if (highlightLink.equals("STARTSEITE")) { %>
-            class="current" 
-            <% } %>>
-            <a href="index.jsp">Startseite</a>
-        </li>
-
-        <% } %>
-
-
-        <!-- Kontakt -->
+		
+		<!-- Kontakt -->
         <li 
             <% if (highlightLink.equals("KONTAKT")) {
             %> class="current" <%
@@ -91,9 +69,7 @@ Veränderungen:	-
             %>>
             <a href="contact.jsp">Kontakt</a>
         </li>
-
-        <% if (benutzer != null) { %>
-
+        
         <!-- LogOut -->
         <li <% if (highlightLink.equals("LOGOUT")) {
             %> class="current" <%
@@ -103,9 +79,48 @@ Veränderungen:	-
                 Abmelden</a>
         </li>
 
+		
+		<!--ADMIN-->
+        <% } else if (benRechte.contains(Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT)) { %>
+
+        <!-- Adminstartseite -->
+        <li <% if (highlightLink.equals("ADMIN")) {
+            %> class="current" <%
+                }
+            %>>
+            <a href="admin.jsp">Admin</a>
+        </li>
+		
+		<!-- LogOut -->
+        <li <% if (highlightLink.equals("LOGOUT")) {
+            %> class="current" <%
+                }
+            %>>
+            <a href="<%= request.getContextPath() %>/LoginLogoutServlet?<%= Konstanten.URL_PARAM_AKTION %>=<%= Konstanten.URL_AKTION_LOGOUT %>" >
+                Abmelden</a>
+        </li>
+
+		
+		<!--NICHT EINGELOGGT-->
         <% } else { %>
 
-        <!-- LogIn & Registrierung -->
+        <!-- Startseite -->
+        <li <% if (highlightLink.equals("STARTSEITE")) { %>
+            class="current" 
+            <% } %>>
+            <a href="index.jsp">Startseite</a>
+        </li>
+		
+		<!-- Kontakt -->
+        <li 
+            <% if (highlightLink.equals("KONTAKT")) {
+            %> class="current" <%
+                }
+            %>>
+            <a href="contact.jsp">Kontakt</a>
+        </li>
+		
+		<!-- LogIn & Registrierung -->
         <li <% if (highlightLink.equals("LOGIN")) {
             %> class="current" <%
                 }
@@ -113,7 +128,8 @@ Veränderungen:	-
             <a href="login_register.jsp">
                 Anmelden & Registrieren</a>
         </li>
-        <% } %>   
+
+        <% } %>
 
     </ul><!--close nav-->
 </nav>

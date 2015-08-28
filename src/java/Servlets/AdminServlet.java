@@ -36,6 +36,10 @@ public class AdminServlet extends HttpServlet {
 	 */
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		//Zeichensatz des Request-Objektes auf "UTF-8" setzen
+		//Ermöglicht die korrekte Verwendung von Umlauten
+		request.setCharacterEncoding("UTF-8");
 
 		//Pruefen, welche Aktion ausgeführt wurde.
 		if (request.getParameter("BenutzerStatistik") != null) {
@@ -44,7 +48,7 @@ public class AdminServlet extends HttpServlet {
 		} else if (request.getParameter("VertragStatistik") != null) {
 			//Der Button "Vertragsübersicht" wurde in der admin.jsp betaetigt.
 			this.zeigeVertragsStatistik(request, response);
-		} else if (request.getParameter("SucheBenutzer") != null) {
+		} else if (request.getParameter("Zeige_BenutzerListe") != null) {
 			this.benutzerSuche(request, response);
 		} else if (request.getParameter("Ben_loeschen") != null) {
 			//Der Button "Löschen" wurde in der admin_dynamic.jsp betätigt.
@@ -205,12 +209,18 @@ public class AdminServlet extends HttpServlet {
 	 * Version: 1.0
 	 *			- 1.1 René Kanzenbach 19.08.2015 
 	 *			Der eingelogte Benutzer wird jetzt aus der Ergebnisliste gefiltert.
+	 *			- 1.2 René Kanzenbach 27.08.2015
+	 *			Die Liste der gefundenen Benutzer wird jetzt in der Session 
+	 *			gespeichert.
 	 *
 	 * Sucht anhand der Benutzereingabe nach Benutzern. Bei der Suche werden nur
 	 * Übereinstimmungen in der E-Mail des Benutzers berücksichtigt.
 	 * 
 	 * Der Benutzer, der die Suche angestoßen hat wird aus der Ergebnisliste 
 	 * gefiltert.
+	 * Die Liste aller gefundenen Benutzer wird in der HttpSession gespeichert,
+	 * um die Benutzer auch nach dem Ändern des Benutzerstatus auflisten zu
+	 * können.
 	 * 
 	 * @param request
 	 * @param response
@@ -234,16 +244,20 @@ public class AdminServlet extends HttpServlet {
 		benutzerListe = dao.sucheBenutzer(benutzerSuche);
 		//Aktiver Benutzer aus der Liste der gefundenen Benutzer filtern.
 		benutzerListe.remove(benutzer);
-		//Benutzerliste als Attribut dem Request-Objekt übergeben.
-		request.setAttribute("BenutzerListe", benutzerListe);
+		//Benutzerliste an die Session hängen
+		session.setAttribute("BenutzerListe", benutzerListe);
 		//Weiterleiten auf admin.jsp
 		request.getRequestDispatcher("/admin.jsp").forward(request, response);
 	}
 
 	/**
-	 * Ersteller: René Kanzenbach
-	 * Datum: 19.08.2015
-	 * Version: 1.0
+	 * Ersteller:	René Kanzenbach
+	 * Datum:		19.08.2015
+	 * Version:		1.0
+	 *				1.1 René Kanzenbach 27.08.2015
+	 *				- Updatet jetzt die BenutzerListe mit dem aktuellen Benutzer.
+	 *				- Setzt das RequestAttribut "Zeige_BenutzerListe", damit in
+	 *				der "admin_dynamic.jsp" die Liste aller Benutzer angezeigt wird.
 	 * 
 	 * Ließt den Benutzer aus den übergebenen Formularparameter und setzt 
 	 * den Status des Benutzers auf "geloescht".
@@ -257,18 +271,38 @@ public class AdminServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException, IOException {
 
 		DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+		HttpSession session = request.getSession();
+		//Liste der Benutzer, die in der "admin_dynamic.jsp" ausgegeben werden
+		List<Benutzer> benutzerListe = (List<Benutzer>) 
+				session.getAttribute("BenutzerListe");
+		//Index des Benutzers innhalb der 'benutzerListe'
+		int benIndex = Integer.parseInt(request.getParameter("Ben_Index"));
+		
+		
 		//Benutzer anhand der übergebenen Email suchen.
 		Benutzer benutzer = dao.getBenutzer(request.getParameter("Ben_Email"));
 		//Benutzerstatus ändern.
 		dao.setBenutzerStatus(benutzer, Konstanten.ID_BEN_STATUS_GELOESCHT);
+		/* Index des alten Benutzers innerhalb der 'benutzerListe' überschreiben.
+		So bleibt die Reihenfolge der aufgelisteten Benutzer innhalb der 
+		'admin_dynamic.jsp' bestehen und es wird sofort der neue Benutzerstatus
+		angezeigt. */
+		benutzerListe.set(benIndex, benutzer);
+		/*Parameter 'Zeige_BenutzerListe' übergeben, damit in der 
+		'admin_dynamic.jsp' die Benutzerliste angezeigt wird */
+		request.setAttribute("Zeige_BenutzerListe", "true");
 		//Weiterleitung auf admin.jsp
 		request.getRequestDispatcher("admin.jsp").forward(request, response);
 	}
 
 	/**
-	 * Ersteller: René Kanzenbach
-	 * Datum: 19.08.2015
-	 * Version: 1.0
+	 * Ersteller:	René Kanzenbach
+	 * Datum:		19.08.2015
+	 * Version:		1.0
+	 *				1.1 René Kanzenbach 27.08.2015
+	 *				- Updatet jetzt die BenutzerListe mit dem aktuellen Benutzer.
+	 *				- Setzt das RequestAttribut "Zeige_BenutzerListe", damit in
+	 *				der "admin_dynamic.jsp" die Liste aller Benutzer angezeigt wird.
 	 * 
 	 * Ließt den Benutzer aus den übergebenen Formularparameter und setzt 
 	 * den Status des Benutzers auf "aktiviert".
@@ -280,12 +314,27 @@ public class AdminServlet extends HttpServlet {
 	 */
 	private void benutzerAktivieren(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-
+		
+		HttpSession session = request.getSession();
+		//Liste der Benutzer, die in der "admin_dynamic.jsp" ausgegeben werden
+		List<Benutzer> benutzerListe = (List<Benutzer>) 
+				session.getAttribute("BenutzerListe");
+		//Index des Benutzers innhalb der 'benutzerListe'
+		int benIndex = Integer.parseInt(request.getParameter("Ben_Index"));
+		
 		DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
 		//Benutzer anhand der übergebenen Email suchen.
 		Benutzer benutzer = dao.getBenutzer(request.getParameter("Ben_Email"));
 		//Benutzerstatus ändern.
 		dao.setBenutzerStatus(benutzer, Konstanten.ID_BEN_STATUS_AKTIV);
+		/*Index des alten Benutzers innerhalb der 'benutzerListe' überschreiben.
+		So bleibt die Reihenfolge der aufgelisteten Benutzer innhalb der 
+		'admin_dynamic.jsp' bestehen und es wird sofort der neue Benutzerstatus
+		angezeigt.*/
+		benutzerListe.set(benIndex, benutzer);
+		/*Parameter 'Zeige_BenutzerListe' übergeben, damit in der 
+		'admin_dynamic.jsp' die Benutzerliste angezeigt wird */
+		request.setAttribute("Zeige_BenutzerListe", "true");
 		//Weiterleitung auf admin.jsp
 		request.getRequestDispatcher("admin.jsp").forward(request, response);
 	}

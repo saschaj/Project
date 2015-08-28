@@ -44,6 +44,10 @@ public class BenutzerServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+		
+		//Zeichensatz des Request-Objektes auf "UTF-8" setzen
+		//Ermöglicht die korrekte Verwendung von Umlauten
+		request.setCharacterEncoding("UTF-8");
 
         HttpSession session = request.getSession();
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
