@@ -8,6 +8,12 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Erstellung der Seite mit Musterausgabe
                 1.1 René Kanzenbach (28.07.2015)
                 - JSP zeigt jetzt die Statistiken an.
+				2.0 René Kanzenbach 20.08.2015
+				- Listet jetzt alle Benutzer auf
+				- Benutzer können aktiviert und gelöscht werden
+				- Das Passwort von Benutzern kann zurückgesetzt werden
+				- Es kann jetzt ein neuer Adminaccount angelegt werden
+				- Das Passwort des Admins kann jetzt geändert werden
 
 --%>
 
@@ -46,19 +52,21 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="css/style.css" />
+
 		<style>
 			.button_small {width: 150px}
 		</style>
+		
         <title>Administratorsicht</title>
     </head>
     <body>
 
         <% if (statistikURL != null) {%>
-		
+
 		<!--Statistik ausgeben-->
 		<IMG src='<%= statistikURL%>' width='500' height='500' border='0'>
 
-        <% } else if (request.getParameter("Zeige_BenutzerListe") != null 
+        <% } else if (request.getParameter("Zeige_BenutzerListe") != null
 				|| request.getAttribute("Zeige_BenutzerListe") != null) { %>
 
 		<!--Tabelle mit Benutzern ausgeben-->
@@ -67,13 +75,14 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
             <% for (Benutzer benutzer : benutzerListe) {%>
 
 			<form method="POST" action="AdminServlet">
-				
+
 				<!--Benutzer-Email übergeben-->
-				<input type="hidden" name="Ben_Email" value="<%= benutzer.getEmail()%>">
+				<input type="hidden" name="Ben_Email" 
+					   value="<%= benutzer.getEmail()%>">
 				<!--Index des Benutzers innerhalb der benutzerListe übergeben-->
 				<input type="hidden" name="Ben_Index" 
-					   value="<%= benutzerListe.indexOf(benutzer) %>">
-				
+					   value="<%= benutzerListe.indexOf(benutzer)%>">
+
 				<tbody>
 
 					<tr>
@@ -103,7 +112,8 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 							</button>
 							<br>
 							<button type="submit" class="button_small" 
-									name="PW_zurueck" value="OK">
+									name="PW_zurueck" value="OK" 
+									onclick="confirm('Passwort wirklich zurücksetzen?')">
 								Passwort zurücksetzen
 							</button>
 						</td>
@@ -163,10 +173,11 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 						Bestätigen
 					</button>
 				</p>
+
 			</form>
 		</div>
 
-		<% } else if (request.getParameter("Zeige_Admin_anlegen") != null 
+		<% } else if (request.getParameter("Zeige_Admin_anlegen") != null
 				|| adminAusgabe != null || adminFehler != null) {%>
 
 		<div>
@@ -175,12 +186,12 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 				<p>
 					<%= adminAusgabe == null
 							? ""
-							: "<span style='color: green'>" + adminAusgabe 
-								+ "</span>"%>
+							: "<span style='color: green'>" + adminAusgabe
+							+ "</span>"%>
 					<%=adminFehler == null
 							? ""
-							: "<span style='color: red'>" + adminFehler 
-								+ "</span>"%>
+							: "<span style='color: red'>" + adminFehler
+							+ "</span>"%>
 				</p>
 				<p>
 					<span class="span_reg">Name</span>
@@ -203,7 +214,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 			</form>
 		</div>
 
-		<% }%>   
+		<% }%>
 
 	</body>
 </html>

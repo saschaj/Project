@@ -64,6 +64,10 @@ public class AdminServlet extends HttpServlet {
 			//Der Button zum Anlegen eines neuen Adminaccounts in der 
 			//"admin_dynamic.jsp" wurde betätigt
 			this.erstelleAdminAccount(request, response);
+		} else if (request.getParameter("PW_zurueck") != null) {
+			//Der Button 'Passwort zurücksetzen' in der 'admin_dynamic.jsp' 
+			//wurde betätigt
+			this.setzePwZurueck(request, response);
 		}
 	}
 
@@ -508,6 +512,25 @@ public class AdminServlet extends HttpServlet {
 			//Weiterleitung auf "admin.jsp"
 			request.getRequestDispatcher("admin.jsp").forward(request, response);
 		}
+	}
+	
+	/**
+	 * Ersteller:	René Kanzenbach
+	 * Datum:		30.08.2015
+	 * Version:		1.0
+	 *
+	 * Setzt das Passwort des im request übergebenen Benutzers zurück.
+	 *
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException 
+	 */
+	private void setzePwZurueck(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		
+		
+		
 	}
 
 }
