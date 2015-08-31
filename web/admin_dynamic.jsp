@@ -55,11 +55,95 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 
         <style>
             .button_small {width: 150px}
+
+            #dialogoverlay{
+                display: none;
+                opacity: .8;
+                position: fixed;
+                top: 0px;
+                left: 0px;
+                background: #FFF;
+                width: 100%;
+                z-index: 10;
+            }
+            #dialogbox{
+                display: none;
+                position: fixed;
+                background: #000;
+                border-radius:7px; 
+                width:550px;
+                z-index: 10;
+            }
+            #dialogbox > div{ background:#FFF; margin:8px; }
+            #dialogbox > div > #dialogboxhead{ background: #666; font-size:19px; padding:10px; color:#CCC; }
+            #dialogbox > div > #dialogboxbody{ background:#333; padding:20px; color:#FFF; }
+            #dialogbox > div > #dialogboxfoot{ background: #666; padding:10px; text-align:right; }
         </style>
+
+        <script>
+            function CustomAlert() {
+                this.render = function (dialog) {
+                    var winW = window.innerWidth;
+                    var winH = window.innerHeight;
+                    var dialogoverlay = document.getElementById('dialogoverlay');
+                    var dialogbox = document.getElementById('dialogbox');
+                    dialogoverlay.style.display = "block";
+                    dialogoverlay.style.height = winH + "px";
+                    dialogbox.style.left = (winW / 2) - (550 * .5) + "px";
+                    dialogbox.style.top = "100px";
+                    dialogbox.style.display = "block";
+                    document.getElementById('dialogboxhead').innerHTML = "Acknowledge This Message";
+                    document.getElementById('dialogboxbody').innerHTML = dialog;
+                    document.getElementById('dialogboxfoot').innerHTML = '<button onclick="Alert.ok()">OK</button>';
+                }
+                this.ok = function () {
+                    document.getElementById('dialogbox').style.display = "none";
+                    document.getElementById('dialogoverlay').style.display = "none";
+                }
+            }
+            var Alert = new CustomAlert();
+
+            function CustomConfirm() {
+                this.render = function (dialog) {
+                    var winW = window.innerWidth;
+                    var winH = window.innerHeight;
+                    var dialogoverlay = document.getElementById('dialogoverlay');
+                    var dialogbox = document.getElementById('dialogbox');
+                    dialogoverlay.style.display = "block";
+                    dialogoverlay.style.height = winH + "px";
+                    dialogbox.style.left = (winW / 2) - (550 * .5) + "px";
+                    dialogbox.style.top = "100px";
+                    dialogbox.style.display = "block";
+
+                    document.getElementById('dialogboxhead').innerHTML = "Confirm that action";
+                    document.getElementById('dialogboxbody').innerHTML = dialog;
+                    document.getElementById('dialogboxfoot').innerHTML = '<button onclick="Confirm.yes()">Yes</button> <button onclick="Confirm.no()">No</button>';
+                }
+                this.no = function () {
+                    document.getElementById('dialogbox').style.display = "none";
+                    document.getElementById('dialogoverlay').style.display = "none";
+                }
+                this.yes = function () {
+                    document.getElementById('dialogbox').style.display = "none";
+                    document.getElementById('dialogoverlay').style.display = "none";
+                }
+            }
+            var Confirm = new CustomConfirm();
+        </script>
+
 
         <title>Administratorsicht</title>
     </head>
     <body>
+
+        <div id="dialogoverlay"></div>
+        <div id="dialogbox">
+            <div>
+                <div id="dialogboxhead"></div>
+                <div id="dialogboxbody"></div>
+                <div id="dialogboxfoot"></div>
+            </div>
+        </div>
 
         <% if (statistikURL != null) {%>
 
@@ -111,9 +195,10 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                                 Aktivieren
                             </button>
                             <br>
-                            <button type="submit" class="button_small" 
+                            
+                            <button class="button_small" id="test" type="submit"
                                     name="PW_zurueck" value="OK" 
-                                    onclick="confirm('Passwort wirklich zurücksetzen?')">
+                                    onclick="this.disabled = true; Confirm.render('TEST TEST')">
                                 Passwort zurücksetzen
                             </button>
                         </td>
@@ -123,10 +208,11 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                             <!--Ausgabe des Benutzerstatus
                             Aktiv wird in Grün dargestellt unbestätigt und gelöscht in Rot
                             -->
-                                  <span style="color:<%= benutzer.getStatus().getBenutzerStatusId()
-                                    == Konstanten.ID_BEN_STATUS_AKTIV
-                                            ? "green"
-                                            : "red"%> ">
+                            <span style="color:
+                                  <%= benutzer.getStatus().getBenutzerStatusId()
+                                          == Konstanten.ID_BEN_STATUS_AKTIV
+                                                  ? "green"
+                                                  : "red"%> ">
                                 <%= benutzer.getStatus().getName()%>
                             </span>
                         </td>
