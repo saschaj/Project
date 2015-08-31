@@ -37,9 +37,9 @@ public class ConfirmationServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 		
-		//Zeichensatz des Request-Objektes auf "UTF-8" setzen
-		//Ermöglicht die korrekte Verwendung von Umlauten
-		request.setCharacterEncoding("UTF-8");
+	//Zeichensatz des Request-Objektes auf "UTF-8" setzen
+	//Ermöglicht die korrekte Verwendung von Umlauten
+	request.setCharacterEncoding("UTF-8");
 		
         String info = "Unglütiger Link. Es gab Probleme mit der Verarbeitung "
                 + "ihrer Daten. Versuchen Sie es erneut oder lassen Sie sich "

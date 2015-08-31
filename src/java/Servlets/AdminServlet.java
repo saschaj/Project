@@ -3,7 +3,9 @@ package Servlets;
 import Entitys.Benutzer;
 import Entitys.Benutzer_Status;
 import Hilfsklassen.Konstanten;
+import Hilfsklassen.ZufallsStringErzeuger;
 import Manager.DatenZugriffsObjekt;
+import Manager.EmailHandler;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -433,8 +435,8 @@ public class AdminServlet extends HttpServlet {
 
 	/**
 	 * Ersteller:	René Kanzenbach
-	 * Datum:		24.08.2015
-	 * Version:		1.0
+	 * Datum:	24.08.2015
+	 * Version:	1.0
 	 *
 	 * Liest die Benutzereingaben aus dem "admin_dynamic.jsp" und erstellt 
 	 * daraus einen neuen Adminaccount.
@@ -516,8 +518,8 @@ public class AdminServlet extends HttpServlet {
 	
 	/**
 	 * Ersteller:	René Kanzenbach
-	 * Datum:		30.08.2015
-	 * Version:		1.0
+	 * Datum:	30.08.2015
+	 * Version:	1.0
 	 *
 	 * Setzt das Passwort des im request übergebenen Benutzers zurück.
 	 *
@@ -527,10 +529,9 @@ public class AdminServlet extends HttpServlet {
 	 * @throws IOException 
 	 */
 	private void setzePwZurueck(HttpServletRequest request,
-			HttpServletResponse response) throws ServletException, IOException {
-		
-		
-		
+                HttpServletResponse response) throws ServletException, IOException {
+            
+            
 	}
 
 }

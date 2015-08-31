@@ -64,6 +64,10 @@ public class LoginLogoutServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        //Zeichensatz des Request-Objektes auf "UTF-8" setzen
+	//Ermöglicht die korrekte Verwendung von Umlauten
+        request.setCharacterEncoding("UTF-8");
+        
         // Deklaration des Hilfsvariablen für die demenstprechenden Funktionen
         String meta = "", ausgabe = "";
         boolean sendeMail = false;
@@ -139,7 +143,7 @@ public class LoginLogoutServlet extends HttpServlet {
         emailer.sendePasswortBestaetigung(email, passwortBestaetigung, pfad);
     }
     
-        private void registrierungsBestaetigung(String email, String pfad, String password) {
+    private void registrierungsBestaetigung(String email, String pfad, String password) {
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
         ZufallsStringErzeuger p = new ZufallsStringErzeuger();        
         String registrierungsBestaetigung = p.erzeugeBestaetigungsReferenz();        

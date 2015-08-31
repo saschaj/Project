@@ -155,13 +155,13 @@ public class Konstanten {
      * Primärschlüssel des BenutzerStatus "Geloescht" in der Tabelle 
      * "BENUTZER_STATUS"
      */
-    public static final int ID_BEN_STATUS_GELOESCHT= 2;
+    public static final int ID_BEN_STATUS_GELOESCHT = 2;
     
     /**
      * Primärschlüssel des BenutzerStatus "Unbestaetigt" in der Tabelle 
      * "BENUTZER_STATUS"
      */
-    public static final int ID_BEN_STATUS_UNBESTAETIGT= 3;
+    public static final int ID_BEN_STATUS_UNBESTAETIGT = 3;
     
     /*
     ----------------------------------------------------------------------------
