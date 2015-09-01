@@ -105,5 +105,6 @@ public class SystemManager {
         b.setPasswort(password);
         b.setPasswortZuruecksetzen("");
         b = dao.updateBenutzer(b);
+        dao.close();
     }
 }

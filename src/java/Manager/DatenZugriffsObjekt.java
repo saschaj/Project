@@ -918,7 +918,10 @@ public class DatenZugriffsObjekt {
 	}
         
         public Benutzer updateBenutzer(Benutzer b){
-            return entityManager.merge(b);
+            this.entityManager.getTransaction().begin();
+            b = this.entityManager.merge(b);
+            this.entityManager.getTransaction().commit();
+            return b;
         }
 
     /**
