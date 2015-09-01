@@ -3,6 +3,7 @@ package Servlets;
 import Entitys.Benutzer;
 import Hilfsklassen.Konstanten;
 import Manager.DatenZugriffsObjekt;
+import Manager.EmailHandler;
 import Manager.SystemManager;
 import java.io.IOException;
 import java.util.List;
@@ -530,13 +531,18 @@ public class AdminServlet extends HttpServlet {
                 HttpServletResponse response) throws ServletException, IOException {
 	    
 	    DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
-	    SystemManager sm= new SystemManager();
+	    EmailHandler em = new EmailHandler();
+            SystemManager sm= new SystemManager();
 	    Benutzer benutzer = dao.getBenutzer(request.getParameter("Ben_Email"));
             
 	    //Passwort des Benutzers zurücksetzen
-            sm.setzePasswort(benutzer);
-	    //Weiterleitung auf 'admin.jsp'
+            String password = sm.setzePasswort(benutzer);
+	    //Email mit den neuen Zugangsdaten senden.
+            em.sendPasswortMail(benutzer, password);
+            dao.close();
+            //Weiterleitung auf 'admin.jsp'
 	    request.getRequestDispatcher("admin.jsp").forward(request, response);
+            
 	}
 
 }

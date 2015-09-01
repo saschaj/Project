@@ -98,7 +98,7 @@ public class SystemManager {
         }
     }
 
-    public void setzePasswort(Benutzer b) {
+    public String setzePasswort(Benutzer b) {
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
         ZufallsStringErzeuger z = new ZufallsStringErzeuger();
         String password = z.holeNeuesPasswort();
@@ -106,5 +106,6 @@ public class SystemManager {
         b.setPasswortZuruecksetzen("");
         b = dao.updateBenutzer(b);
         dao.close();
+        return password;
     }
 }
