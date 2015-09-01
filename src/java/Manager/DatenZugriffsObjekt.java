@@ -607,18 +607,24 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach 
-     * Datum: 28.07.2015 
-     * Version: 1.0 Änderungen: -
+     * Ersteller:   René Kanzenbach 
+     * Datum:	    28.07.2015 
+     * Version:	    1.0
+     *		    1.1 René Kanzenbach 01.09.2015
+     *		    - Die verschiedenen Status bekommen jetzt immer eine feste
+     *		    Farbe zugewiesen
      *
      * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Benutzer im System
      * registriert sind und welchen Status diese besitzen.
+     * Die unterschiedlichen Status bekommen dabei immmer die gleiche Farbe 
+     * zugewiesen.
      *
      * @return JFreeChart mit Benutzerinformationen.
      */
     public JFreeChart getBenutzerStatistik() {
 
 	JFreeChart chart;
+	Benutzer_Status status;
 	DefaultPieDataset dataset = new DefaultPieDataset();
 	List<Benutzer> benutzerListe = this.getAllBenutzer();
 	PiePlot plot;
@@ -646,23 +652,40 @@ public class DatenZugriffsObjekt {
 
 	//Diagramm erstellen.
 	chart = ChartFactory.createPieChart("Benutzerübersicht", dataset);
+	
 	//Anpassen des Labelformates im Diagramm.
 	plot = (PiePlot) chart.getPlot();
 	plot.setLabelGenerator(
 		new StandardPieSectionLabelGenerator("{0} Anzahl: {1} ({2})"));
+	
 	//Diagrammhintergrund transparent setzen
 	plot.setBackgroundPaint(new Color(255, 255, 255, 0));
 	plot.setBackgroundImageAlpha(0.0f);
+	
 	//Rand um das Diagramm deaktivieren
 	plot.setOutlineVisible(false);
-
+	
+	//Farben der einzelnen Sektionen im Chart festlegen
+	//Dem Status 'Aktiv' die Farbe Grün zuweisen
+	status = this.entityManager.find(Benutzer_Status.class,
+		Konstanten.ID_BEN_STATUS_AKTIV);
+	plot.setSectionPaint(status.getName(),  new Color(0,153,0));
+	//Dem Status 'Geloescht' die Farbe Rot zuweisen
+	status = this.entityManager.find(Benutzer_Status.class,
+		Konstanten.ID_BEN_STATUS_GELOESCHT);
+	plot.setSectionPaint(status.getName(), Color.RED);
+	//Dem Status 'Unbestaetigt' die Farbe Orange zuweisen
+	status = this.entityManager.find(Benutzer_Status.class,
+		Konstanten.ID_BEN_STATUS_UNBESTAETIGT);
+	plot.setSectionPaint(status.getName(), new Color(250,128,0));
+	
 	return chart;
     }
 
     /**
-     * Ersteller: René Kanzenbach 
-     * Datum: 28.07.2015 
-     * Version: 1.0 Änderungen: -
+     * Ersteller:   René Kanzenbach 
+     * Datum:	    28.07.2015 
+     * Version:	    1.0
      *
      * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Vertraege im
      * System registriert sind und was es fuer Vertraege sind.
@@ -672,6 +695,7 @@ public class DatenZugriffsObjekt {
     public JFreeChart getVertragStatistik() {
 
 	JFreeChart chart;
+	Vertrag_Art vArt;
 	DefaultPieDataset dataset = new DefaultPieDataset();
 	List<Vertrag> vertragListe = this.getAllVertraege();
 	PiePlot plot;
@@ -707,12 +731,35 @@ public class DatenZugriffsObjekt {
 	plot = (PiePlot) chart.getPlot();
 	plot.setLabelGenerator(
 		new StandardPieSectionLabelGenerator("{0} Anzahl: {1} ({2})"));
+	
 	//Diagrammhintergrund transparent setzen
 	plot.setBackgroundPaint(new Color(255, 255, 255, 0));
 	plot.setBackgroundImageAlpha(0.0f);
+	
 	//Rand um das Diagramm deaktivieren
 	plot.setOutlineVisible(false);
-
+	
+	//Den Vertragsarten eine feste Farbe zuweisen
+	//Der Vertragsart 'Stromvertrag' die Farbe Gelb zuweisen
+	vArt = this.entityManager.find(Vertrag_Art.class,
+		Konstanten.ID_VERTRAG_ART_STROM);
+	plot.setSectionPaint(vArt.getName(), Color.YELLOW);
+	//Der Vertragsart 'Gasvertrag' die Farbe Orange zuweisen
+	vArt = this.entityManager.find(Vertrag_Art.class,
+		Konstanten.ID_VERTRAG_ART_GAS);
+	plot.setSectionPaint(vArt.getName(),  new Color(250,128,0));
+	//Der Vertragsart 'Handyvertrag' die Farbe Magenta zuweisen
+	vArt = this.entityManager.find(Vertrag_Art.class,
+		Konstanten.ID_VERTRAG_ART_HANDY);
+	plot.setSectionPaint(vArt.getName(),  new Color(204,0,204));
+	//Der Vertragsart 'Festnetzvertrag' die Farbe Blau zuweisen
+	vArt = this.entityManager.find(Vertrag_Art.class,
+		Konstanten.ID_VERTRAG_ART_FESTNETZ);
+	plot.setSectionPaint(vArt.getName(), Color.BLUE);
+	//Der Vertragsart 'Zeitschriftvertrag' die Farbe Grün zuweisen
+	vArt = this.entityManager.find(Vertrag_Art.class,
+		Konstanten.ID_VERTRAG_ART_ZEITSCHRIFT);
+	plot.setSectionPaint(vArt.getName(), new Color(0,153,0));
 	return chart;
     }
 
@@ -872,7 +919,7 @@ public class DatenZugriffsObjekt {
     public void setKundeVertrag(Kunde kunde, Vertrag vertrag) {
 
 	EntityTransaction tr = this.entityManager.getTransaction();
-	//Sicherstellen, dass sich der Benutzer im PersistenceContext
+	//Sicherstellen, dass sich der Kunde im PersistenceContext
 	//des EntityManagers befindet
 	Kunde updateKunde = this.entityManager.merge(kunde);
 

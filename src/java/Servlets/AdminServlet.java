@@ -531,10 +531,15 @@ public class AdminServlet extends HttpServlet {
 	 */
 	private void setzePwZurueck(HttpServletRequest request,
                 HttpServletResponse response) throws ServletException, IOException {
-//            Benutzers, welcher ein neues Passwort erhalten soll
-//            SystemManager sm = new SystemManager();            
-//            sm.setzePasswort(b);
-                        
+	    
+	    DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+	    SystemManager sm= new SystemManager();
+	    Benutzer benutzer = dao.getBenutzer(request.getParameter("Ben_Email"));
+            
+	    //Passwort des Benutzers zurücksetzen
+            sm.setzePasswort(benutzer);
+	    //Weiterleitung auf 'admin.jsp'
+	    request.getRequestDispatcher("admin.jsp").forward(request, response);
 	}
 
 }
