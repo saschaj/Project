@@ -129,8 +129,7 @@ public class LoginLogoutServlet extends HttpServlet {
             out.println("</html>");
         }
         if (sendeMail) {           
-            SystemManager sm = new SystemManager();
-            sm.passwortZuruecksetzen(email, request.getRequestURL().toString());
+            passwortZuruecksetzen(email, request.getRequestURL().toString());
         }
     }
     
@@ -140,7 +139,7 @@ public class LoginLogoutServlet extends HttpServlet {
         String registrierungsBestaetigung = p.erzeugeBestaetigungsReferenz();        
         Benutzer b = dao.getBenutzer(email);
         b.setEmailBestaetigung(registrierungsBestaetigung);
-        dao.updateBenutzer(b);
+        b = dao.updateBenutzer(b);
         Kunde k = dao.getKunde(b.getBenutzerId());
         EmailHandler emailer = new EmailHandler();
         emailer.sendeRegistrierungsBestaetigung("Registrierung für " + k.getVorname() + " "
@@ -407,6 +406,18 @@ public class LoginLogoutServlet extends HttpServlet {
         //Weiterleitung auf Startseite
         request.getRequestDispatcher("/index.jsp")
                 .forward(request, response);
+    }
+    
+     private void passwortZuruecksetzen(String email, String pfad) {
+        DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+        ZufallsStringErzeuger p = new ZufallsStringErzeuger();
+        String passwortBestaetigung = p.erzeugeBestaetigungsReferenz();
+        Benutzer b = dao.getBenutzer(email);
+        b.setPasswortZuruecksetzen(passwortBestaetigung);
+        b = dao.updateBenutzer(b);
+        EmailHandler emailer = new EmailHandler();
+        emailer.sendePasswortBestaetigung(email, passwortBestaetigung, pfad);
+        dao.close();
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

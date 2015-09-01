@@ -60,7 +60,7 @@ public class ConfirmationServlet extends HttpServlet {
                     String password = z.holeNeuesPasswort();
                     b.setPasswort(password);
                     b.setPasswortZuruecksetzen("");
-                    dao.updateBenutzerDaten(b.getEmail(), password, b.getBenutzerId());
+                    b = dao.updateBenutzer(b);
                     sendeNeuesPasswort(b, password);
                 } else if (action.equals("register") && b.getEmailBestaetigung() != null && b.getEmailBestaetigung().equals(ref)) {
                     info = "Ihre Bestätigung war erfolgreich.";
@@ -68,11 +68,12 @@ public class ConfirmationServlet extends HttpServlet {
                     Kunde k = dao.getKunde(b.getBenutzerId());
                     b.setEmailBestaetigung("");
                     dao.updateBenutzerDaten(b.getEmail(), b.getPasswort(), b.getBenutzerId());
-                    sendeRegistrierungsMail(k);
-                } 
-                
+                    sendeRegistrierungsMail(k);                    
+                }                
             }
+            dao.close();             
         }
+        
         request.setAttribute("info", info);
         request.getRequestDispatcher("/confirmation.jsp").forward(request, response);
     }

@@ -98,14 +98,12 @@ public class SystemManager {
         }
     }
 
-    public void passwortZuruecksetzen(String email, String pfad) {
+    public void setzePasswort(Benutzer b) {
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
-        ZufallsStringErzeuger p = new ZufallsStringErzeuger();
-        String passwortBestaetigung = p.erzeugeBestaetigungsReferenz();
-        Benutzer b = dao.getBenutzer(email);
-        b.setPasswortZuruecksetzen(passwortBestaetigung);
-        dao.updateBenutzer(b);
-        EmailHandler emailer = new EmailHandler();
-        emailer.sendePasswortBestaetigung(email, passwortBestaetigung, pfad);
+        ZufallsStringErzeuger z = new ZufallsStringErzeuger();
+        String password = z.holeNeuesPasswort();
+        b.setPasswort(password);
+        b.setPasswortZuruecksetzen("");
+        b = dao.updateBenutzer(b);
     }
 }
