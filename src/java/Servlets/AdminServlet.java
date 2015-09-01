@@ -531,9 +531,9 @@ public class AdminServlet extends HttpServlet {
 	 */
 	private void setzePwZurueck(HttpServletRequest request,
                 HttpServletResponse response) throws ServletException, IOException {
-//            email des Benutzers, welcher ein neues Passwort erhalten soll
+//            Benutzers, welcher ein neues Passwort erhalten soll
 //            SystemManager sm = new SystemManager();            
-//            sm.passwortZuruecksetzen(email, request.getRequestURL().toString());
+//            sm.setzePasswort(b);
                         
 	}
 
