@@ -1,8 +1,10 @@
 package Manager;
 
+import Entitys.Benutzer;
 import Entitys.Kunde;
 import Entitys.Vertrag;
 import Entitys.Zeit_Einheit;
+import Hilfsklassen.ZufallsStringErzeuger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -22,10 +24,9 @@ public class SystemManager {
     public SystemManager() {
         emailer = new EmailHandler();
     }
-    
-        
+
     /**
-     * Einmal Täglich wird zu jedem Vertrag geprüft ob eine Benachrichtigung 
+     * Einmal Täglich wird zu jedem Vertrag geprüft ob eine Benachrichtigung
      * verschickt werden muss.
      */
     //@Schedule(minute = "*/1", hour = "*")
@@ -50,8 +51,7 @@ public class SystemManager {
             datumAendern(benachrichtigungsDatum, kfEinheit, -kuendigungsFrist);
             datumAendern(benachrichtigungsDatum, bfEinheit, -benachrichtigungsFrist);
             System.out.println("benachrichtigungsDatum: " + benachrichtigungsDatum.getTime());
-            
-                   
+
             if (benachrichtigungsDatum.before(now) && !v.isBenachrichtigungVersand()) {
                 Kunde k = v.getKunde();
                 ArrayList<Vertrag> tmpList;
@@ -96,5 +96,16 @@ public class SystemManager {
                 cal.add(Calendar.YEAR, frist);
                 break;
         }
+    }
+
+    public void passwortZuruecksetzen(String email, String pfad) {
+        DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+        ZufallsStringErzeuger p = new ZufallsStringErzeuger();
+        String passwortBestaetigung = p.erzeugeBestaetigungsReferenz();
+        Benutzer b = dao.getBenutzer(email);
+        b.setPasswortZuruecksetzen(passwortBestaetigung);
+        dao.updateBenutzer(b);
+        EmailHandler emailer = new EmailHandler();
+        emailer.sendePasswortBestaetigung(email, passwortBestaetigung, pfad);
     }
 }

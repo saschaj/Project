@@ -19,6 +19,7 @@ import Hilfsklassen.Konstanten;
 import Hilfsklassen.ZufallsStringErzeuger;
 import Manager.DatenZugriffsObjekt;
 import Manager.EmailHandler;
+import Manager.SystemManager;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -97,7 +98,7 @@ public class LoginLogoutServlet extends HttpServlet {
 
             } else {
                 String fehler[] = {"Geben Sie ihre E-Mail-Adresse an."};
-                request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehler);
+                request.setAttribute("error", fehler);
                 // Da es Fehler im Formular gibt stellt man dem Besucher seine
                 // eingegebenen Daten zur Verfügung, damit er sie
                 // überarbeiten bzw. ergänzen kann.                
@@ -128,19 +129,9 @@ public class LoginLogoutServlet extends HttpServlet {
             out.println("</html>");
         }
         if (sendeMail) {           
-            passwortZuruecksetzen(email, request.getRequestURL().toString());
+            SystemManager sm = new SystemManager();
+            sm.passwortZuruecksetzen(email, request.getRequestURL().toString());
         }
-    }
-
-    private void passwortZuruecksetzen(String email, String pfad) {
-        DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
-        ZufallsStringErzeuger p = new ZufallsStringErzeuger();        
-        String passwortBestaetigung = p.erzeugeBestaetigungsReferenz();        
-        Benutzer b = dao.getBenutzer(email);
-        b.setPasswortZuruecksetzen(passwortBestaetigung);
-        dao.addBenutzer(b);
-        EmailHandler emailer = new EmailHandler();
-        emailer.sendePasswortBestaetigung(email, passwortBestaetigung, pfad);
     }
     
     private void registrierungsBestaetigung(String email, String pfad, String password) {
@@ -149,7 +140,7 @@ public class LoginLogoutServlet extends HttpServlet {
         String registrierungsBestaetigung = p.erzeugeBestaetigungsReferenz();        
         Benutzer b = dao.getBenutzer(email);
         b.setEmailBestaetigung(registrierungsBestaetigung);
-        dao.addBenutzer(b);
+        dao.updateBenutzer(b);
         Kunde k = dao.getKunde(b.getBenutzerId());
         EmailHandler emailer = new EmailHandler();
         emailer.sendeRegistrierungsBestaetigung("Registrierung für " + k.getVorname() + " "

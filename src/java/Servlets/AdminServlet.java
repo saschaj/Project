@@ -6,6 +6,7 @@ import Hilfsklassen.Konstanten;
 import Hilfsklassen.ZufallsStringErzeuger;
 import Manager.DatenZugriffsObjekt;
 import Manager.EmailHandler;
+import Manager.SystemManager;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -530,8 +531,10 @@ public class AdminServlet extends HttpServlet {
 	 */
 	private void setzePwZurueck(HttpServletRequest request,
                 HttpServletResponse response) throws ServletException, IOException {
-            
-            
+//            email des Benutzers, welcher ein neues Passwort erhalten soll
+//            SystemManager sm = new SystemManager();            
+//            sm.passwortZuruecksetzen(email, request.getRequestURL().toString());
+                        
 	}
 
 }

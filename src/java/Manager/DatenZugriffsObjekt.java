@@ -916,6 +916,10 @@ public class DatenZugriffsObjekt {
 		}
 		return istAdminAngelegt;
 	}
+        
+        public Benutzer updateBenutzer(Benutzer b){
+            return entityManager.merge(b);
+        }
 
     /**
      * Methode zum schließen des EntityManagers.

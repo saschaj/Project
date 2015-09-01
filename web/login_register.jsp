@@ -18,7 +18,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 <%@page import="Hilfsklassen.Konstanten"%>
 <%
     String fehler[];
-    String error;
+    String error[];
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -59,10 +59,10 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                             <div class="sidebar_item">
                                 <%-- Formular der Anmeldung --%>
                                 <% if (request.getAttribute(
-                                            "fehler") != null) {
-                                        fehler = (String[]) request.getAttribute("fehler");
-                                        for (int i = 0; i < fehler.length; i++) {%>
-                                <span class="span_error"><%= fehler[i]%></span><br>
+                                            "error") != null) {
+                                        error = (String[]) request.getAttribute("error");
+                                        for (int i = 0; i < error.length; i++) {%>
+                                <span class="span_error"><%= error[i]%></span><br>
                                 <%  }
                                         request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, null);
                                     }%>

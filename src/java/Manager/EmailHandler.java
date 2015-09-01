@@ -211,8 +211,8 @@ public class EmailHandler {
                     + " aufgerufen. Klicken Sie auf den folgenden Link um das"
                     + " Passwort zurückzusetzen. Dieses wird Ihnen dann in einer"
                     + " seperaten E-Mail zugesendet. \n";
-
-            pfad = pfad.replace("LoginLogout", "Confirmation");
+            pfad = pfad.substring(0, pfad.lastIndexOf("/"));
+            pfad = pfad + "/ConfirmationServlet";
             String link = pfad + "?user=" + recipient + "?action=password?ref=";
             messageBodyPart.setText(msgBody + "\n" + link + ref);
 
