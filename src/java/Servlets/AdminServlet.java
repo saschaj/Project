@@ -1,11 +1,8 @@
 package Servlets;
 
 import Entitys.Benutzer;
-import Entitys.Benutzer_Status;
 import Hilfsklassen.Konstanten;
-import Hilfsklassen.ZufallsStringErzeuger;
 import Manager.DatenZugriffsObjekt;
-import Manager.EmailHandler;
 import Manager.SystemManager;
 import java.io.IOException;
 import java.util.List;
@@ -531,10 +528,15 @@ public class AdminServlet extends HttpServlet {
 	 */
 	private void setzePwZurueck(HttpServletRequest request,
                 HttpServletResponse response) throws ServletException, IOException {
-//            Benutzers, welcher ein neues Passwort erhalten soll
-//            SystemManager sm = new SystemManager();            
-//            sm.setzePasswort(b);
-                        
+	    
+	    DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+	    SystemManager sm= new SystemManager();
+	    Benutzer benutzer = dao.getBenutzer(request.getParameter("Ben_Email"));
+            
+	    //Passwort des Benutzers zurücksetzen
+            sm.setzePasswort(benutzer);
+	    //Weiterleitung auf 'admin.jsp'
+	    request.getRequestDispatcher("admin.jsp").forward(request, response);
 	}
 
 }

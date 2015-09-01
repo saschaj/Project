@@ -506,7 +506,7 @@ public class VertragServlet extends HttpServlet {
                     // gespeichert werden
                     // return true=gespeichert false=nicht gespeichert
                     vertragGespeichert = new DatenZugriffsObjekt().addContract(neuFestnetzvertrag);
-                    neuerVertrag = neuGasvertrag;
+                    neuerVertrag = neuFestnetzvertrag;
                     break;
                 case "Handy":
                     // Vertragsdaten setzen
