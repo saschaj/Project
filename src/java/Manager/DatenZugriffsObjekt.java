@@ -451,12 +451,12 @@ public class DatenZugriffsObjekt {
      * @return true, wenn die Registrierung erfolgreich war false, wenn die
      * Registrierung fehlgeschlagen ist
      */
-    public boolean register(String vname, String name,
-            String email, String passwort) {
+   public boolean register(String vname, String name, String email, String passwort) {
         boolean istRegistriert = false;
         Kunde neuerKunde = new Kunde();
         Benutzer_Recht recht = this.entityManager.find(Benutzer_Recht.class,
                 Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT);
+        Adresse adr = new Adresse();
 
         neuerKunde.setVorname(vname);
         neuerKunde.setNachname(name);
@@ -465,10 +465,18 @@ public class DatenZugriffsObjekt {
         neuerKunde.addRecht(recht);
         neuerKunde.setStatus(this.entityManager.find(Benutzer_Status.class,
                 Konstanten.ID_BEN_STATUS_AKTIV));
+        
+        adr.setHausNr("");
+        adr.setLand("");
+        adr.setOrt("");
+        adr.setPlz("");
+        adr.setStrasse("");
+        neuerKunde.setAdresse(adr);
 
         try {
             this.entityManager.getTransaction().begin();
             this.entityManager.persist(neuerKunde);
+            this.entityManager.persist(adr);
             this.entityManager.getTransaction().commit();
             istRegistriert = true;
         } catch (RollbackException re) {
@@ -481,7 +489,6 @@ public class DatenZugriffsObjekt {
 
         return istRegistriert;
     }
-
     /**
      * Ersteller: René Kanzenbach Datum: 02.06.2015 Methode: getBenutzer
      * Version: 1.0 1.1 René Kanzenbach 20.07.2015 -Fehler behoben. Wirft jetzt
