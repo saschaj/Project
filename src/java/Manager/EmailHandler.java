@@ -247,7 +247,8 @@ public class EmailHandler {
                     + "\nEmail-Adresse: " + recipient
                     + "\nPasswort: " + passwort + "\n\n";
 
-            pfad = pfad.replace("LoginLogout", "Confirmation");
+            pfad = pfad.substring(0, pfad.lastIndexOf("/"));
+            pfad = pfad + "/ConfirmationServlet";
             String link = pfad + "?user=" + recipient + "?action=register?ref=";
             messageBodyPart.setText(msgBody + "\n" + link + ref);
 
