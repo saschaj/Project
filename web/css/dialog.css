@@ -17,13 +17,34 @@
 #dialogbox{
 	display: none;
 	position: fixed;
-	background: #000;
+	background: #323232;
 	border-radius:7px; 
 	width:550px;
 	z-index: 10;
 }
 
-#dialogbox > div{ background:#FFF; margin:8px; }
-#dialogbox > div > #dialogboxhead{ background: #666; font-size:19px; padding:10px; color:#CCC; }
-#dialogbox > div > #dialogboxbody{ background:#333; padding:20px; color:#FFF; }
-#dialogbox > div > #dialogboxfoot{ background: #666; padding:10px; text-align:right; }
+#dialogbox > div{
+    background:#FFF;
+    margin:8px;
+}
+
+#dialogbox > div > #dialogboxhead{ 
+    background: #323232; 
+    font-size:19px; 
+    padding:10px; 
+    color:#E25506;
+    font: bold 150% 'News Cycle', Arial, sans-serif;
+}
+
+#dialogbox > div > #dialogboxbody{ 
+    background:#FFF; 
+    padding:20px; 
+    color:#000;
+    font: normal 125% Arial, Helvetica, sans-serif;
+}
+
+#dialogbox > div > #dialogboxfoot{
+    background: #323232; 
+    padding:10px; 
+    text-align:right; 
+}

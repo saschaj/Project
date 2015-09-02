@@ -81,10 +81,10 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 		    document.getElementById('dialogboxhead').innerHTML = "Bitte bestätigen!";
 		    document.getElementById('dialogboxbody').innerHTML = dialog;
 		    document.getElementById('dialogboxfoot').innerHTML 
-			    = '<button class="button_small" onclick="Confirm.yes(\'' + formId + '\')">\n\
+			    = '<button class="submit" onclick="Confirm.yes(\'' + formId + '\')">\n\
 				Ja\n\
 				</button>\n\
-				<button class="button_small" onclick="Confirm.no()">\n\
+				<button class="submit" onclick="Confirm.no()">\n\
 				Nein\n\
 				</button>';
 		};
