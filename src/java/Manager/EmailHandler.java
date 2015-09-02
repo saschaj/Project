@@ -104,7 +104,7 @@ public class EmailHandler {
         try {
             Message msg = new MimeMessage(session);
             msg.setSubject("Kontaktaufnahme von " + name);
-            msg.setRecipient(RecipientType.TO, new InternetAddress("swpss2015@gmail.com"));
+            msg.setRecipient(RecipientType.TO, new InternetAddress("lovy.julia@gmail.com"));
             msg.setFrom(new InternetAddress(emailAbsender));
             // Body text.
             BodyPart messageBodyPart = new MimeBodyPart();
