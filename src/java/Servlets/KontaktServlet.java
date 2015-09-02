@@ -10,14 +10,16 @@
  *                    - Prüfungen ob die Pflichtfelder leer sind.
  *                    - Lexikalische und syntaktische Korrektheit der Eingaben.
  *                    - Vollständigkeitsprüfungen der Eingaben.
-                      - Wenn die Felder nicht korrekt ausgefüllt sind, werden 
-                        entsprechende Fehlern ausgewerfen.Sonst erscheint eine Meldung 
-                        , dass alle Daten erfolgreich gesendet wurden.
- *                  
+ *                    - Wenn die Felder nicht korrekt ausgefüllt sind, werden 
+ *                       entsprechende Fehlern ausgewerfen.Sonst erscheint eine Meldung 
+ *                       , dass alle Daten erfolgreich gesendet wurden.
+ *                  1.2 (Julie Kenfack) 19.08.2015
+ *                     - Email-Benachrichtungen hinzugefügt.
  */
 package Servlets;
 
 import Hilfsklassen.Konstanten;
+import Manager.EmailHandler;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -29,21 +31,20 @@ import javax.servlet.http.HttpSession;
 public class KontaktServlet extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Ersteller: Julie Kenfack Datum: 20.07.2015 Version: 1.1 Änderungen: -
      *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * Diese Methode prüft, ob alle kontaktdaten(Captcha erforderlich) die
+     * eingegeben wurden, korrekt sind. Wenn ja dann werden die Daten per email
+     * an uns geschickt und der User wird auf Startseite weitergeleitet.
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-		
-	//Zeichensatz des Request-Objektes auf "UTF-8" setzen
-	//Ermöglicht die korrekte Verwendung von Umlauten
-	request.setCharacterEncoding("UTF-8");
-        
+
         HttpSession session = request.getSession();
         String ausgabe = "", meta = "";
         String fehler[];
@@ -81,12 +82,14 @@ public class KontaktServlet extends HttpServlet {
                 fehler = ausgabe.split("!");
                 // Setzen der Fehler in den Request                    
                 request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, fehler);
+
+                // Weiterleitung an contact.jsp
                 request.getRequestDispatcher("/contact.jsp").forward(request, response);
             } else {
                 meta = "<meta http-equiv='refresh' content='2; URL=index.jsp'>";
                 ausgabe = "Daten wurden erfolgreich gesendet";
-                session.invalidate();
 
+                // Automatisch generiert
                 response.setContentType("text/html;charset=UTF-8");
 
                 try (PrintWriter out = response.getWriter()) {
@@ -102,13 +105,12 @@ public class KontaktServlet extends HttpServlet {
                     out.println("</body>");
                     out.println("</html>");
                 }
+                // Erzeugung eines EmailHanhlers
+                EmailHandler eh = new EmailHandler();
+                // Aufruf der Methode für die Email-Benachrichtung
+                eh.sendInfoMail(email, mitteilung, name);
             }
         }
-        //Kontaktdaten in den Session laden
-//        session.setAttribute(name, name);
-//        session.setAttribute(email, email);
-//        session.setAttribute(mitteilung, mitteilung);
-
     }
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
