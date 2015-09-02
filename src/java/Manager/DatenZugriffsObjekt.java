@@ -69,8 +69,12 @@ public class DatenZugriffsObjekt {
     public Kunde getKunde(int benutzerId) {
 	return entityManager.find(Kunde.class, benutzerId);
     }
-
-    /**
+    
+     /**
+     * Ersteller:    Julie Kenfack 
+     * Erstelldatum: 20.08.2015
+     * Methode:      updateKundeDaten
+     * Version:      1.0
      * Die Methode soll den in der Datenbank,bestehenden Kunden mit den
      * übergebenen Kundendaten aktualisieren.
      *
@@ -81,57 +85,98 @@ public class DatenZugriffsObjekt {
      * @param plz
      * @param wohnort
      * @param nummer
+     * @return true, wenn die Aktualisierung der Kundendaten erfolgreich war und false, wenn nicht
      */
     public boolean updateKundeDaten(String vorname, String nachname,
-	    Adresse adresse, Date gebdt, String nummer, int benutzerId) {
-	boolean istAktualisiert = false;
+            Date gebdt, String nummer, int benutzerId) {
+        boolean istAktualisiert = false;
+        Kunde k = entityManager.find(Kunde.class, benutzerId);
+        entityManager.getTransaction().begin();
+        try {
 
-	Kunde k = entityManager.find(Kunde.class, benutzerId);
-	try {
-//            entityManager.flush();
-//            this.entityManager.persist(k);
-	    entityManager.getTransaction().begin();
+            k.setGeburtsdatum(gebdt);
+            k.setVorname(vorname);
+            k.setNachname(nachname);
+            k.setGeburtsdatum(gebdt);
+            k.setTelefonnummer(nummer);
 
-//       Kunde k= new Kunde();
-	    k.setGeburtsdatum(gebdt);
-	    k.setVorname(vorname);
-	    k.setNachname(nachname);
-	    k.setAdresse(adresse);
-	    k.setGeburtsdatum(gebdt);
-	    k.setTelefonnummer(nummer);
+            entityManager.getTransaction().commit();
+            istAktualisiert = true;
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
 
-	    entityManager.getTransaction().commit();
-	    istAktualisiert = true;
-	} catch (PersistenceException pe) {
-	    this.entityManager.getTransaction().rollback();
+        }
+        return istAktualisiert;
+    }
+    /**
+     * Ersteller:    Julie Kenfack
+     * Erstelldatum: 20.08.2015
+     * Methode:      updateAdresseDaten
+     * Version:      1.0
+     * 
+     * Die Methode soll den in der Datenbank,bestehenden Kunden mit den
+     * übergebenen Adresse aktualisieren.
+     *
+     * @param vorname
+     * @param nachname
+     * @param straße
+     * @param hausnummer
+     * @param plz
+     * @param wohnort
+     * @param nummer
+     * @return true, wenn die Aktualisierung der Adresse erfolgreich war und false, wenn nicht
+     */
+    public boolean updateAdresse(String strasse, String hsnum, String plz, String ort, String land,
+            int adresseId) {
+        Adresse ad = entityManager.find(Adresse.class, adresseId);
+        boolean istAktualisiert = false;
 
-	}
-	return istAktualisiert;
+        entityManager.getTransaction().begin();
+        try {
+            ad.setStrasse(strasse);
+            ad.setHausNr(hsnum);
+            ad.setPlz(plz);
+            ad.setOrt(ort);
+            ad.setLand(land);
+            entityManager.getTransaction().commit();
+
+            istAktualisiert = true;
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
+
+        }
+        return istAktualisiert;
     }
 
     /**
+     * Ersteller:    Julie Kenfack 
+     * Erstelldatum: 20.08.2015
+     * Methode:      updateKundeDaten
+     * Version:      1.0
+     * 
      * Die Methode soll den in der Datenbank,bestehenden benutzer mit den
      * übergebenen Benutzerdaten aktualisieren.
      *
      * @param email
      * @param passwort
+     * @return true, wenn die Aktualisierung der Benutzerdaten erfolgreich war und false, wenn nicht
      */
     public boolean updateBenutzerDaten(String email, String passwort, int id) {
-	Benutzer ben = entityManager.find(Benutzer.class, id);
-	boolean istAktualisiert = false;
+        Benutzer ben = entityManager.find(Benutzer.class, id);
+        boolean istAktualisiert = false;
 
-	entityManager.getTransaction().begin();
-	try {
-	    ben.setEmail(email);
-	    ben.setPasswort(passwort);
-	    entityManager.getTransaction().commit();
+        entityManager.getTransaction().begin();
+        try {
+            ben.setEmail(email);
+            ben.setPasswort(passwort);
+            entityManager.getTransaction().commit();
 
-	    istAktualisiert = true;
-	} catch (PersistenceException pe) {
-	    this.entityManager.getTransaction().rollback();
+            istAktualisiert = true;
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
 
-	}
-	return istAktualisiert;
+        }
+        return istAktualisiert;
     }
 
     /**
@@ -401,12 +446,12 @@ public class DatenZugriffsObjekt {
      * @return true, wenn die Registrierung erfolgreich war false, wenn die
      * Registrierung fehlgeschlagen ist
      */
-    public boolean register(String vname, String name,
-	    String email, String passwort) {
-	boolean istRegistriert = false;
-	Kunde neuerKunde = new Kunde();
-	Benutzer_Recht recht = this.entityManager.find(Benutzer_Recht.class,
-		Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT);
+   public boolean register(String vname, String name, String email, String passwort) {
+        boolean istRegistriert = false;
+        Kunde neuerKunde = new Kunde();
+        Benutzer_Recht recht = this.entityManager.find(Benutzer_Recht.class,
+                Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT);
+        Adresse adr = new Adresse();
 
 	neuerKunde.setVorname(vname);
 	neuerKunde.setNachname(name);
@@ -416,22 +461,22 @@ public class DatenZugriffsObjekt {
 	neuerKunde.setStatus(this.entityManager.find(Benutzer_Status.class,
 		Konstanten.ID_BEN_STATUS_UNBESTAETIGT));
 
-	try {
-	    this.entityManager.getTransaction().begin();
-	    this.entityManager.persist(neuerKunde);
-	    this.entityManager.getTransaction().commit();
-	    istRegistriert = true;
-	} catch (RollbackException re) {
+        try {
+            this.entityManager.getTransaction().begin();
+            this.entityManager.persist(neuerKunde);
+            this.entityManager.persist(adr);
+            this.entityManager.getTransaction().commit();
+            istRegistriert = true;
+        } catch (RollbackException re) {
 
-	} catch (PersistenceException pe) {
-	    this.entityManager.getTransaction().rollback();
-	} catch (Throwable th) {
-	    this.entityManager.getTransaction().rollback();
-	}
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
+        } catch (Throwable th) {
+            this.entityManager.getTransaction().rollback();
+        }
 
-	return istRegistriert;
+        return istRegistriert;
     }
-
     /**
      * Ersteller: René Kanzenbach Datum: 02.06.2015 Methode: getBenutzer
      * Version: 1.0 1.1 René Kanzenbach 20.07.2015 -Fehler behoben. Wirft jetzt
@@ -1002,6 +1047,9 @@ public class DatenZugriffsObjekt {
 	return istAdminAngelegt;
     }
 
+    public Benutzer_Status getStatusByID(int id) {
+        return this.entityManager.find(Benutzer_Status.class, id);
+    }
 
     /**
      * Methode zum schließen des EntityManagers.

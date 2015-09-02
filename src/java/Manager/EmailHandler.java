@@ -104,7 +104,7 @@ public class EmailHandler {
         try {
             Message msg = new MimeMessage(session);
             msg.setSubject("Kontaktaufnahme von " + name);
-            msg.setRecipient(RecipientType.TO, new InternetAddress("swpss2015@gmail.com"));
+            msg.setRecipient(RecipientType.TO, new InternetAddress("lovy.julia@gmail.com"));
             msg.setFrom(new InternetAddress(emailAbsender));
             // Body text.
             BodyPart messageBodyPart = new MimeBodyPart();
@@ -247,7 +247,8 @@ public class EmailHandler {
                     + "\nEmail-Adresse: " + recipient
                     + "\nPasswort: " + passwort + "\n\n";
 
-            pfad = pfad.replace("LoginLogout", "Confirmation");
+            pfad = pfad.substring(0, pfad.lastIndexOf("/"));
+            pfad = pfad + "/ConfirmationServlet";
             String link = pfad + "?user=" + recipient + "?action=register?ref=";
             messageBodyPart.setText(msgBody + "\n" + link + ref);
 
