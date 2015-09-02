@@ -25,7 +25,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 <%@page import="Entitys.Adresse"%>
 <%@page import="java.util.Date"%>
 <%@page import="Hilfsklassen.Konstanten"%>
-<% String fehler[], fehler2[]; %>
+<% String fehler[], fehler2[]; String error[]; %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -174,14 +174,23 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 
                     <div id="form_settings">
                         <h2>Benutzerdaten:</h2>
+                        <%-- Formular der Anmeldung --%>
+                            <%--     <% if (request.getAttribute(
+                                            "error") != null) {
+                                        error = (String[]) request.getAttribute("error");
+                                        for (int i = 0; i < error.length; i++) {%>
+                                <span class="span_error"><%= error[i]%></span><br>
+                                <%  }
+                                        request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, null);
+                                    }%> --%>
                         <form method="POST" action="BenutzerServlet">
-                            <%--   <%     if (request.getAttribute("fehler2") != null) {
+                              <%     if (request.getAttribute("fehler2") != null) {
                                        fehler2 = (String[]) request.getAttribute("fehler2");
                                        for (int i = 0; i < fehler2.length; i++) {%>
                                <span style="color:#FF0000"><%= fehler2[i]%></span><br>
                                <%}
                                        request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, null);
-                                   }%> --%>
+                                   }%>
                             <p>Wenn Sie Ihre Benutzerdaten ändern wollen, müssen Sie alle Felder ausfüllen!</p>
                             <p><span class="span_contact">Aktuelle E-mail:</span><input type="text" name="aktuelle e-mail" value="<%= k.getEmail()%>" /></p>
                                 <%

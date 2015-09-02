@@ -44,7 +44,7 @@ import javax.servlet.http.HttpSession;
 public class BenutzerServlet extends HttpServlet {
 
     /**
-     * Ersteller: Julie Kenfack Datum: 20.07.2015 Version: 1.1 
+     * Ersteller: Julie Kenfack Datum: 20.07.2015 Version: 1.1
      *
      * Prüft, welche Aktion in der user_account.jsp aufgerufen wurde und führt
      * dann die entsprechende Methode auf.
@@ -89,10 +89,11 @@ public class BenutzerServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
-        Kunde k = (Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
         Benutzer ben = (Benutzer) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
+        Kunde k = dao.getKunde(ben.getBenutzerId());
         Adresse adr = k.getAdresse();
-
+        k = dao.getKunde(ben.getBenutzerId());
+        ben = dao.getBenutzer(ben.getEmail());
         // Formulardaten in Variablen speichern
         String vname = request.getParameter("acc_vname");
         String name = request.getParameter("acc_name");
@@ -245,25 +246,12 @@ public class BenutzerServlet extends HttpServlet {
             dao.updateKundeDaten(vname, name, parseDate, tel, bId);
             // Änderungen der Adressedaten werden durchgeführt.
             dao.updateAdresse(strasse, hnr, plz, ort, land, aId);
-            meta = "<meta http-equiv='refresh' content='2; URL=index.jsp'>";
-            ausgabe = "Ihre Kundendaten wurden erfolgreich aktualisiert!";
-            // Automatisch generiert
-            response.setContentType("text/html;charset=UTF-8");
 
-            try (PrintWriter out = response.getWriter()) {
-                /* TODO output your page here. You may use following sample code. */
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println("<head>");
-                out.println("<title>Servlet BenutzerServlet</title>");
-                out.println(meta);
-                out.println("</head>");
-                out.println("<body>");
-                out.println(ausgabe);
-                out.println("</body>");
-                out.println("</html>");
-            }
-
+            session.setAttribute(Konstanten.SESSION_ATTR_BENUTZER, ben);
+            String info[] = {"Kundendaten aktualisiert"};
+            request.setAttribute(Konstanten.URL_PARAM_FEHLER, info);
+            request.getRequestDispatcher("/user_account.jsp")
+                    .forward(request, response);
         } else {
 
             // Fehlermeldung wird gesplittet und im Array gespeichert
