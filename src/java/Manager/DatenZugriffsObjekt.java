@@ -458,20 +458,13 @@ public class DatenZugriffsObjekt {
                 Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT);
         Adresse adr = new Adresse();
 
-        neuerKunde.setVorname(vname);
-        neuerKunde.setNachname(name);
-        neuerKunde.setEmail(email);
-        neuerKunde.setPasswort(passwort);
-        neuerKunde.addRecht(recht);
-        neuerKunde.setStatus(this.entityManager.find(Benutzer_Status.class,
-                Konstanten.ID_BEN_STATUS_AKTIV));
-        
-        adr.setHausNr("");
-        adr.setLand("");
-        adr.setOrt("");
-        adr.setPlz("");
-        adr.setStrasse("");
-        neuerKunde.setAdresse(adr);
+	neuerKunde.setVorname(vname);
+	neuerKunde.setNachname(name);
+	neuerKunde.setEmail(email);
+	neuerKunde.setPasswort(passwort);
+	neuerKunde.addRecht(recht);
+	neuerKunde.setStatus(this.entityManager.find(Benutzer_Status.class,
+		Konstanten.ID_BEN_STATUS_UNBESTAETIGT));
 
         try {
             this.entityManager.getTransaction().begin();
