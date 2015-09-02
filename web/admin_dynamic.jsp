@@ -30,6 +30,8 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
     String pwFehler;
     String adminAusgabe;
     String adminFehler;
+    
+    int i = 0;
 
     //URL fuer die BenutzerStatistik auslesen
     statistikURL = (String) request.getAttribute("StatistikURL");
@@ -52,7 +54,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
     <head>
         <title>Administratorsicht</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	
+
 	<!--Allgemeine CSS Datei importieren-->
         <link rel="stylesheet" type="text/css" href="css/style.css" />
 
@@ -80,7 +82,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 
 		    document.getElementById('dialogboxhead').innerHTML = "Bitte bestätigen!";
 		    document.getElementById('dialogboxbody').innerHTML = dialog;
-		    document.getElementById('dialogboxfoot').innerHTML 
+		    document.getElementById('dialogboxfoot').innerHTML
 			    = '<button class="submit" onclick="Confirm.yes(\'' + formId + '\')">\n\
 				Ja\n\
 				</button>\n\
@@ -124,13 +126,15 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 	<IMG src='<%= statistikURL%>' width='500' height='500' border='0'>
 
 	<% } else if (request.getParameter("Zeige_BenutzerListe") != null
-	    || request.getAttribute("Zeige_BenutzerListe") != null) { %>
+		|| request.getAttribute("Zeige_BenutzerListe") != null) { %>
 
 	<!--Tabelle mit Benutzern ausgeben-->
 	<TABLE rules="groups" border="2">
 
 	    <% for (Benutzer benutzer : benutzerListe) {%>
 
+	    <%i++;%>
+	    
 	    <tbody>
 
 		<tr>
@@ -143,7 +147,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 		    <td rowspan="2" style="border-left:solid 2px black">
 
 			<!--Button Löschen-->
-			<form id="form_loeschen" method="POST" action="AdminServlet">
+			<form id="form_loeschen<%=i%>" method="POST" action="AdminServlet">
 
 			    <!--Benutzer-Email übergeben-->
 			    <input type="hidden" name="Ben_Email" 
@@ -157,8 +161,8 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 
 			    <button type="button" class="button_small"
 				    onclick="Confirm.render(
-						'Benutzer wirklich löschen?',
-						'form_loeschen')"
+						    'Benutzer wirklich löschen?',
+						    'form_loeschen<%=i%>')"
 				    <%= benutzer.getStatus().getBenutzerStatusId()
 					    == Konstanten.ID_BEN_STATUS_GELOESCHT
 						    ? "disabled"
@@ -171,7 +175,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 			<br>
 
 			<!--Button Aktivieren-->
-			<form id="form_aktivieren" method="POST" action="AdminServlet">
+			<form id="form_aktivieren<%=i%>" method="POST" action="AdminServlet">
 
 			    <!--Benutzer-Email übergeben-->
 			    <input type="hidden" name="Ben_Email" 
@@ -185,7 +189,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 
 			    <button type="button" class="button_small" 
 				    onclick="Confirm.render('Benutzer wirklich aktivieren?',
-						'form_aktivieren')"
+						    'form_aktivieren<%=i%>')"
 				    <%= benutzer.getStatus().getBenutzerStatusId()
 					    == Konstanten.ID_BEN_STATUS_AKTIV
 						    ? "disabled"
@@ -198,7 +202,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 			<br>
 
 			<!--Button Passwort zurücksetzen-->
-			<form id="form_pw" method="POST" action="AdminServlet">
+			<form id="form_pw<%=i%>" method="POST" action="AdminServlet">
 
 			    <!--Benutzer-Email übergeben-->
 			    <input type="hidden" name="Ben_Email" 
@@ -212,8 +216,8 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 
 			    <button type="button" class="button_small"
 				    onclick="Confirm.render(
-						'Passwort wirklich zurücksetzen?'
-						, 'form_pw')">
+						    'Passwort wirklich zurücksetzen?'
+						    , 'form_pw<%=i%>')">
 				Passwort zurücksetzen
 			    </button>
 
@@ -225,11 +229,11 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 			<!--Ausgabe des Benutzerstatus
 			Aktiv wird in Grün dargestellt unbestätigt und gelöscht in Rot
 			-->
-			<span style="color:
-			      <%= benutzer.getStatus().getBenutzerStatusId()
+			<span style="font: bold;
+			      color:<%= benutzer.getStatus().getBenutzerStatusId()
 				      == Konstanten.ID_BEN_STATUS_AKTIV
 					      ? "green"
-					      : "red"%> ">
+					      : "red"%>;">
 			    <%= benutzer.getStatus().getName()%>
 			</span>
 		    </td>
@@ -247,7 +251,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 	</TABLE>
 
 	<% } else if (request.getParameter("Zeige_Admin_pw_aendern") != null
-	    || pwAusgabe != null || pwFehler != null) {%>
+		|| pwAusgabe != null || pwFehler != null) {%>
 
 	<!--Formular zum Ändern des Adminpassworts anzeigen-->
 	<div>
@@ -280,7 +284,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 	</div>
 
 	<% } else if (request.getParameter("Zeige_Admin_anlegen") != null
-	    || adminAusgabe != null || adminFehler != null) {%>
+		|| adminAusgabe != null || adminFehler != null) {%>
 
 	<div>
 	    <form method="POST" action="AdminServlet">
