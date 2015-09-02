@@ -74,8 +74,12 @@ public class DatenZugriffsObjekt {
     public Kunde getKunde(int benutzerId) {
         return entityManager.find(Kunde.class, benutzerId);
     }
-
-    /**
+    
+     /**
+     * Ersteller:    Julie Kenfack 
+     * Erstelldatum: 20.08.2015
+     * Methode:      updateKundeDaten
+     * Version:      1.0
      * Die Methode soll den in der Datenbank,bestehenden Kunden mit den
      * übergebenen Kundendaten aktualisieren.
      *
@@ -86,22 +90,18 @@ public class DatenZugriffsObjekt {
      * @param plz
      * @param wohnort
      * @param nummer
+     * @return true, wenn die Aktualisierung der Kundendaten erfolgreich war und false, wenn nicht
      */
     public boolean updateKundeDaten(String vorname, String nachname,
-            Adresse adresse, Date gebdt, String nummer, int benutzerId) {
+            Date gebdt, String nummer, int benutzerId) {
         boolean istAktualisiert = false;
-
         Kunde k = entityManager.find(Kunde.class, benutzerId);
+        entityManager.getTransaction().begin();
         try {
-//            entityManager.flush();
-//            this.entityManager.persist(k);
-            entityManager.getTransaction().begin();
 
-//       Kunde k= new Kunde();
             k.setGeburtsdatum(gebdt);
             k.setVorname(vorname);
             k.setNachname(nachname);
-            k.setAdresse(adresse);
             k.setGeburtsdatum(gebdt);
             k.setTelefonnummer(nummer);
 
@@ -113,13 +113,58 @@ public class DatenZugriffsObjekt {
         }
         return istAktualisiert;
     }
+    /**
+     * Ersteller:    Julie Kenfack
+     * Erstelldatum: 20.08.2015
+     * Methode:      updateAdresseDaten
+     * Version:      1.0
+     * 
+     * Die Methode soll den in der Datenbank,bestehenden Kunden mit den
+     * übergebenen Adresse aktualisieren.
+     *
+     * @param vorname
+     * @param nachname
+     * @param straße
+     * @param hausnummer
+     * @param plz
+     * @param wohnort
+     * @param nummer
+     * @return true, wenn die Aktualisierung der Adresse erfolgreich war und false, wenn nicht
+     */
+    public boolean updateAdresse(String strasse, String hsnum, String plz, String ort, String land,
+            int adresseId) {
+        Adresse ad = entityManager.find(Adresse.class, adresseId);
+        boolean istAktualisiert = false;
+
+        entityManager.getTransaction().begin();
+        try {
+            ad.setStrasse(strasse);
+            ad.setHausNr(hsnum);
+            ad.setPlz(plz);
+            ad.setOrt(ort);
+            ad.setLand(land);
+            entityManager.getTransaction().commit();
+
+            istAktualisiert = true;
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
+
+        }
+        return istAktualisiert;
+    }
 
     /**
+     * Ersteller:    Julie Kenfack 
+     * Erstelldatum: 20.08.2015
+     * Methode:      updateKundeDaten
+     * Version:      1.0
+     * 
      * Die Methode soll den in der Datenbank,bestehenden benutzer mit den
      * übergebenen Benutzerdaten aktualisieren.
      *
      * @param email
      * @param passwort
+     * @return true, wenn die Aktualisierung der Benutzerdaten erfolgreich war und false, wenn nicht
      */
     public boolean updateBenutzerDaten(String email, String passwort, int id) {
         Benutzer ben = entityManager.find(Benutzer.class, id);
