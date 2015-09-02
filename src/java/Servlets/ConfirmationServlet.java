@@ -6,6 +6,7 @@
 package Servlets;
 
 import Entitys.Benutzer;
+import Entitys.Benutzer_Status;
 import Entitys.Kunde;
 import Hilfsklassen.ZufallsStringErzeuger;
 import Manager.DatenZugriffsObjekt;
@@ -64,10 +65,11 @@ public class ConfirmationServlet extends HttpServlet {
                     sendeNeuesPasswort(b, password);
                 } else if (action.equals("register") && b.getEmailBestaetigung() != null && b.getEmailBestaetigung().equals(ref)) {
                     info = "Ihre Bestätigung war erfolgreich.";
-                            
-                    Kunde k = dao.getKunde(b.getBenutzerId());
+                    Benutzer_Status bs = dao.getStatusByID(1);
+                    b.setStatus(bs);
                     b.setEmailBestaetigung("");
-                    dao.updateBenutzerDaten(b.getEmail(), b.getPasswort(), b.getBenutzerId());
+                    dao.updateBenutzer(b);
+                    Kunde k = dao.getKunde(b.getBenutzerId());                    
                     sendeRegistrierungsMail(k);                    
                 }                
             }

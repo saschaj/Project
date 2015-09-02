@@ -1002,6 +1002,9 @@ public class DatenZugriffsObjekt {
 	return istAdminAngelegt;
     }
 
+    public Benutzer_Status getStatusByID(int id) {
+        return this.entityManager.find(Benutzer_Status.class, id);
+    }
 
     /**
      * Methode zum schließen des EntityManagers.
