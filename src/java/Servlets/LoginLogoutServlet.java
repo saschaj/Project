@@ -95,7 +95,7 @@ public class LoginLogoutServlet extends HttpServlet {
                 sendeMail = true;
             } else {
                 String fehler[] = {"Geben Sie ihre E-Mail-Adresse an."};
-                request.setAttribute("error", fehler);
+                request.setAttribute(Konstanten.URL_PARAM_FEHLER_RECHTS, fehler);
                 // Da es Fehler im Formular gibt stellt man dem Besucher seine
                 // eingegebenen Daten zur Verfügung, damit er sie
                 // überarbeiten bzw. ergänzen kann.                
@@ -344,7 +344,7 @@ public class LoginLogoutServlet extends HttpServlet {
                     //das "login_register.jsp"
                     fehlerText = new String[1];
                     fehlerText[0] = this.FEHLER_ACCOUNT_NICHT_AKTIVIERT;
-                    request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehlerText);
+                    request.setAttribute(Konstanten.URL_PARAM_FEHLER_RECHTS, fehlerText);
 
                     //Weiterleitung auf login_register.jsp
                     request.getRequestDispatcher("/login_register.jsp")
@@ -359,7 +359,7 @@ public class LoginLogoutServlet extends HttpServlet {
                     //das "login_register.jsp"
                     fehlerText = new String[1];
                     fehlerText[0] = this.FEHLER_ACCOUNT_GELOESCHT;
-                    request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehlerText);
+                    request.setAttribute(Konstanten.URL_PARAM_FEHLER_RECHTS, fehlerText);
 
                     //Weiterleitung auf login_register.jsp
                     request.getRequestDispatcher("/login_register.jsp")
@@ -372,7 +372,7 @@ public class LoginLogoutServlet extends HttpServlet {
             //Übergabe des Fehlertextes an das "login_register.jsp"
             fehlerText = new String[1];
             fehlerText[0] = this.LOGINFEHLER_TEXT;
-            request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehlerText);
+            request.setAttribute(Konstanten.URL_PARAM_FEHLER_RECHTS, fehlerText);
 
             //Weiterleitung auf login_register.jsp
             request.getRequestDispatcher("/login_register.jsp")
