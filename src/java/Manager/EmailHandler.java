@@ -33,7 +33,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 /**
- *
+ * 
  * @author Mladko
  */
 
@@ -43,6 +43,7 @@ public class EmailHandler {
     private Session session;
 
     /**
+     * Kunde k = v.getKu
      * Konstruktor des EmailHandler. Hier werden die benötigten Daten für die
      * Session, anhand der in der JavaMailSession hinterlegten Daten, belegt.
      */
@@ -56,6 +57,9 @@ public class EmailHandler {
     }
 
     /**
+     * Ersteller: Mladen Sikiric 
+     * Erstelldatum: 01.09.2015
+     * 
      * sendRegisterMai sendet eine Email mit den Benutzerdaten an die übergebene
      * Emailadresse.
      *

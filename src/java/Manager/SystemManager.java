@@ -4,6 +4,7 @@ import Entitys.Benutzer;
 import Entitys.Kunde;
 import Entitys.Vertrag;
 import Entitys.Zeit_Einheit;
+import Hilfsklassen.Konstanten;
 import Hilfsklassen.ZufallsStringErzeuger;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,7 +19,7 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class SystemManager {
-
+    /* EmailHanlder zum verschicken der Emails */
     private EmailHandler emailer;
 
     public SystemManager() {
@@ -26,16 +27,21 @@ public class SystemManager {
     }
 
     /**
-     * Einmal Täglich wird zu jedem Vertrag geprüft ob eine Benachrichtigung
-     * verschickt werden muss.
+     * Ersteller: Mladen Sikiric 
+     * Erstelldatum: 20.08.2015 
+     * 
+     * Einmal Täglich wird zu
+     * jedem Vertrag geprüft ob eine Benachrichtigung verschickt werden muss.
      */
-    @Schedule(minute = "*/1", hour = "*")
+    @Schedule(hour = "0")
     private void pruefeAufAblaufendeFristen() {
-        System.out.println("pruefeAufAblaufendeFristen um: " + Calendar.getInstance(Locale.GERMANY).getTime());
         Calendar now;
         DatenZugriffsObjekt dao;
+        
         ArrayList<Vertrag> alleVertraege;
+        
         HashMap<Kunde, ArrayList<Vertrag>> ablaufendeVertraege = new HashMap<>();
+        
         now = Calendar.getInstance();
         dao = new DatenZugriffsObjekt();
         alleVertraege = new ArrayList(dao.getAllVertraege());
@@ -50,10 +56,9 @@ public class SystemManager {
 
             datumAendern(benachrichtigungsDatum, kfEinheit, -kuendigungsFrist);
             datumAendern(benachrichtigungsDatum, bfEinheit, -benachrichtigungsFrist);
-            System.out.println("benachrichtigungsDatum: " + benachrichtigungsDatum.getTime());
-
-            if (benachrichtigungsDatum.before(now) && !v.isBenachrichtigungVersand()) {
-                Kunde k = v.getKunde();
+            Kunde k = v.getKunde();
+            if ((k.getStatus().getBenutzerStatusId() == Konstanten.ID_BEN_STATUS_AKTIV) && benachrichtigungsDatum.before(now) && !v.isBenachrichtigungVersand()) {
+                
                 ArrayList<Vertrag> tmpList;
                 if (ablaufendeVertraege.containsKey(k)) {
                     tmpList = ablaufendeVertraege.get(k);
@@ -75,6 +80,9 @@ public class SystemManager {
     }
 
     /**
+     * Ersteller: Mladen Sikiric
+     * Erstelldatum: 20.08.2015 
+     * 
      * Diese Methode ändert ein Datum anhand der übergebenen Parameter
      *
      * @param cal Zu änderndes Datum
@@ -98,13 +106,23 @@ public class SystemManager {
         }
     }
 
+    /**
+     * Ersteller: Mladen Sikiric 
+     * Erstelldatum: 01.09.2015
+     *
+     * Der übergebene Benutzer erhält ein neues Passwort, welches von der
+     * Methode zurückgeliefert wird.
+     *
+     * @param b Benutezr dessen Passwort geändert werden soll
+     * @return Das geänderte Passwort
+     */
     public String setzePasswort(Benutzer b) {
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
         ZufallsStringErzeuger z = new ZufallsStringErzeuger();
         String password = z.holeNeuesPasswort();
         b.setPasswort(password);
         b.setPasswortZuruecksetzen("");
-        b = dao.updateBenutzer(b);
+        dao.updateBenutzer(b);
         dao.close();
         return password;
     }

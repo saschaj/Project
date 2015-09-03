@@ -108,14 +108,19 @@ public class LoginLogoutServlet extends HttpServlet {
 	} else {
 	    ausgabe = "Irgendwas wurde nicht richtig programmiert!";
 	}
-
-	if (sendeMail) {
+        DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+	if (sendeMail && dao.isEmailAvailable(email)) {
 	    String info = "Ihnen wird ein Bestätigungslink zugesandt mit dem Sie ein neues Passwort anfordern können.";
 	    request.setAttribute("info", info);
 	    request.getRequestDispatcher("/confirmation.jsp")
 		    .forward(request, response);
 	    passwortZuruecksetzen(email, request.getRequestURL().toString());
-	}
+	} else {
+            String fehler[] = {"Diese E-Mail-Adresse ist nicht registriert"};
+		request.setAttribute("error", fehler);
+                request.getRequestDispatcher("/login_register.jsp")
+			.forward(request, response);
+        }
 
 	// Automatisch generiert
 	response.setContentType("text/html;charset=UTF-8");
@@ -406,16 +411,23 @@ public class LoginLogoutServlet extends HttpServlet {
 		.forward(request, response);
     }
 
+    /**
+     * 
+     * @param email
+     * @param pfad 
+     */
     private void passwortZuruecksetzen(String email, String pfad) {
-	DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+        DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+        
 	ZufallsStringErzeuger p = new ZufallsStringErzeuger();
 	String passwortBestaetigung = p.erzeugeBestaetigungsReferenz();
 	Benutzer b = dao.getBenutzer(email);
 	b.setPasswortZuruecksetzen(passwortBestaetigung);
-	b = dao.updateBenutzer(b);
+	dao.updateBenutzer(b);
 	EmailHandler emailer = new EmailHandler();
 	emailer.sendePasswortBestaetigung(email, passwortBestaetigung, pfad);
 	dao.close();
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

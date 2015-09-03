@@ -86,29 +86,13 @@ public class KontaktServlet extends HttpServlet {
                 // Weiterleitung an contact.jsp
                 request.getRequestDispatcher("/contact.jsp").forward(request, response);
             } else {
-                meta = "<meta http-equiv='refresh' content='2; URL=index.jsp'>";
-                ausgabe = "Daten wurden erfolgreich gesendet";
-
-                // Automatisch generiert
-                response.setContentType("text/html;charset=UTF-8");
-
-                try (PrintWriter out = response.getWriter()) {
-                    /* TODO output your page here. You may use following sample code. */
-                    out.println("<!DOCTYPE html>");
-                    out.println("<html>");
-                    out.println("<head>");
-                    out.println("<title>Servlet KontaktServlet</title>");
-                    out.println(meta);
-                    out.println("</head>");
-                    out.println("<body>");
-                    out.println(ausgabe);
-                    out.println("</body>");
-                    out.println("</html>");
-                }
                 // Erzeugung eines EmailHanhlers
                 EmailHandler eh = new EmailHandler();
                 // Aufruf der Methode für die Email-Benachrichtung
                 eh.sendInfoMail(email, mitteilung, name);
+                //Weiterleitung an contact_complete.jsp
+                 request.getRequestDispatcher("/contact_complete.jsp")
+                            .forward(request, response);
             }
         }
     }
