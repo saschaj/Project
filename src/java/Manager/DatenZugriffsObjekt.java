@@ -338,7 +338,6 @@ public class DatenZugriffsObjekt {
      * @return true, wenn sie existiert.. false, wenn sie nicht existiert
      */
     public boolean isEmailAvailable(String email) {
-
         Benutzer b = getBenutzer(email);
         return b != null;
     }
