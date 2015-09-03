@@ -17,6 +17,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 
 --%>
 
+<%@page import="Manager.DatenZugriffsObjekt"%>
 <%@page import="Entitys.Benutzer_Recht"%>
 <%@page import="Hilfsklassen.Konstanten"%>
 <%@page import="java.util.List"%>
@@ -30,8 +31,14 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
     String pwFehler;
     String adminAusgabe;
     String adminFehler;
+    DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
     
+    //Hilfsvariablen
+    //Zähler für die Zeilen der Auflistung der Benutzer
     int i = 0;
+    //Adminrecht
+    Benutzer_Recht adminRecht = dao.getBenutzerRecht(
+	    Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT);
 
     //URL fuer die BenutzerStatistik auslesen
     statistikURL = (String) request.getAttribute("StatistikURL");
@@ -101,8 +108,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 		    document.getElementById('dialogbox').style.display = "none";
 		    document.getElementById('dialogoverlay').style.display = "none";
 		};
-	    }
-	    ;
+	    };
 
 	    var Confirm = new CustomConfirm();
 	</script>
@@ -217,7 +223,10 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 			    <button type="button" class="button_small"
 				    onclick="Confirm.render(
 						    'Passwort wirklich zurücksetzen?'
-						    , 'form_pw<%=i%>')">
+						    , 'form_pw<%=i%>')" 
+				    <%= (benutzer.getRechte().contains(adminRecht))
+					    ? "disabled"
+					    : "" %>>
 				Passwort zurücksetzen
 			    </button>
 

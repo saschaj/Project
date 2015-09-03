@@ -29,7 +29,7 @@ public class SystemManager {
      * Einmal Täglich wird zu jedem Vertrag geprüft ob eine Benachrichtigung
      * verschickt werden muss.
      */
-    //@Schedule(minute = "*/1", hour = "*")
+    @Schedule(minute = "*/1", hour = "*")
     private void pruefeAufAblaufendeFristen() {
         System.out.println("pruefeAufAblaufendeFristen um: " + Calendar.getInstance(Locale.GERMANY).getTime());
         Calendar now;
