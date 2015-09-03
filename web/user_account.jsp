@@ -175,13 +175,13 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                     <div id="form_settings">
                         <h2>Benutzerdaten:</h2>
                         <form method="POST" action="BenutzerServlet">
-                            <%--   <%     if (request.getAttribute("fehler2") != null) {
+                            <%     if (request.getAttribute("fehler2") != null) {
                                        fehler2 = (String[]) request.getAttribute("fehler2");
                                        for (int i = 0; i < fehler2.length; i++) {%>
                                <span style="color:#FF0000"><%= fehler2[i]%></span><br>
                                <%}
                                        request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, null);
-                                   }%> --%>
+                                   }%> 
                             <p>Wenn Sie Ihre Benutzerdaten ändern wollen, müssen Sie alle Felder ausfüllen!</p>
                             <p><span class="span_contact">Aktuelle E-mail:</span><input type="text" name="aktuelle e-mail" value="<%= k.getEmail()%>" /></p>
                                 <%

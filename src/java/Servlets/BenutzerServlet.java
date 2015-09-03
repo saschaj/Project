@@ -114,7 +114,7 @@ public class BenutzerServlet extends HttpServlet {
         String fehler[], fehler2[];
 
         //Hilfsvariable für die Ausgabe
-        String ausgabe = "", meta = "";
+        String ausgabe = "";
 
         // KundenId,BenutzerId und AdresseId in den Variablen gespeichert.
         int kId = k.getBenutzerId();
@@ -170,6 +170,8 @@ public class BenutzerServlet extends HttpServlet {
             }
         } catch (ParseException ex) {
             ausgabe += "\n Geburtsdatum ist nicht konform.";
+        } catch (IllegalArgumentException iex) {
+            ausgabe += iex.getMessage();
         }
 
         // Ueberpruefung ob die Strasse konform ist.
@@ -245,24 +247,9 @@ public class BenutzerServlet extends HttpServlet {
             dao.updateKundeDaten(vname, name, parseDate, tel, bId);
             // Änderungen der Adressedaten werden durchgeführt.
             dao.updateAdresse(strasse, hnr, plz, ort, land, aId);
-            meta = "<meta http-equiv='refresh' content='2; URL=index.jsp'>";
-            ausgabe = "Ihre Kundendaten wurden erfolgreich aktualisiert!";
-            // Automatisch generiert
-            response.setContentType("text/html;charset=UTF-8");
-
-            try (PrintWriter out = response.getWriter()) {
-                /* TODO output your page here. You may use following sample code. */
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println("<head>");
-                out.println("<title>Servlet BenutzerServlet</title>");
-                out.println(meta);
-                out.println("</head>");
-                out.println("<body>");
-                out.println(ausgabe);
-                out.println("</body>");
-                out.println("</html>");
-            }
+            //Weiterleitung an update_user_complete.jsp
+                 request.getRequestDispatcher("/update_user_complete.jsp")
+                            .forward(request, response);
 
         } else {
 
@@ -311,7 +298,7 @@ public class BenutzerServlet extends HttpServlet {
         String fehler[], fehler2[];
 
         //Hilfsvariablen für die Ausgabe
-        String ausgabe = "", meta = "";
+        String ausgabe = "";
 
         //Hilfsvariablen für die Ausgabe
         boolean emailIsTrue = false, pwIsTrue = false;
@@ -362,33 +349,17 @@ public class BenutzerServlet extends HttpServlet {
         if (emailIsTrue && pwIsTrue) {
             // Änderungen der Kundendaten werden durchgeführt.
             dao.updateBenutzerDaten(email1, pw1, bId);
-            meta = "<meta http-equiv='refresh' content='2; URL=index.jsp'>";
-            ausgabe = "Ihre Benutzerdaten wurden erfolgreich aktualisiert!";
-
-            // Automatisch generiert
-            response.setContentType("text/html;charset=UTF-8");
-
-            try (PrintWriter out = response.getWriter()) {
-                /* TODO output your page here. You may use following sample code. */
-                out.println("<!DOCTYPE html>");
-                out.println("<html>");
-                out.println("<head>");
-                out.println("<title>Servlet BenutzerServlet</title>");
-                out.println(meta);
-                out.println("</head>");
-                out.println("<body>");
-                out.println(ausgabe);
-                out.println("</body>");
-                out.println("</html>");
-            }
+             //Weiterleitung an update_user_complete.jsp
+                 request.getRequestDispatcher("/update_user_complete.jsp")
+                            .forward(request, response);
 
         } else {
 
             // Fehlermeldung wird gesplittet und im Array gespeichert
             // und auf der user_account.jsp ausgegeben.
-            fehler = ausgabe.split("!");
+            fehler2 = ausgabe.split("!");
             // Setzen der Fehler in den Request                    
-            request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehler);
+            request.setAttribute("fehler2", fehler2);
             // Weiterleitung an user_account.jsp               
             request.getRequestDispatcher("/user_account.jsp")
                     .forward(request, response);
