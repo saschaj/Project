@@ -243,7 +243,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 				      == Konstanten.ID_BEN_STATUS_AKTIV
 					      ? "green"
 					      : "red"%>;">
-			    <%= benutzer.getStatus().getName()%>
+			    <%= " " + benutzer.getStatus().getName()%>
 			</span>
 		    </td>
 		    <!--Auflistung der Benutzerrechte-->

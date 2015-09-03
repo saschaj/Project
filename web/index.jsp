@@ -47,13 +47,25 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 
                     <%-- Überschrift --%>
                     <h1>Willkommen in unserer Vertragsverwaltung</h1>
-                    <p>Das ist unsere Applikation für das Softwareprojekt im Sommersemester 2015.</p>
+                    <p>
+					Haben Sie auch die Übersicht über Ihre Verträge verloren?
+					<br>
+					<br>
+					Ständig werden Ihre Verträge automatisch verlängert und Sie müssen mehr für die gleiche
+					Leistung bezahlen, weil Sie wieder den Kündigungstermin verpasst haben ?
+					<br>
+					<br>
+					Mit der SWPSS2015 Vertragsverwaltung erhalten Sie automatisch E-Mail-Benachrichtigungen über die
+					Kündigungstermine Ihrer Verträge! Hören Sie also auf mehr zu zahlen, ohne dafür auch mehr zu bekommen!
+					<br>
+					<br>
+					Sie müssen sich dafür lediglich registrieren und los gehts!</p>
 
                 </div><!--close content-->                  
             </div><!--close site_content-->
 
             <footer>
-                SWP SS 2015 by Julie Kenfack, Mladen Sikiric, René Kanzenbach & Sascha Jungenkrüger
+                SWP SS 2015 von Julie Kenfack, Mladen Sikiric, René Kanzenbach & Sascha Jungenkrüger
             </footer>
 
         </div>        

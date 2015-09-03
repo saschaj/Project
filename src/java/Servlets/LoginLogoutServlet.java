@@ -109,7 +109,7 @@ public class LoginLogoutServlet extends HttpServlet {
 			ausgabe = "Irgendwas wurde nicht richtig programmiert!";
 		}
 		DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
-		if (sendeMail && dao.isEmailAvailable(email)) {
+		if (sendeMail && !dao.isEmailAvailable(email)) {
 			String info = "Ihnen wird ein Bestätigungslink zugesandt mit dem Sie ein neues Passwort anfordern können.";
 			request.setAttribute("info", info);
 			request.getRequestDispatcher("/confirmation.jsp")
@@ -184,7 +184,7 @@ public class LoginLogoutServlet extends HttpServlet {
 		// Überprüfung, ob der Vorname leer ist
 		if (vname.equals("")) {
 			// Fehlermeldung in Variable ausgabe gespeichert
-			ausgabe = "Bitte geben Sie Ihren Vornamen ein!";
+			ausgabe = "Bitte geben Sie Ihren Vornamen ein!}";
 		} else {
 			// Vorname wurde eingetragen und wird also true gespeichert
 			vnameIsTrue = true;
@@ -192,7 +192,7 @@ public class LoginLogoutServlet extends HttpServlet {
 		// Überprüfung, ob der Nachname leer ist
 		if (name.equals("")) {
 			// Fehlermeldung in Variable ausgabe gespeichert
-			ausgabe = ausgabe + "\n Bitte geben Sie Ihren Nachnamen ein!";
+			ausgabe = ausgabe + "\n Bitte geben Sie Ihren Nachnamen ein!}";
 		} else {
 			// Nachname wurde eingetragen und wird also true gespeichert
 			nameIsTrue = true;
@@ -200,17 +200,17 @@ public class LoginLogoutServlet extends HttpServlet {
 		// Überprüfung, ob die E-Mail-Adresse leer ist
 		if (email1.equals("") && email2.equals("")) {
 			// Fehlermeldung in Variable ausgabe gespeichert
-			ausgabe = ausgabe + "Bitte geben Sie Ihre E-Mail-Adresse ein!";
+			ausgabe = ausgabe + "Bitte geben Sie Ihre E-Mail-Adresse ein!}";
 			// Überprüfung, ob die E-Mail-Adressen gleich sind
 		} else if (!email1.equals(email2)) {
 			// Fehlermeldung in Variable ausgabe gespeichert
-			ausgabe = ausgabe + "\n E-Mail-Adressen stimmen nicht überein!";
+			ausgabe = ausgabe + "\n E-Mail-Adressen stimmen nicht überein!}";
 		} else {
 			// Überprüfung, ob die E-Mail-Adressen konform sind
 			if (!email1.matches("[a-zA-Z0-9].+@[a-zA-Z0-9\\.-]+[a-zA-Z]{2,4}")) {
 				// Fehlermeldung in Variable ausgabe gespeichert
 				ausgabe = ausgabe
-						+ "\n E-Mail-Adresse ist nicht konform!";
+						+ "\n E-Mail-Adresse ist nicht konform!}";
 			} else {
                 // E-Mail-Adressen stimmen überein 
 				// und werden als true gespeichert
@@ -220,18 +220,18 @@ public class LoginLogoutServlet extends HttpServlet {
 		// Überprüfung, ob die Passwörter nicht leer sind
 		if (pw1.equals("") && pw2.equals("")) {
 			// Fehlermeldung in Variable ausgabe gespeichert
-			ausgabe = ausgabe + "\n Bitte geben Sie ein Passwort ein!";
+			ausgabe = ausgabe + "\n Bitte geben Sie ein Passwort ein!}";
 			// Überprüfung, ob die Passwörter gleich sind
 		} else if (!pw1.equals(pw2)) {
 			// Fehlermeldung in Variable ausgabe gespeichert
 			ausgabe = ausgabe
-					+ "\n Passwörter stimmen nicht überein!";
+					+ "\n Passwörter stimmen nicht überein!}";
 		} else {
 			// Überprüfung, ob das Passwort weniger als 6 Zeichen hat
 			if (pw1.length() < 6) {
 				// Fehlermeldung in Variable ausgabe gespeichert
 				ausgabe = ausgabe
-						+ "\n Das Passwort muss länger als 6 Zeichen sein!";
+						+ "\n Das Passwort muss länger als 6 Zeichen sein!}";
 			} else {
                 // Passwörter stimmen überein 
 				// und werden als true gespeichert
@@ -256,10 +256,10 @@ public class LoginLogoutServlet extends HttpServlet {
 							.forward(request, response);
 				}
 			} else {
-				ausgabe = "Ihre E-Mail-Adresse ist schon vorhanden!";
+				ausgabe = "Ihre E-Mail-Adresse ist schon vorhanden!}";
                 // Fehlermeldung wird gesplittet und im Array gespeichert
 				// und auf der login_register.jsp ausgegeben.
-				fehler = ausgabe.split("!");
+				fehler = ausgabe.split("}");
 				// Setzen der Fehler in den Request                    
 				request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehler);
                 // Da es Fehler im Formular gibt stellt man dem Besucher seine
@@ -273,7 +273,7 @@ public class LoginLogoutServlet extends HttpServlet {
 		} else {
             // Fehlermeldung wird gesplittet und im Array gespeichert
 			// und auf der login_register.jsp ausgegeben.
-			fehler = ausgabe.split("!");
+			fehler = ausgabe.split("}");
 			// Setzen der Fehler in den Request
 			request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehler);
             // Da es Fehler im Formular gibt stellt man dem Besucher seine

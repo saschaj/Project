@@ -58,7 +58,7 @@ Veränderungen:	-
             <% if (highlightLink.equals("BENUTZER_ACCOUNT")) { %>
             class="current" 
             <% } %>>
-            <a href="user_account.jsp">Benutzer Account</a>
+            <a href="user_account.jsp">Benutzerprofil</a>
         </li>
 		
 		<!-- Kontakt -->

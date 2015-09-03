@@ -339,7 +339,7 @@ public class DatenZugriffsObjekt {
 	 */
 	public boolean isEmailAvailable(String email) {
 		Benutzer b = getBenutzer(email);
-		return b != null;
+		return b == null;
 	}
 
 	/**
