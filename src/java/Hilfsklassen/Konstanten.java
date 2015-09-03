@@ -73,6 +73,7 @@ public class Konstanten {
      */
     public static final String REQUEST_ATTR_CONTRACT_PAGE = "fehler";
     public static final String URL_PARAM_FEHLER = "fehler";
+    public static final String URL_PARAM_FEHLER_RECHTS = "error";
      
     /**
      * Parametername für eine URL.

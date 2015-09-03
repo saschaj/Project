@@ -7,11 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import Hilfsklassen.Konstanten;
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import javax.servlet.http.HttpSession;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
@@ -30,44 +28,51 @@ public class DatenZugriffsObjekt {
      * Konstruktor
      */
     public DatenZugriffsObjekt() {
-	this.entityManager = Persistence
-		.createEntityManagerFactory("VertragsverwaltungPU")
-		.createEntityManager();
+
+        this.entityManager = Persistence
+                .createEntityManagerFactory("VertragsverwaltungPU")
+                .createEntityManager();
+
+        initializeDB();
+    }
+
+    public void initializeDB() {
+
     }
 
     /**
      * Legt Testweise einen neuen Kunden und einen Vertrag zum Kunden an.
      */
     public void beispiel() {
-	Kunde neuerKunde = new Kunde();
-	Stromvertrag stromVertrag = new Stromvertrag();
+        Kunde neuerKunde = new Kunde();
+        Stromvertrag stromVertrag = new Stromvertrag();
 
-	neuerKunde.setVorname("Saul Slash");
-	neuerKunde.setNachname("Hudson");
-	neuerKunde.setGeburtsdatum(new java.util.Date(1965, 7, 23));
-	neuerKunde.setEmail("gunsNroses@web.de");
+        neuerKunde.setVorname("Saul Slash");
+        neuerKunde.setNachname("Hudson");
+        neuerKunde.setGeburtsdatum(new java.util.Date(1965, 7, 23));
+        neuerKunde.setEmail("gunsNroses@web.de");
 
-	stromVertrag.setLaufzeit(30);
-	stromVertrag.setStromzaehlerNr("1337#YOLO");
-	stromVertrag.setKunde(neuerKunde);
+        stromVertrag.setLaufzeit(30);
+        stromVertrag.setStromzaehlerNr("1337#YOLO");
+        stromVertrag.setKunde(neuerKunde);
 
-	try {
-	    this.entityManager.getTransaction().begin();
-	    this.entityManager.persist(neuerKunde);
-	    this.entityManager.persist(stromVertrag);
-	    this.entityManager.getTransaction().commit();
-	} catch (RollbackException re) {
+        try {
+            this.entityManager.getTransaction().begin();
+            this.entityManager.persist(neuerKunde);
+            this.entityManager.persist(stromVertrag);
+            this.entityManager.getTransaction().commit();
+        } catch (RollbackException re) {
 
-	} catch (PersistenceException pe) {
-	    this.entityManager.getTransaction().rollback();
-	} catch (Throwable th) {
-	    this.entityManager.getTransaction().rollback();
-	}
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
+        } catch (Throwable th) {
+            this.entityManager.getTransaction().rollback();
+        }
 
     }
 
     public Kunde getKunde(int benutzerId) {
-	return entityManager.find(Kunde.class, benutzerId);
+        return entityManager.find(Kunde.class, benutzerId);
     }
     
      /**
@@ -186,18 +191,18 @@ public class DatenZugriffsObjekt {
      * @return true, bei Erfolg.. false, bei Nicht-Erfolg
      */
     public boolean updateVertrag(Vertrag vertrag) {
-	// Initialisierung der benötigten Variablen
-	boolean istAktualisiert = false;
-	Vertrag alterVertrag
-		= this.entityManager.find(Vertrag.class, vertrag.getVertragId());
+        // Initialisierung der benötigten Variablen
+        boolean istAktualisiert = false;
+        Vertrag alterVertrag
+                = this.entityManager.find(Vertrag.class, vertrag.getVertragId());
 
-	// Starten der Transaktion
-	this.entityManager.getTransaction().begin();
+        // Starten der Transaktion
+        this.entityManager.getTransaction().begin();
 
-	try {
-	    // Setze die Vertragsdaten
-	    alterVertrag.setVertragsBezeichnung(
-		    vertrag.getVertragsBezeichnung());
+        try {
+            // Setze die Vertragsdaten
+            alterVertrag.setVertragsBezeichnung(
+                    vertrag.getVertragsBezeichnung());
 //            alterVertrag.setVertragNr(vertrag.getVertragNr());
 //            alterVertrag.setVertragBeginn(vertrag.getVertragBeginn());
 //            alterVertrag.setVertragEnde(vertrag.getVertragEnde());
@@ -206,198 +211,198 @@ public class DatenZugriffsObjekt {
 //            alterVertrag.setKuendigungsfrist(vertrag.getKuendigungsfrist());
 //            alterVertrag.setKuendigungsfristEinheit(
 //                    vertrag.getKuendigungsfristEinheit());
-	    alterVertrag.setVertragsPartner(vertrag.getVertragsPartner());
-	    alterVertrag.setBenachrichtigungsfrist(
-		    vertrag.getBenachrichtigungsfrist());
-	    alterVertrag.setBenachrichtigungsfristEinheit(
-		    vertrag.getBenachrichtigungsfristEinheit());
-	    alterVertrag.setKundenNr(vertrag.getKundenNr());
+            alterVertrag.setVertragsPartner(vertrag.getVertragsPartner());
+            alterVertrag.setBenachrichtigungsfrist(
+                    vertrag.getBenachrichtigungsfrist());
+            alterVertrag.setBenachrichtigungsfristEinheit(
+                    vertrag.getBenachrichtigungsfristEinheit());
+            alterVertrag.setKundenNr(vertrag.getKundenNr());
 
-	    // Setze die vertragsspezifischen Daten
-	    switch (alterVertrag.getVertragArt().getVertragArtId()) {
-		case Konstanten.ID_VERTRAG_ART_STROM:
-		    ((Stromvertrag) alterVertrag).setStromzaehlerNr(
-			    ((Stromvertrag) vertrag).getStromzaehlerNr());
-		    ((Stromvertrag) alterVertrag).setStromzaehlerStand(
-			    ((Stromvertrag) vertrag).getStromzaehlerStand());
-		    ((Stromvertrag) alterVertrag).setVerbrauchProJahr(
-			    ((Stromvertrag) vertrag).getVerbrauchProJahr());
-		    ((Stromvertrag) alterVertrag).setPreisProKwh(
-			    ((Stromvertrag) vertrag).getPreisProKwh());
-		    ((Stromvertrag) alterVertrag).setGrundpreisMonat(
-			    ((Stromvertrag) vertrag).getGrundpreisMonat());
-		    ((Stromvertrag) alterVertrag).setAnzPersonenHaushalt(
-			    ((Stromvertrag) vertrag).getAnzPersonenHaushalt());
-		    break;
-		case Konstanten.ID_VERTRAG_ART_GAS:
-		    ((Gasvertrag) alterVertrag).setGaszaehlerNr(
-			    ((Gasvertrag) vertrag).getGaszaehlerNr());
-		    ((Gasvertrag) alterVertrag).setGaszaehlerStand(
-			    ((Gasvertrag) vertrag).getGaszaehlerStand());
-		    ((Gasvertrag) alterVertrag).setPreisProKhw(
-			    ((Gasvertrag) vertrag).getPreisProKhw());
-		    ((Gasvertrag) alterVertrag).setVerbrauchProJahr(
-			    ((Gasvertrag) vertrag).getVerbrauchProJahr());
-		    ((Gasvertrag) alterVertrag).setVerbrauchsFlaeche(
-			    ((Gasvertrag) vertrag).getVerbrauchsFlaeche());
-		    break;
-		case Konstanten.ID_VERTRAG_ART_FESTNETZ:
-		    ((Festnetzvertrag) alterVertrag).setTarifname(
-			    ((Festnetzvertrag) vertrag).getTarifname());
-		    ((Festnetzvertrag) alterVertrag).setNetztypp(
-			    ((Festnetzvertrag) vertrag).getNetztypp());
-		    ((Festnetzvertrag) alterVertrag).setIstISDN(
-			    ((Festnetzvertrag) vertrag).isIstISDN());
-		    ((Festnetzvertrag) alterVertrag).setIstVOIP(
-			    ((Festnetzvertrag) vertrag).isIstVOIP());
-		    break;
-		case Konstanten.ID_VERTRAG_ART_HANDY:
-		    ((Handyvertrag) alterVertrag).setTarifname(
-			    ((Handyvertrag) vertrag).getTarifname());
-		    ((Handyvertrag) alterVertrag).setRufnummer(
-			    ((Handyvertrag) vertrag).getRufnummer());
-		    ((Handyvertrag) alterVertrag).setNetztyp(
-			    ((Handyvertrag) vertrag).getNetztyp());
-		    break;
-		case Konstanten.ID_VERTRAG_ART_ZEITSCHRIFT:
-		    ((Zeitschriftvertrag) alterVertrag).setZeitschriftName(
-			    ((Zeitschriftvertrag) vertrag).
-			    getZeitschriftName());
-		    ((Zeitschriftvertrag) alterVertrag).
-			    setLieferintervall(
-				    ((Zeitschriftvertrag) vertrag).
-				    getLieferintervall());
-		    ((Zeitschriftvertrag) alterVertrag).
-			    setLieferintervallEinheit(
-				    ((Zeitschriftvertrag) vertrag).
-				    getLieferintervallEinheit());
-		    ((Zeitschriftvertrag) alterVertrag).setInteressengebiet(
-			    ((Zeitschriftvertrag) vertrag).
-			    getInteressengebiet());
-		    break;
-	    }
-	    // Abschließen der Transaktion
-	    entityManager.getTransaction().commit();
-	    istAktualisiert = true;
-	} catch (PersistenceException pe) {
-	    // Rollback, falls etwas schief,gelaufen ist
-	    this.entityManager.getTransaction().rollback();
-	    istAktualisiert = false;
-	}
+            // Setze die vertragsspezifischen Daten
+            switch (alterVertrag.getVertragArt().getVertragArtId()) {
+                case Konstanten.ID_VERTRAG_ART_STROM:
+                    ((Stromvertrag) alterVertrag).setStromzaehlerNr(
+                            ((Stromvertrag) vertrag).getStromzaehlerNr());
+                    ((Stromvertrag) alterVertrag).setStromzaehlerStand(
+                            ((Stromvertrag) vertrag).getStromzaehlerStand());
+                    ((Stromvertrag) alterVertrag).setVerbrauchProJahr(
+                            ((Stromvertrag) vertrag).getVerbrauchProJahr());
+                    ((Stromvertrag) alterVertrag).setPreisProKwh(
+                            ((Stromvertrag) vertrag).getPreisProKwh());
+                    ((Stromvertrag) alterVertrag).setGrundpreisMonat(
+                            ((Stromvertrag) vertrag).getGrundpreisMonat());
+                    ((Stromvertrag) alterVertrag).setAnzPersonenHaushalt(
+                            ((Stromvertrag) vertrag).getAnzPersonenHaushalt());
+                    break;
+                case Konstanten.ID_VERTRAG_ART_GAS:
+                    ((Gasvertrag) alterVertrag).setGaszaehlerNr(
+                            ((Gasvertrag) vertrag).getGaszaehlerNr());
+                    ((Gasvertrag) alterVertrag).setGaszaehlerStand(
+                            ((Gasvertrag) vertrag).getGaszaehlerStand());
+                    ((Gasvertrag) alterVertrag).setPreisProKhw(
+                            ((Gasvertrag) vertrag).getPreisProKhw());
+                    ((Gasvertrag) alterVertrag).setVerbrauchProJahr(
+                            ((Gasvertrag) vertrag).getVerbrauchProJahr());
+                    ((Gasvertrag) alterVertrag).setVerbrauchsFlaeche(
+                            ((Gasvertrag) vertrag).getVerbrauchsFlaeche());
+                    break;
+                case Konstanten.ID_VERTRAG_ART_FESTNETZ:
+                    ((Festnetzvertrag) alterVertrag).setTarifname(
+                            ((Festnetzvertrag) vertrag).getTarifname());
+                    ((Festnetzvertrag) alterVertrag).setNetztypp(
+                            ((Festnetzvertrag) vertrag).getNetztypp());
+                    ((Festnetzvertrag) alterVertrag).setIstISDN(
+                            ((Festnetzvertrag) vertrag).isIstISDN());
+                    ((Festnetzvertrag) alterVertrag).setIstVOIP(
+                            ((Festnetzvertrag) vertrag).isIstVOIP());
+                    break;
+                case Konstanten.ID_VERTRAG_ART_HANDY:
+                    ((Handyvertrag) alterVertrag).setTarifname(
+                            ((Handyvertrag) vertrag).getTarifname());
+                    ((Handyvertrag) alterVertrag).setRufnummer(
+                            ((Handyvertrag) vertrag).getRufnummer());
+                    ((Handyvertrag) alterVertrag).setNetztyp(
+                            ((Handyvertrag) vertrag).getNetztyp());
+                    break;
+                case Konstanten.ID_VERTRAG_ART_ZEITSCHRIFT:
+                    ((Zeitschriftvertrag) alterVertrag).setZeitschriftName(
+                            ((Zeitschriftvertrag) vertrag).
+                            getZeitschriftName());
+                    ((Zeitschriftvertrag) alterVertrag).
+                            setLieferintervall(
+                                    ((Zeitschriftvertrag) vertrag).
+                                    getLieferintervall());
+                    ((Zeitschriftvertrag) alterVertrag).
+                            setLieferintervallEinheit(
+                                    ((Zeitschriftvertrag) vertrag).
+                                    getLieferintervallEinheit());
+                    ((Zeitschriftvertrag) alterVertrag).setInteressengebiet(
+                            ((Zeitschriftvertrag) vertrag).
+                            getInteressengebiet());
+                    break;
+            }
+            // Abschließen der Transaktion
+            entityManager.getTransaction().commit();
+            istAktualisiert = true;
+        } catch (PersistenceException pe) {
+            // Rollback, falls etwas schief,gelaufen ist
+            this.entityManager.getTransaction().rollback();
+            istAktualisiert = false;
+        }
 
-	return istAktualisiert;
+        return istAktualisiert;
     }
 
     public boolean loescheVertrag(int vertragID) {
-	boolean istGeloescht = false;
-	Vertrag vertrag = this.entityManager.find(Vertrag.class, vertragID);
+        boolean istGeloescht = false;
+        Vertrag vertrag = this.entityManager.find(Vertrag.class, vertragID);
 
-	this.entityManager.getTransaction().begin();
-	try {
-	    vertrag.setIstGeloescht(true);
-	    this.entityManager.getTransaction().commit();
-	    istGeloescht = true;
-	} catch (PersistenceException pe) {
-	    this.entityManager.getTransaction().rollback();
-	    istGeloescht = false;
-	}
+        this.entityManager.getTransaction().begin();
+        try {
+            vertrag.setIstGeloescht(true);
+            this.entityManager.getTransaction().commit();
+            istGeloescht = true;
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
+            istGeloescht = false;
+        }
 
-	return istGeloescht;
+        return istGeloescht;
     }
 
     public boolean addBenutzer(Benutzer b) {
-	boolean addComplete = false;
+        boolean addComplete = false;
 
-	try {
-	    this.entityManager.getTransaction().begin();
-	    this.entityManager.persist(b);
-	    this.entityManager.getTransaction().commit();
-	    addComplete = true;
+        try {
+            this.entityManager.getTransaction().begin();
+            this.entityManager.persist(b);
+            this.entityManager.getTransaction().commit();
+            addComplete = true;
 
-	} catch (RollbackException re) {
+        } catch (RollbackException re) {
 
-	} catch (PersistenceException pe) {
-	    this.entityManager.getTransaction().rollback();
-	} catch (Throwable th) {
-	    this.entityManager.getTransaction().rollback();
-	}
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
+        } catch (Throwable th) {
+            this.entityManager.getTransaction().rollback();
+        }
 
-	return addComplete;
+        return addComplete;
     }
 
     /**
-     * Methode zur Überprüfung, ob die E-Mail Adresse schon existiert 
-     * 
+     * Methode zur Überprüfung, ob die E-Mail Adresse schon existiert
+     *
      * @param email Zu überprüfende E-Mail
      * @return true, wenn sie existiert.. false, wenn sie nicht existiert
      */
     public boolean isEmailAvailable(String email) {
-	String query = "select count(b) from Benutzer b where "
-		+ "b.email like '" + email + "'";
-	long i = 0;
-	i = (long) this.entityManager.createQuery(query).getSingleResult();
+        String query = "select count(b) from Benutzer b where "
+                + "b.email like '" + email + "'";
+        long i = 0;
+        i = (long) this.entityManager.createQuery(query).getSingleResult();
 
-	return i == 0;
+        return i == 0;
     }
 
     /**
      * Methode zum Hinzufügen eines Vertrags
-     * 
+     *
      * @param vertrag Der hinzuzufügende Vertrag
      * @return true, wenn erfolgreich.. false, wenn nicht erfolgreich
      */
     public boolean addContract(Vertrag vertrag) {
-	boolean addComplete = false;
+        boolean addComplete = false;
 
-	try {
-	    this.entityManager.getTransaction().begin();
-	    this.entityManager.persist(vertrag);
-	    this.entityManager.getTransaction().commit();
-	    addComplete = true;
+        try {
+            this.entityManager.getTransaction().begin();
+            this.entityManager.persist(vertrag);
+            this.entityManager.getTransaction().commit();
+            addComplete = true;
 
-	} catch (RollbackException re) {
+        } catch (RollbackException re) {
 
-	} catch (PersistenceException pe) {
-	    this.entityManager.getTransaction().rollback();
-	} catch (Throwable th) {
-	    this.entityManager.getTransaction().rollback();
-	}
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
+        } catch (Throwable th) {
+            this.entityManager.getTransaction().rollback();
+        }
 
-	return addComplete;
+        return addComplete;
     }
 
     /**
      * Methode dient zur textuellen Suche eines Vertrags
-     * 
+     *
      * @param suchText Der zu suchende Text
      * @param k Das Kundenobjekt
      * @return Eine Collection der Verträge unter dem Suchbegriff
      */
     public Collection<Vertrag> searchContract(String suchText, Kunde k) {
-	Collection<Vertrag> vertraegeErg = null, vertraegeErg2 = null;
-	java.util.Date beginn = null, ende = null;
-	SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+        Collection<Vertrag> vertraegeErg = null, vertraegeErg2 = null;
+        java.util.Date beginn = null, ende = null;
+        SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
 
-	try {
-	    beginn = df.parse(suchText);
-	} catch (ParseException ex) {
-	    beginn = null;
-	}
-	try {
-	    ende = df.parse(suchText);
-	} catch (ParseException ex) {
-	    ende = null;
-	}
+        try {
+            beginn = df.parse(suchText);
+        } catch (ParseException ex) {
+            beginn = null;
+        }
+        try {
+            ende = df.parse(suchText);
+        } catch (ParseException ex) {
+            ende = null;
+        }
 
-	suchText = "%" + suchText + "%";
-	// Hiermit werden alle Verträge des Kunden gesucht
-	vertraegeErg = this.entityManager.createQuery(
-		"SELECT v FROM Vertrag v WHERE "
-		+ "v.kunde.benutzerId = " + k.getBenutzerId() + " "
-		+ "AND v.vertragNr LIKE '" + suchText + "' "
-		+ "OR v.vertragsBezeichnung LIKE '" + suchText + "' "
-		+ "OR v.kundenNr LIKE '" + suchText + "' "
-		+ "OR v.vertragsPartner LIKE '" + suchText + "'").getResultList();
+        suchText = "%" + suchText + "%";
+        // Hiermit werden alle Verträge des Kunden gesucht
+        vertraegeErg = this.entityManager.createQuery(
+                "SELECT v FROM Vertrag v WHERE "
+                + "v.kunde.benutzerId = " + k.getBenutzerId() + " "
+                + "AND v.vertragNr LIKE '" + suchText + "' "
+                + "OR v.vertragsBezeichnung LIKE '" + suchText + "' "
+                + "OR v.kundenNr LIKE '" + suchText + "' "
+                + "OR v.vertragsPartner LIKE '" + suchText + "'").getResultList();
 
 //        if (!vertraegeErg2.isEmpty()) {
 //            for (Vertrag v : vertraegeErg2) {
@@ -411,25 +416,25 @@ public class DatenZugriffsObjekt {
 //                }
 //            }
 //        }
-	return vertraegeErg;
+        return vertraegeErg;
     }
 
     /**
      * Methode dient zur kategorisierten Suche der hinzugefügten Verträge
-     * 
+     *
      * @param kategorie spezielle Kategorie
      * @param k Kundenobjekt
      * @return Collection mit den speziellen Verträgen
      */
     public Collection<Vertrag> searchContractCategory(String kategorie, Kunde k) {
-	Collection<Vertrag> vertraegeErg = null;
+        Collection<Vertrag> vertraegeErg = null;
 
-	vertraegeErg = this.entityManager.createQuery(
-		"SELECT v FROM Vertrag v WHERE "
-		+ "v.kunde.benutzerId = " + k.getBenutzerId() + " AND "
-		+ "v.vertragArt.name = '" + kategorie + "'").getResultList();
+        vertraegeErg = this.entityManager.createQuery(
+                "SELECT v FROM Vertrag v WHERE "
+                + "v.kunde.benutzerId = " + k.getBenutzerId() + " AND "
+                + "v.vertragArt.name = '" + kategorie + "'").getResultList();
 
-	return vertraegeErg;
+        return vertraegeErg;
     }
 
     /**
@@ -502,29 +507,29 @@ public class DatenZugriffsObjekt {
      */
     public Benutzer getBenutzer(String eMail) {
 
-	List<Benutzer> benutzerListe;
-	Query query;
-	Iterator iterator;
-	Benutzer benutzer;
+        List<Benutzer> benutzerListe;
+        Query query;
+        Iterator iterator;
+        Benutzer benutzer;
 
-	//Benutzer mit gleicher EMail-Adresse suchen
-	query = this.entityManager.createQuery(""
-		+ "SELECT ben "
-		+ "FROM Benutzer ben "
-		+ "WHERE ben.email LIKE '" + eMail + "' ");
-	query.setMaxResults(1);
-	benutzerListe = query.getResultList();
+        //Benutzer mit gleicher EMail-Adresse suchen
+        query = this.entityManager.createQuery(""
+                + "SELECT ben "
+                + "FROM Benutzer ben "
+                + "WHERE ben.email LIKE '" + eMail + "' ");
+        query.setMaxResults(1);
+        benutzerListe = query.getResultList();
 
-	//Iterator holen
-	iterator = benutzerListe.iterator();
+        //Iterator holen
+        iterator = benutzerListe.iterator();
 
-	if (iterator.hasNext()) {
-	    benutzer = (Benutzer) iterator.next();
-	} else {
-	    benutzer = null;
-	}
+        if (iterator.hasNext()) {
+            benutzer = (Benutzer) iterator.next();
+        } else {
+            benutzer = null;
+        }
 
-	return benutzer;
+        return benutzer;
     }
 
     /**
@@ -538,9 +543,9 @@ public class DatenZugriffsObjekt {
      * @return Eine Liste mit allen Zeit_Einheiten der Datenbank
      */
     public List<Zeit_Einheit> getEinheiten() {
-	return this.entityManager.createQuery(
-		"SELECT einheit FROM Zeit_Einheit einheit"
-	).getResultList();
+        return this.entityManager.createQuery(
+                "SELECT einheit FROM Zeit_Einheit einheit"
+        ).getResultList();
     }
 
     /**
@@ -555,7 +560,7 @@ public class DatenZugriffsObjekt {
      * @return Ein Objekt der übergebenen Zeit_Einheiten
      */
     public Zeit_Einheit getZeitEinheit(int einheitID) {
-	return this.entityManager.find(Zeit_Einheit.class, einheitID);
+        return this.entityManager.find(Zeit_Einheit.class, einheitID);
     }
 
     /**
@@ -569,9 +574,9 @@ public class DatenZugriffsObjekt {
      * @return Eine Liste mit allen Interessengebieten der Datenbank
      */
     public List<Interessengebiet> getInteressengebiete() {
-	return this.entityManager.createQuery(
-		"SELECT gebiet FROM Interessengebiet gebiet"
-	).getResultList();
+        return this.entityManager.createQuery(
+                "SELECT gebiet FROM Interessengebiet gebiet"
+        ).getResultList();
     }
 
     /**
@@ -586,7 +591,7 @@ public class DatenZugriffsObjekt {
      * @return Ein Objekt mit speziellem Interessengebieten
      */
     public Interessengebiet getInteressengebiet(int gebietID) {
-	return this.entityManager.find(Interessengebiet.class, gebietID);
+        return this.entityManager.find(Interessengebiet.class, gebietID);
     }
 
     /**
@@ -599,7 +604,7 @@ public class DatenZugriffsObjekt {
      * @return Liefert ein Objekt der übergebenen ID zurück
      */
     public Netztyp getNetztyp(int netztypID) {
-	return this.entityManager.find(Netztyp.class, netztypID);
+        return this.entityManager.find(Netztyp.class, netztypID);
     }
 
     /**
@@ -615,15 +620,15 @@ public class DatenZugriffsObjekt {
      * @return Eine Liste mit allen Netztypen der Datenbank
      */
     public List<Netztyp> getNetztypen(boolean istHandyTyp, boolean istFestnetzTyp) {
-	Query query = this.entityManager.createQuery(
-		"SELECT typ FROM Netztyp typ "
-		+ "WHERE typ.istHandyTyp = :HandyTyp "
-		+ "OR typ.istFestnetzTyp = :FestnetzTyp"
-	);
-	query.setParameter("HandyTyp", istHandyTyp);
-	query.setParameter("FestnetzTyp", istFestnetzTyp);
+        Query query = this.entityManager.createQuery(
+                "SELECT typ FROM Netztyp typ "
+                + "WHERE typ.istHandyTyp = :HandyTyp "
+                + "OR typ.istFestnetzTyp = :FestnetzTyp"
+        );
+        query.setParameter("HandyTyp", istHandyTyp);
+        query.setParameter("FestnetzTyp", istFestnetzTyp);
 
-	return query.getResultList();
+        return query.getResultList();
     }
 
     /**
@@ -639,7 +644,7 @@ public class DatenZugriffsObjekt {
      * @return Ein Objekt den gewünschten Vertrag der Datenbank
      */
     public Vertrag getVertrag(int vertragID) {
-	return this.entityManager.find(Vertrag.class, vertragID);
+        return this.entityManager.find(Vertrag.class, vertragID);
     }
 
     /**
@@ -655,7 +660,7 @@ public class DatenZugriffsObjekt {
      * @return Ein Objekt der gewünschten VertragsArt der Datenbank
      */
     public Vertrag_Art getVertragsArt(int artID) {
-	return this.entityManager.find(Vertrag_Art.class, artID);
+        return this.entityManager.find(Vertrag_Art.class, artID);
     }
 
     /**
@@ -671,89 +676,83 @@ public class DatenZugriffsObjekt {
      * @return Ein Objekt des gewünschten VertragsStatus
      */
     public Vertrag_Status getVertragsStatus(int statusID) {
-	return this.entityManager.find(Vertrag_Status.class, statusID);
+        return this.entityManager.find(Vertrag_Status.class, statusID);
     }
 
     /**
-     * Ersteller:   René Kanzenbach 
-     * Datum:	    28.07.2015 
-     * Version:	    1.0
-     *		    1.1 René Kanzenbach 01.09.2015
-     *		    - Die verschiedenen Status bekommen jetzt immer eine feste
-     *		    Farbe zugewiesen
+     * Ersteller: René Kanzenbach Datum:	28.07.2015 Version:	1.0 1.1 René
+     * Kanzenbach 01.09.2015 - Die verschiedenen Status bekommen jetzt immer
+     * eine feste Farbe zugewiesen
      *
      * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Benutzer im System
-     * registriert sind und welchen Status diese besitzen.
-     * Die unterschiedlichen Status bekommen dabei immmer die gleiche Farbe 
-     * zugewiesen.
+     * registriert sind und welchen Status diese besitzen. Die unterschiedlichen
+     * Status bekommen dabei immmer die gleiche Farbe zugewiesen.
      *
      * @return JFreeChart mit Benutzerinformationen.
      */
     public JFreeChart getBenutzerStatistik() {
 
-	JFreeChart chart;
-	Benutzer_Status status;
-	DefaultPieDataset dataset = new DefaultPieDataset();
-	List<Benutzer> benutzerListe = this.getAllBenutzer();
-	PiePlot plot;
+        JFreeChart chart;
+        Benutzer_Status status;
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        List<Benutzer> benutzerListe = this.getAllBenutzer();
+        PiePlot plot;
 
-	//Ermitteln, wie viele Benutzer es mit welchem Status gibt.
-	for (Benutzer ben : benutzerListe) {
+        //Ermitteln, wie viele Benutzer es mit welchem Status gibt.
+        for (Benutzer ben : benutzerListe) {
 
-	    String benutzerStatus = ben.getStatus().getName();
+            String benutzerStatus = ben.getStatus().getName();
 
-	    if (dataset.getKeys().contains(benutzerStatus)) {
-		/*
-		 Wenn sich bereits Benutzer mit dem gleichen Status im Dataset
-		 befinden, erhoehe den Wert um 1.
-		 */
-		dataset.setValue(benutzerStatus, dataset.getValue(benutzerStatus)
-			.intValue() + 1);
-	    } else {
-		/*
-		 Wenn noch keine Benutzer mit gleichem Status im Dataset sind,
-		 setze den Wert auf 1;
-		 */
-		dataset.setValue(benutzerStatus, 1);
-	    }
-	}
+            if (dataset.getKeys().contains(benutzerStatus)) {
+                /*
+                 Wenn sich bereits Benutzer mit dem gleichen Status im Dataset
+                 befinden, erhoehe den Wert um 1.
+                 */
+                dataset.setValue(benutzerStatus, dataset.getValue(benutzerStatus)
+                        .intValue() + 1);
+            } else {
+                /*
+                 Wenn noch keine Benutzer mit gleichem Status im Dataset sind,
+                 setze den Wert auf 1;
+                 */
+                dataset.setValue(benutzerStatus, 1);
+            }
+        }
 
-	//Diagramm erstellen.
-	chart = ChartFactory.createPieChart("Benutzerübersicht", dataset);
-	
-	//Anpassen des Labelformates im Diagramm.
-	plot = (PiePlot) chart.getPlot();
-	plot.setLabelGenerator(
-		new StandardPieSectionLabelGenerator("{0} Anzahl: {1} ({2})"));
-	
-	//Diagrammhintergrund transparent setzen
-	plot.setBackgroundPaint(new Color(255, 255, 255, 0));
-	plot.setBackgroundImageAlpha(0.0f);
-	
-	//Rand um das Diagramm deaktivieren
-	plot.setOutlineVisible(false);
-	
+        //Diagramm erstellen.
+        chart = ChartFactory.createPieChart("Benutzerübersicht", dataset);
+
+        //Anpassen des Labelformates im Diagramm.
+        plot = (PiePlot) chart.getPlot();
+        plot.setLabelGenerator(
+                new StandardPieSectionLabelGenerator("{0} Anzahl: {1} ({2})"));
+
+        //Diagrammhintergrund transparent setzen
+        plot.setBackgroundPaint(new Color(255, 255, 255, 0));
+        plot.setBackgroundImageAlpha(0.0f);
+
+        //Rand um das Diagramm deaktivieren
+        plot.setOutlineVisible(false);
+
 	//Farben der einzelnen Sektionen im Chart festlegen
-	//Dem Status 'Aktiv' die Farbe Grün zuweisen
-	status = this.entityManager.find(Benutzer_Status.class,
-		Konstanten.ID_BEN_STATUS_AKTIV);
-	plot.setSectionPaint(status.getName(),  new Color(0,153,0));
-	//Dem Status 'Geloescht' die Farbe Rot zuweisen
-	status = this.entityManager.find(Benutzer_Status.class,
-		Konstanten.ID_BEN_STATUS_GELOESCHT);
-	plot.setSectionPaint(status.getName(), Color.RED);
-	//Dem Status 'Unbestaetigt' die Farbe Orange zuweisen
-	status = this.entityManager.find(Benutzer_Status.class,
-		Konstanten.ID_BEN_STATUS_UNBESTAETIGT);
-	plot.setSectionPaint(status.getName(), new Color(250,128,0));
-	
-	return chart;
+        //Dem Status 'Aktiv' die Farbe Grün zuweisen
+        status = this.entityManager.find(Benutzer_Status.class,
+                Konstanten.ID_BEN_STATUS_AKTIV);
+        plot.setSectionPaint(status.getName(), new Color(0, 153, 0));
+        //Dem Status 'Geloescht' die Farbe Rot zuweisen
+        status = this.entityManager.find(Benutzer_Status.class,
+                Konstanten.ID_BEN_STATUS_GELOESCHT);
+        plot.setSectionPaint(status.getName(), Color.RED);
+        //Dem Status 'Unbestaetigt' die Farbe Orange zuweisen
+        status = this.entityManager.find(Benutzer_Status.class,
+                Konstanten.ID_BEN_STATUS_UNBESTAETIGT);
+        plot.setSectionPaint(status.getName(), new Color(250, 128, 0));
+
+        return chart;
     }
 
     /**
-     * Ersteller:   René Kanzenbach 
-     * Datum:	    28.07.2015 
-     * Version:	    1.0
+     * Ersteller: René Kanzenbach Datum:	28.07.2015 Version:	1.0
      *
      * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Vertraege im
      * System registriert sind und was es fuer Vertraege sind.
@@ -762,73 +761,73 @@ public class DatenZugriffsObjekt {
      */
     public JFreeChart getVertragStatistik() {
 
-	JFreeChart chart;
-	Vertrag_Art vArt;
-	DefaultPieDataset dataset = new DefaultPieDataset();
-	List<Vertrag> vertragListe = this.getAllVertraege();
-	PiePlot plot;
+        JFreeChart chart;
+        Vertrag_Art vArt;
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        List<Vertrag> vertragListe = this.getAllVertraege();
+        PiePlot plot;
 
-	//Dataset mit Informationen fuellen.
-	for (Vertrag vertrag : vertragListe) {
+        //Dataset mit Informationen fuellen.
+        for (Vertrag vertrag : vertragListe) {
 
-	    //Vertragsart auslesen.
-	    String vertragArt = vertrag.getVertragArt().getName();
+            //Vertragsart auslesen.
+            String vertragArt = vertrag.getVertragArt().getName();
 
-	    if (dataset.getKeys().contains(vertragArt)) {
+            if (dataset.getKeys().contains(vertragArt)) {
 
-		/*
-		 Wenn das Dataset bereits einen Vertrag mit dieser Vertragsart
-		 enthaelt, wird der Wert um 1 erhoeht.
-		 */
-		dataset.setValue(vertragArt, dataset.getValue(vertragArt).
-			intValue() + 1);
-	    } else {
-		/*
-		 Wenn Das Dataset noch keinen Vertrag mit dieser Vertragsart
-		 enthaelt, wird der Wert auf 1 gesetzt.
-		 */
-		dataset.setValue(vertragArt, 1);
-	    }
+                /*
+                 Wenn das Dataset bereits einen Vertrag mit dieser Vertragsart
+                 enthaelt, wird der Wert um 1 erhoeht.
+                 */
+                dataset.setValue(vertragArt, dataset.getValue(vertragArt).
+                        intValue() + 1);
+            } else {
+                /*
+                 Wenn Das Dataset noch keinen Vertrag mit dieser Vertragsart
+                 enthaelt, wird der Wert auf 1 gesetzt.
+                 */
+                dataset.setValue(vertragArt, 1);
+            }
 
-	}
+        }
 
-	//Diagramm erstellen.
-	chart = ChartFactory.createPieChart("Vertragsübersicht", dataset);
+        //Diagramm erstellen.
+        chart = ChartFactory.createPieChart("Vertragsübersicht", dataset);
 
-	//Anpassen des Labelformates im Diagramm.
-	plot = (PiePlot) chart.getPlot();
-	plot.setLabelGenerator(
-		new StandardPieSectionLabelGenerator("{0} Anzahl: {1} ({2})"));
-	
-	//Diagrammhintergrund transparent setzen
-	plot.setBackgroundPaint(new Color(255, 255, 255, 0));
-	plot.setBackgroundImageAlpha(0.0f);
-	
-	//Rand um das Diagramm deaktivieren
-	plot.setOutlineVisible(false);
-	
+        //Anpassen des Labelformates im Diagramm.
+        plot = (PiePlot) chart.getPlot();
+        plot.setLabelGenerator(
+                new StandardPieSectionLabelGenerator("{0} Anzahl: {1} ({2})"));
+
+        //Diagrammhintergrund transparent setzen
+        plot.setBackgroundPaint(new Color(255, 255, 255, 0));
+        plot.setBackgroundImageAlpha(0.0f);
+
+        //Rand um das Diagramm deaktivieren
+        plot.setOutlineVisible(false);
+
 	//Den Vertragsarten eine feste Farbe zuweisen
-	//Der Vertragsart 'Stromvertrag' die Farbe Gelb zuweisen
-	vArt = this.entityManager.find(Vertrag_Art.class,
-		Konstanten.ID_VERTRAG_ART_STROM);
-	plot.setSectionPaint(vArt.getName(), Color.YELLOW);
-	//Der Vertragsart 'Gasvertrag' die Farbe Orange zuweisen
-	vArt = this.entityManager.find(Vertrag_Art.class,
-		Konstanten.ID_VERTRAG_ART_GAS);
-	plot.setSectionPaint(vArt.getName(),  new Color(250,128,0));
-	//Der Vertragsart 'Handyvertrag' die Farbe Magenta zuweisen
-	vArt = this.entityManager.find(Vertrag_Art.class,
-		Konstanten.ID_VERTRAG_ART_HANDY);
-	plot.setSectionPaint(vArt.getName(),  new Color(204,0,204));
-	//Der Vertragsart 'Festnetzvertrag' die Farbe Blau zuweisen
-	vArt = this.entityManager.find(Vertrag_Art.class,
-		Konstanten.ID_VERTRAG_ART_FESTNETZ);
-	plot.setSectionPaint(vArt.getName(), Color.BLUE);
-	//Der Vertragsart 'Zeitschriftvertrag' die Farbe Grün zuweisen
-	vArt = this.entityManager.find(Vertrag_Art.class,
-		Konstanten.ID_VERTRAG_ART_ZEITSCHRIFT);
-	plot.setSectionPaint(vArt.getName(), new Color(0,153,0));
-	return chart;
+        //Der Vertragsart 'Stromvertrag' die Farbe Gelb zuweisen
+        vArt = this.entityManager.find(Vertrag_Art.class,
+                Konstanten.ID_VERTRAG_ART_STROM);
+        plot.setSectionPaint(vArt.getName(), Color.YELLOW);
+        //Der Vertragsart 'Gasvertrag' die Farbe Orange zuweisen
+        vArt = this.entityManager.find(Vertrag_Art.class,
+                Konstanten.ID_VERTRAG_ART_GAS);
+        plot.setSectionPaint(vArt.getName(), new Color(250, 128, 0));
+        //Der Vertragsart 'Handyvertrag' die Farbe Magenta zuweisen
+        vArt = this.entityManager.find(Vertrag_Art.class,
+                Konstanten.ID_VERTRAG_ART_HANDY);
+        plot.setSectionPaint(vArt.getName(), new Color(204, 0, 204));
+        //Der Vertragsart 'Festnetzvertrag' die Farbe Blau zuweisen
+        vArt = this.entityManager.find(Vertrag_Art.class,
+                Konstanten.ID_VERTRAG_ART_FESTNETZ);
+        plot.setSectionPaint(vArt.getName(), Color.BLUE);
+        //Der Vertragsart 'Zeitschriftvertrag' die Farbe Grün zuweisen
+        vArt = this.entityManager.find(Vertrag_Art.class,
+                Konstanten.ID_VERTRAG_ART_ZEITSCHRIFT);
+        plot.setSectionPaint(vArt.getName(), new Color(0, 153, 0));
+        return chart;
     }
 
     /**
@@ -844,17 +843,17 @@ public class DatenZugriffsObjekt {
      */
     public List<Benutzer> getAllBenutzer() {
 
-	List<Benutzer> alleBenutzer = null;
-	Query query;
+        List<Benutzer> alleBenutzer = null;
+        Query query;
 
-	//Select-Query erstellen.
-	query = this.entityManager.createQuery("SELECT ben "
-		+ "FROM Benutzer ben");
+        //Select-Query erstellen.
+        query = this.entityManager.createQuery("SELECT ben "
+                + "FROM Benutzer ben");
 
-	//Query ausführen.
-	alleBenutzer = query.getResultList();
+        //Query ausführen.
+        alleBenutzer = query.getResultList();
 
-	return alleBenutzer;
+        return alleBenutzer;
     }
 
     /**
@@ -869,17 +868,17 @@ public class DatenZugriffsObjekt {
      */
     public List<Vertrag> getAllVertraege() {
 
-	List<Vertrag> alleVertraege = null;
-	Query query;
+        List<Vertrag> alleVertraege = null;
+        Query query;
 
-	//Select-Query erstellen.
-	query = this.entityManager.createQuery("SELECT vert "
-		+ "FROM Vertrag vert");
+        //Select-Query erstellen.
+        query = this.entityManager.createQuery("SELECT vert "
+                + "FROM Vertrag vert");
 
-	//Query ausführen.
-	alleVertraege = query.getResultList();
+        //Query ausführen.
+        alleVertraege = query.getResultList();
 
-	return alleVertraege;
+        return alleVertraege;
     }
 
     /**
@@ -898,182 +897,177 @@ public class DatenZugriffsObjekt {
      */
     public List<Benutzer> sucheBenutzer(String suche) {
 
-	Query query;
+        Query query;
 
-	if (suche.isEmpty()) {
-	    suche = "%";
-	}
+        if (suche.isEmpty()) {
+            suche = "%";
+        }
 
-	query = this.entityManager.createQuery(""
-		+ "SELECT b "
-		+ "FROM Benutzer b "
-		+ "WHERE b.email LIKE :emailName ", Benutzer.class);
-	//Suche auf 25 Ergebnisse beschränken.
-	query.setMaxResults(25);
-	query.setParameter("emailName", "%" + suche + "%");
-	return query.getResultList();
+        query = this.entityManager.createQuery(""
+                + "SELECT b "
+                + "FROM Benutzer b "
+                + "WHERE b.email LIKE :emailName ", Benutzer.class);
+        //Suche auf 25 Ergebnisse beschränken.
+        query.setMaxResults(25);
+        query.setParameter("emailName", "%" + suche + "%");
+        return query.getResultList();
     }
 
     /**
-     * Ersteller:	René Kanzenbach
-     * Datum:		19.08.2015
-     * Version:		1.0
-     * 
-     * Ändert den Status des übergebenen Benutzers auf den Status, mit der  
+     * Ersteller:	René Kanzenbach Datum:	19.08.2015 Version:	1.0
+     *
+     * Ändert den Status des übergebenen Benutzers auf den Status, mit der
      * übergebenen Id.
-     * 
+     *
      * @param benutzer
-     * @param statusId 
+     * @param statusId
      */
     public void setBenutzerStatus(Benutzer benutzer, int statusId) {
 
-	//Status mit gesuchter Id finden.
-	Benutzer_Status status = this.entityManager.find(Benutzer_Status.class,
-		statusId);
+        //Status mit gesuchter Id finden.
+        Benutzer_Status status = this.entityManager.find(Benutzer_Status.class,
+                statusId);
 		//Sicherstellen, dass sich der Benutzer im PersistenceContext des
-	//EntityManagers befindet
-	Benutzer updateBenutzer = this.entityManager.merge(benutzer);
+        //EntityManagers befindet
+        Benutzer updateBenutzer = this.entityManager.merge(benutzer);
 
-	try {
-	    //Transaktion beginnen.
-	    this.entityManager.getTransaction().begin();
-	    //Benutzerstatus ändern.
-	    updateBenutzer.setStatus(status);
-	    //Transaktion bestätigen.
-	    this.entityManager.getTransaction().commit();
-	} catch (RollbackException rbe) {
-	    System.out.println("Fehler Rollback musste ausgeführt werden.");
-	} catch (Exception e) {
-	    this.entityManager.getTransaction().rollback();
-	    System.out.println("Fehler Rollback musste ausgeführt werden.");
-	}
+        try {
+            //Transaktion beginnen.
+            this.entityManager.getTransaction().begin();
+            //Benutzerstatus ändern.
+            updateBenutzer.setStatus(status);
+            //Transaktion bestätigen.
+            this.entityManager.getTransaction().commit();
+        } catch (RollbackException rbe) {
+            System.out.println("Fehler Rollback musste ausgeführt werden.");
+        } catch (Exception e) {
+            this.entityManager.getTransaction().rollback();
+            System.out.println("Fehler Rollback musste ausgeführt werden.");
+        }
     }
 
     /**
-     * Ersteller:	René Kanzenbach
-     * Datum:		20.08.2015
-     * Version:		1.0
-     * 
-     * Änder das Passwort des übergebenen Benutzers, innerhalb einer Transaktion.
-     * 
+     * Ersteller:	René Kanzenbach Datum:	20.08.2015 Version:	1.0
+     *
+     * Änder das Passwort des übergebenen Benutzers, innerhalb einer
+     * Transaktion.
+     *
      * @param benutzer
-     * @param pw 
+     * @param pw
      */
     public void setBenutzerPW(Benutzer benutzer, String pw) {
 
-	EntityTransaction tr = this.entityManager.getTransaction();
+        EntityTransaction tr = this.entityManager.getTransaction();
 		//Sicherstellen, dass sich der Benutzer im PersistenceContext
-	//des EntityManagers befindet
-	Benutzer updateBenutzer = this.entityManager.merge(benutzer);
+        //des EntityManagers befindet
+        Benutzer updateBenutzer = this.entityManager.merge(benutzer);
 
-	try {
-	    //Transaktion beginnen.
-	    tr.begin();
-	    //Benutzerstatus ändern.
-	    updateBenutzer.setPasswort(pw);
-	    //Transaktion bestätigen.
-	    tr.commit();
-	} catch (RollbackException rbe) {
-	    System.out.println("RollbackException aufgetreten in "
-		    + "DatenZugriffsObjekt -> setBenutzerPW() \n"
-		    + rbe.getMessage());
-	} catch (Exception e) {
-	    this.entityManager.getTransaction().rollback();
-	    System.out.println("Allgemeine Exception aufgetreten in "
-		    + "DatenZugriffsObjekt -> setBenutzerPW()"
-		    + e.getMessage());
-	}
+        try {
+            //Transaktion beginnen.
+            tr.begin();
+            //Benutzerstatus ändern.
+            updateBenutzer.setPasswort(pw);
+            //Transaktion bestätigen.
+            tr.commit();
+        } catch (RollbackException rbe) {
+            System.out.println("RollbackException aufgetreten in "
+                    + "DatenZugriffsObjekt -> setBenutzerPW() \n"
+                    + rbe.getMessage());
+        } catch (Exception e) {
+            this.entityManager.getTransaction().rollback();
+            System.out.println("Allgemeine Exception aufgetreten in "
+                    + "DatenZugriffsObjekt -> setBenutzerPW()"
+                    + e.getMessage());
+        }
     }
 
     /**
-	
-     @param benutzer
-     @param vertrag 
+     *
+     * @param benutzer
+     * @param vertrag
      */
     public void setKundeVertrag(Kunde kunde, Vertrag vertrag) {
 
-	EntityTransaction tr = this.entityManager.getTransaction();
+        EntityTransaction tr = this.entityManager.getTransaction();
 	//Sicherstellen, dass sich der Kunde im PersistenceContext
-	//des EntityManagers befindet
-	Kunde updateKunde = this.entityManager.merge(kunde);
+        //des EntityManagers befindet
+        Kunde updateKunde = this.entityManager.merge(kunde);
 
-	try {
-	    //Transaktion beginnen.
-	    tr.begin();
-	    //Benutzerstatus ändern.
-	    updateKunde.getVertraege().add(vertrag);
-	    //Transaktion bestätigen.
-	    tr.commit();
-	} catch (RollbackException rbe) {
-	    System.out.println("RollbackException aufgetreten in "
-		    + "DatenZugriffsObjekt -> setKundeVertrag() \n"
-		    + rbe.getMessage());
-	} catch (Exception e) {
-	    this.entityManager.getTransaction().rollback();
-	    System.out.println("Allgemeine Exception aufgetreten in "
-		    + "DatenZugriffsObjekt -> setKundeVertrag()"
-		    + e.getMessage());
-	}       
-        
-    }
-    
-    public Benutzer updateBenutzer(Benutzer b){
-            this.entityManager.getTransaction().begin();
-            b = this.entityManager.merge(b);
-            this.entityManager.getTransaction().commit();
-            return b;
+        try {
+            //Transaktion beginnen.
+            tr.begin();
+            //Benutzerstatus ändern.
+            updateKunde.getVertraege().add(vertrag);
+            //Transaktion bestätigen.
+            tr.commit();
+        } catch (RollbackException rbe) {
+            System.out.println("RollbackException aufgetreten in "
+                    + "DatenZugriffsObjekt -> setKundeVertrag() \n"
+                    + rbe.getMessage());
+        } catch (Exception e) {
+            this.entityManager.getTransaction().rollback();
+            System.out.println("Allgemeine Exception aufgetreten in "
+                    + "DatenZugriffsObjekt -> setKundeVertrag()"
+                    + e.getMessage());
         }
 
+    }
+
+    public Benutzer updateBenutzer(Benutzer b) {
+        this.entityManager.getTransaction().begin();
+        b = this.entityManager.merge(b);
+        this.entityManager.getTransaction().commit();
+        return b;
+    }
+
     /**
-     * Ersteller:	René Kanzenbach
-     * Datum:		24.08.2015
-     * Version:		1.0
-     * 
-     * Erstellt einen neuen Adminaccount und fügt ihn in die Datenbank ein.
-     * Der neu erzeugte Admin erhält sofort den Status "aktiv".
-     * 
+     * Ersteller:	René Kanzenbach Datum:	24.08.2015 Version:	1.0
+     *
+     * Erstellt einen neuen Adminaccount und fügt ihn in die Datenbank ein. Der
+     * neu erzeugte Admin erhält sofort den Status "aktiv".
+     *
      * @param name
-     * @param pw 
-     * @return 'true' wenn der Admin angelegt wurde; 'false' wenn der Admin 
-     *			nicht angelegt werden konnte
+     * @param pw
+     * @return 'true' wenn der Admin angelegt wurde; 'false' wenn der Admin
+     * nicht angelegt werden konnte
      */
     public boolean addAdmin(String name, String pw) {
 
-	EntityTransaction tr = this.entityManager.getTransaction();
-	boolean istAdminAngelegt = false;
+        EntityTransaction tr = this.entityManager.getTransaction();
+        boolean istAdminAngelegt = false;
 
-	//Neuen Benutzer erstellen
-	Benutzer neuerAdmin = new Benutzer();
-	//Status "aktiv" aus der Datenbank laden
-	Benutzer_Status statusAktiv = this.entityManager.find(
-		Benutzer_Status.class, Konstanten.ID_BEN_STATUS_AKTIV);
-	//Adminrecht aus der Datenbank laden
-	Benutzer_Recht adminRecht = this.entityManager.find(
-		Benutzer_Recht.class, Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT);
+        //Neuen Benutzer erstellen
+        Benutzer neuerAdmin = new Benutzer();
+        //Status "aktiv" aus der Datenbank laden
+        Benutzer_Status statusAktiv = this.entityManager.find(
+                Benutzer_Status.class, Konstanten.ID_BEN_STATUS_AKTIV);
+        //Adminrecht aus der Datenbank laden
+        Benutzer_Recht adminRecht = this.entityManager.find(
+                Benutzer_Recht.class, Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT);
 
-	//Adminobjekt mit Daten füllen
-	neuerAdmin.setEmail(name);
-	neuerAdmin.setPasswort(pw);
-	neuerAdmin.addRecht(adminRecht);
-	neuerAdmin.setStatus(statusAktiv);
+        //Adminobjekt mit Daten füllen
+        neuerAdmin.setEmail(name);
+        neuerAdmin.setPasswort(pw);
+        neuerAdmin.addRecht(adminRecht);
+        neuerAdmin.setStatus(statusAktiv);
 
-	//Admin in die Datenbank einfügen
-	try {
-	    //Transaktion beginnen
-	    tr.begin();
-	    //Adminobjekt dem EntityManager übergeben
-	    this.entityManager.persist(neuerAdmin);
-	    //Transaktion abschließen
-	    tr.commit();
-	    istAdminAngelegt = true;
-	} catch (RollbackException e) {
-	    System.out.println("Fehler in DatenZugriffsObjekt -> addAdmin() \n"
-		    + e.getMessage());
-	} catch (Exception e) {
-	    System.out.println("Fehler in DatenZugriffsObjekt -> addAdmin() \n"
-		    + e.getMessage());
-	}
-	return istAdminAngelegt;
+        //Admin in die Datenbank einfügen
+        try {
+            //Transaktion beginnen
+            tr.begin();
+            //Adminobjekt dem EntityManager übergeben
+            this.entityManager.persist(neuerAdmin);
+            //Transaktion abschließen
+            tr.commit();
+            istAdminAngelegt = true;
+        } catch (RollbackException e) {
+            System.out.println("Fehler in DatenZugriffsObjekt -> addAdmin() \n"
+                    + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Fehler in DatenZugriffsObjekt -> addAdmin() \n"
+                    + e.getMessage());
+        }
+        return istAdminAngelegt;
     }
 
     public Benutzer_Status getStatusByID(int id) {
@@ -1084,6 +1078,6 @@ public class DatenZugriffsObjekt {
      * Methode zum schließen des EntityManagers.
      */
     public void close() {
-	this.entityManager.close();
+        this.entityManager.close();
     }
 }

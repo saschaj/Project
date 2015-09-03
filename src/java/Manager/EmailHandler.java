@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.ejb.MessageDriven;
 import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -35,6 +36,7 @@ import javax.naming.NamingException;
  *
  * @author Mladko
  */
+
 public class EmailHandler {
 
     private InitialContext ctx;
