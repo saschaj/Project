@@ -433,11 +433,16 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Erstelldatum: 08.06.2015 Methode: register
-     * Version: -1.0 -1.1 René Kanzenbach 11.06.2015 -Dem Benutzer wird jetzt
-     * bei der Registrierung das Recht "Benutzer_Ansicht" verliehen. -1.2 René
-     * Kanzenbach 22.07.2015 -Dem Benutzer wird jetzt bei der Registrierung der
-     * Status "Aktiv" verliehen.
+     * Ersteller:   Sascha Jungenkrüger 
+     * Datum:	    08.06.2015 
+     * Methode:	    register
+     * Version:	    -1.0 
+     *		    -1.1 René Kanzenbach 11.06.2015 
+     *		    -Dem Benutzer wird jetzt bei der Registrierung das 
+     *		    Recht "Benutzer_Ansicht" verliehen. 
+     *		    -1.2 René Kanzenbach 22.07.2015 
+     *		    -Dem Benutzer wird jetzt bei der Registrierung der Status
+     *		    "Aktiv" verliehen.
      *
      * @param vname Vorname des Benutzer
      * @param name Nachname des Benutzer
@@ -523,7 +528,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getEinheiten
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getEinheiten
      * Version: 1.0
      *
      * Liest alle Zeiteinheiten aus der Datenbank und gibt Sie zurück.
@@ -537,7 +544,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getEinheit
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getEinheit
      * Version: 1.0
      *
      * Liest Zeiteinheiten aus der Datenbank und gibt es zurück.
@@ -550,8 +559,10 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode:
-     * getInteressengebiete Version: 1.0
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getInteressengebiete 
+     * Version: 1.0
      *
      * Liest alle Interessengebiete aus der Datenbank und gibt Sie zurück.
      *
@@ -564,8 +575,10 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode:
-     * getInteressengebiet Version: 1.0
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getInteressengebiet 
+     * Version: 1.0
      *
      * Liest ein Interessengebiet aus der Datenbank und gibt das Objekt zurück.
      *
@@ -577,7 +590,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getNetztyp
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getNetztyp
      * Version: 1.0
      *
      * @param netztypID Primärschlüssel für ein Netztyp-Objekt
@@ -588,7 +603,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getNetztypen
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getNetztypen
      * Version: 1.0
      *
      * Liest alle Netztypen aus der Datenbank und gibt Sie zurück.
@@ -610,7 +627,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getVertrag
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getVertrag
      * Version: 1.0
      *
      * Liest einen Vertrag über den übergebenen Index aus der Datenbank und
@@ -624,7 +643,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getVertragsArt
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getVertragsArt
      * Version: 1.0
      *
      * Liest eine Vertragsart über den übergebenen Index aus der Datenbank und
@@ -638,8 +659,10 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode:
-     * getVertragsStatus Version: 1.0
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getVertragsStatus 
+     * Version: 1.0
      *
      * Liest eine VertragsStatus über den übergebenen Index aus der Datenbank
      * und liefert das entsprechende Objekt zurück.
@@ -809,7 +832,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach Erstelldatum: 27.07.2015 Version: 1.0
+     * Ersteller: René Kanzenbach 
+     * Erstelldatum: 27.07.2015 
+     * Version: 1.0
      * Veränderungen: -
      *
      * Gibt alle Benutzer zurück, die sich in der Datenbank befinden, unabhängig
@@ -833,7 +858,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach Erstelldatum: 28.07.2015 Version: 1.0
+     * Ersteller: René Kanzenbach 
+     * Erstelldatum: 28.07.2015 
+     * Version: 1.0
      * Veränderungen: -
      *
      * Gibt alle Vertraege zurück, die sich in der Datenbank befinden.
@@ -856,7 +883,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach Erstelldatum: 04.08.2015 Version: 1.0
+     * Ersteller: René Kanzenbach 
+     * Erstelldatum: 04.08.2015 
+     * Version: 1.0
      * Veränderungen: -
      *
      * Sucht Benutzer mit Hilfe der eingegebenen Suche und gibt diese in einer
