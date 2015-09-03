@@ -45,12 +45,12 @@ Veränderungen:	-
 		<!--BENUTZER-->
         <% if (benRechte.contains(Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT)) { %>
 
-        <!-- Benutzerstartseite -->
+        <!-- Vertragsverwaltung -->
         <li 
             <% if (highlightLink.equals("BENUTZER")) { %>
             class="current" 
             <% } %>>
-            <a href="user.jsp">Benutzer</a>
+            <a href="user.jsp">Vertragsverwaltung</a>
         </li>
 		
 		<!-- BenutzerAccountSeite -->

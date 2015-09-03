@@ -31,7 +31,9 @@ import javax.servlet.http.HttpSession;
 public class KontaktServlet extends HttpServlet {
 
 	/**
-	 * Ersteller: Julie Kenfack Datum: 20.07.2015 Version: 1.1 Änderungen: -
+	 * Ersteller:	Julie Kenfack 
+	 * Datum:		20.07.2015 
+	 * Version:		1.1 
 	 *
 	 * Diese Methode prüft, ob alle kontaktdaten(Captcha erforderlich) die
 	 * eingegeben wurden, korrekt sind. Wenn ja dann werden die Daten per email
@@ -44,6 +46,10 @@ public class KontaktServlet extends HttpServlet {
 	 */
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		
+		//Zeichensatz des Request-Objektes auf "UTF-8" setzen
+		//Ermöglicht die korrekte Verwendung von Umlauten
+		request.setCharacterEncoding("UTF-8");
 
 		HttpSession session = request.getSession();
 		String ausgabe = "", meta = "";

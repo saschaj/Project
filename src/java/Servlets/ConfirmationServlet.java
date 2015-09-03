@@ -38,7 +38,7 @@ public class ConfirmationServlet extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-	//Zeichensatz des Request-Objektes auf "UTF-8" setzen
+		//Zeichensatz des Request-Objektes auf "UTF-8" setzen
 		//Ermöglicht die korrekte Verwendung von Umlauten
 		request.setCharacterEncoding("UTF-8");
 
