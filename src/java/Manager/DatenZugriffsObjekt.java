@@ -338,12 +338,9 @@ public class DatenZugriffsObjekt {
      * @return true, wenn sie existiert.. false, wenn sie nicht existiert
      */
     public boolean isEmailAvailable(String email) {
-	String query = "select count(b) from Benutzer b where "
-		+ "b.email like '" + email + "'";
-	long i = 0;
-	i = (long) this.entityManager.createQuery(query).getSingleResult();
 
-	return i == 0;
+        Benutzer b = getBenutzer(email);
+        return b != null;
     }
 
     /**
@@ -1009,37 +1006,6 @@ public class DatenZugriffsObjekt {
 	}
     }
 
-    /**
-     *
-     * @param benutzer
-     * @param vertrag
-     */
-    public void setKundeVertrag(Kunde kunde, Vertrag vertrag) {
-
-	EntityTransaction tr = this.entityManager.getTransaction();
-	//Sicherstellen, dass sich der Kunde im PersistenceContext
-	//des EntityManagers befindet
-	Kunde updateKunde = this.entityManager.merge(kunde);
-
-	try {
-	    //Transaktion beginnen.
-	    tr.begin();
-	    //Benutzerstatus ändern.
-	    updateKunde.getVertraege().add(vertrag);
-	    //Transaktion bestätigen.
-	    tr.commit();
-	} catch (RollbackException rbe) {
-	    System.out.println("RollbackException aufgetreten in "
-		    + "DatenZugriffsObjekt -> setKundeVertrag() \n"
-		    + rbe.getMessage());
-	} catch (Exception e) {
-	    this.entityManager.getTransaction().rollback();
-	    System.out.println("Allgemeine Exception aufgetreten in "
-		    + "DatenZugriffsObjekt -> setKundeVertrag()"
-		    + e.getMessage());
-	}
-
-    }
 
     public Benutzer updateBenutzer(Benutzer b) {
 	this.entityManager.getTransaction().begin();
