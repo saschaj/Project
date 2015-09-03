@@ -337,12 +337,8 @@ public class DatenZugriffsObjekt {
      * @return true, wenn sie existiert.. false, wenn sie nicht existiert
      */
     public boolean isEmailAvailable(String email) {
-        String query = "select count(b) from Benutzer b where "
-                + "b.email like '" + email + "'";
-        long i = 0;
-        i = (long) this.entityManager.createQuery(query).getSingleResult();
-
-        return i == 0;
+        Benutzer b = getBenutzer(email);
+        return b != null;
     }
 
     /**
