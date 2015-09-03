@@ -28,7 +28,7 @@ public class Kunde extends Benutzer{
     @Column (name = "TELEFONNUMMER")
     private String telefonnummer;
     
-    @ManyToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn (name = "ADRESSE")
     private Adresse adresse;
 
