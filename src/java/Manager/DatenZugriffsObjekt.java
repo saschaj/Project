@@ -506,7 +506,8 @@ public class DatenZugriffsObjekt {
      *          -1.2 René Kanzenbach 22.07.2015 
      *          -Dem Benutzer wird jetzt bei der Registrierung der
      * Status "Aktiv" verliehen.
-     * 
+     *          - 1.3 Julie Kenfack 25.08.2015
+     *           Leere Adresse an den neuen Benutzer gesetzt.
      * Die Methode schreibt einen neuen Kunden in die Datenbank.
      *
      * @param vname Vorname des Benutzer
@@ -516,33 +517,33 @@ public class DatenZugriffsObjekt {
      * @return true, wenn die Registrierung erfolgreich war false, wenn die
      * Registrierung fehlgeschlagen ist
      */
-    public boolean register(String vname, String name, String email, String passwort) {
-        // Initialisierung der Hilfvariablen & Objekte
+   public boolean register(String vname, String name, String email, String passwort) {
         boolean istRegistriert = false;
         Kunde neuerKunde = new Kunde();
-        // Benutzerrecht aus der Datenbank holen
         Benutzer_Recht recht = this.entityManager.find(Benutzer_Recht.class,
                 Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT);
         Adresse adr = new Adresse();
 
-        // Formularwerte setten 
         neuerKunde.setVorname(vname);
         neuerKunde.setNachname(name);
-        neuerKunde.setAdresse(adr);
         neuerKunde.setEmail(email);
         neuerKunde.setPasswort(passwort);
         neuerKunde.addRecht(recht);
-        // Status "unbestätigt" einfügen
         neuerKunde.setStatus(this.entityManager.find(Benutzer_Status.class,
-                Konstanten.ID_BEN_STATUS_UNBESTAETIGT));
+                Konstanten.ID_BEN_STATUS_AKTIV));
+        
+        adr.setHausNr("");
+        adr.setLand("");
+        adr.setOrt("");
+        adr.setPlz("");
+        adr.setStrasse("");
+        neuerKunde.setAdresse(adr);
 
         try {
-            // Transaktion starten, Objekt persisitieren & speichern
             this.entityManager.getTransaction().begin();
             this.entityManager.persist(neuerKunde);
-//            this.entityManager.persist(adr);
+            this.entityManager.persist(adr);
             this.entityManager.getTransaction().commit();
-            // Bei Erfolg Returnvariable auf true setzen
             istRegistriert = true;
         } catch (RollbackException re) {
 
