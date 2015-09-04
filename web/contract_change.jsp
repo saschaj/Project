@@ -2,11 +2,13 @@
 
 Ersteller:	Sascha Jungenkrüger
 Erstelldatum:   03.06.2015
-Dokument:	contract_add.jsp
+Dokument:	contract_change.jsp
 Version:	1.0
                 1.1 Sascha Jungenkrüger
                 - Formular implementiert
-Veränderungen:	-
+                1.2 Sascha Jungenkrüger
+                - Pattern eingefügt
+                - Formular angepasst
 
 --%>
 <%@page import="Entitys.Kunde"%>
@@ -23,19 +25,20 @@ Veränderungen:	-
 <%@page import="Entitys.Zeit_Einheit"%>
 <%@page import="Manager.DatenZugriffsObjekt"%>
 <%@page import="Hilfsklassen.Konstanten"%>
-<% String fehler[] = null;
+<%  
+    String fehler[] = null;
     String isISDN = "";
     String isVOIP = "";
     List<Interessengebiet> gebiete = null;
     List<Netztyp> typen = null;
     Vertrag vertrag = null;
     int vertragID = Integer.parseInt(request.getParameter("vertrag"));
-    Kunde k = (Kunde)session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
+    Kunde k = (Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
     for (Vertrag v : k.getVertraege()) {
         if (v.getVertragId() == vertragID) {
             vertrag = v;
         }
-    }    
+    }
     SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
     // Liest alles Zeiteinheiten aus der DB und gibt
     // diese in einer Auswahlbox aus
@@ -69,54 +72,92 @@ Veränderungen:	-
         <div id="main" style="width:800px">
             <div id="site_content">    
 
-                <% if (request.getAttribute(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null) {
-                        fehler = (String[]) request.getAttribute(Konstanten.REQUEST_ATTR_FEHLER_CHANGE);
+                <% if (request.getAttribute(
+                        Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null) {
+                        fehler = (String[]) request.getAttribute(
+                                Konstanten.REQUEST_ATTR_FEHLER_CHANGE);
                         for (int i = 0; i < fehler.length; i++) {%>
                 <span class="span_error_contract"><%= fehler[i]%></span><br>
                 <% }
-                         }%>
+                    }%>
 
                 <div id="content">
-                    <form method="POST" action="VertragServlet"> 
+                    <form method="POST" action="VertragServlet" style="display:inline"> 
                         <!-- Pflichtdaten eines Vertrags -->
                         <u>Obligatorische Vertragsdaten</u>
                         <p>
                             <span class="span_reg">Vertragsbezeichnung:</span>
                             <input class="contact" type="text" name="vertragsbez"
-                                   value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("vertragsbez") : vertrag.getVertragsBezeichnung()%>" >
+                                   value=
+                                   "<%= request.getParameter(
+                                           Konstanten.REQUEST_ATTR_FEHLER_CHANGE) 
+                                           != null
+                                           ? request.getParameter("vertragsbez") 
+                                            : vertrag.getVertragsBezeichnung()%>" >
                         </p>
                         <p>
                             <span class="span_reg">Vertragsnummer:</span>
                             <input class="contact" type="text" name="vertragsNr"
-                                   pattern="[0-9]{5,10}" title="Die Nummer darf minimal 5 und maximal 10 Ziffern beinhalten."
-                                   value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                           ? request.getParameter("vertragsNr") : vertrag.getVertragNr()%>" readonly>
+                                   pattern="[0-9]{5,10}" title="Die Nummer darf 
+                                   minimal 5 und maximal 10 Ziffern beinhalten."
+                                   value=
+                                   "<%= request.getParameter(
+                                           Konstanten.REQUEST_ATTR_FEHLER_CHANGE) 
+                                           != null
+                                           ? request.getParameter("vertragsNr") 
+                                           : vertrag.getVertragNr()%>" readonly>
+                        </p>
+                        <p>
+                            <span class="span_reg">Vertragsart:</span>
+                            <input class="contact" type="text" name="vertragsArt"
+                                   value=
+                                   "<%= request.getParameter(
+                                           Konstanten.REQUEST_ATTR_FEHLER_CHANGE) 
+                                           != null
+                                           ? request.getParameter("vertragsArt") 
+                                           : vertrag.getVertragArt().getName()%>" 
+                                           readonly>
                         </p>
                         <p>
                             <span class="span_reg">Vertragsbeginn*:</span>
                             <input id="datepicker" class="contact" 
                                    type="text" name="vertragsBeginn"
-                                   pattern="[0-3][0-9].[0-1][0-9].[1-2][0-9]{3}" title="Datumsformat lautet: DD.MM.YYYY"
-                                   value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("vertragsBeginn") : dateFormatter.format(vertrag.getVertragBeginn())%>" readonly>
+                                   pattern="[0-3][0-9].[0-1][0-9].[1-2][0-9]{3}" 
+                                   title="Datumsformat lautet: DD.MM.YYYY"
+                                   value="<%= request.getParameter(
+                                           Konstanten.REQUEST_ATTR_FEHLER_CHANGE) 
+                                           != null
+                                           ? request.getParameter(
+                                                   "vertragsBeginn") 
+                                           : vertrag.getVertragBeginn() == null 
+                                                   ? "" 
+                                                   : dateFormatter.format(
+                                                   vertrag.getVertragBeginn())%>"
+                                                   readonly>
                         </p>
                         <p>
                             <span class="span_reg">Laufzeit*:</span>
                             <input class="contact" type="text" name="laufzeit"
-                                   pattern="[1-9]{1}[0-9]*" title="Die Laufzeit darf nur Ziffern enthalten und nicht mit einer 0 beginnen!"
+                                   pattern="[1-9]{1}[0-9]*" 
+                                   title="Die Laufzeit darf nur Ziffern 
+                                   enthalten und nicht mit einer 0 beginnen!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("laufzeit") : vertrag.getLaufzeit()%>" readonly>
-                            <select name="laufzeiteinheit">
+                                           ? request.getParameter("laufzeit") : vertrag.getLaufzeit()%>" readonly>
+                            <select name="laufzeiteinhei" disabled>
                                 <%
-                                for (Zeit_Einheit einheit : einheiten) {
-                                    if (einheit.getName().equals(vertrag.getLaufzeitEinheit().getName())) {%>
+                                    for (Zeit_Einheit einheit : einheiten) {
+                                        if (einheit.getName().equals(
+                                                vertrag.getLaufzeitEinheit().
+                                                                getName())) {%>
                                 <option selected><%= einheit.getName()%></option>
                                 <%} else {%>
                                 <option><%= einheit.getName()%></option>
                                 <%}%>                            
                                 <% }%>                            
                             </select>
+                            <input type="hidden" name="laufzeiteinheit" 
+                                   value="<%= vertrag.getLaufzeitEinheit()
+                                           .getName()%>">
                         </p>
                         <p>
                             <span class="span_reg">Vertragsende*:</span>
@@ -124,7 +165,7 @@ Veränderungen:	-
                                    type="text" name="vertragsEnde"
                                    pattern="[0-3][0-9].[0-1][0-9].[1-2][0-9]{3}" title="Datumsformat lautet: DD.MM.YYYY"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("vertragsEnde") : dateFormatter.format(vertrag.getVertragEnde())%>" readonly>
+                                           ? request.getParameter("vertragsEnde") : dateFormatter.format(vertrag.getVertragEnde())%>" disabled>
                         </p>
                         * Hier können Sie entweder nur das Vertragsende 
                         oder den Vertragsbeginn & die Laufzeit eingeben<br>
@@ -133,10 +174,10 @@ Veränderungen:	-
                             <input class="contact" type="text" name="kuendigungsfrist"
                                    pattern="[1-9]{1}[0-9]*" title="Die Kündigungsfrist darf nur Ziffern enthalten und nicht mit einer 0 beginnen!"  
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("kuendigungsfrist") : vertrag.getKuendigungsfrist()%>" readonly>
+                                           ? request.getParameter("kuendigungsfrist") : vertrag.getKuendigungsfrist()%>" readonly>
                             <select name="kuendigungsfristeinheit">
                                 <% for (Zeit_Einheit einheit : einheiten) {
-                                    if (einheit.getName().equals(vertrag.getKuendigungsfristEinheit().getName())) {%>
+                                        if (einheit.getName().equals(vertrag.getKuendigungsfristEinheit().getName())) {%>
                                 <option selected><%= einheit.getName()%></option>
                                 <%} else {%>
                                 <option><%= einheit.getName()%></option>
@@ -150,23 +191,23 @@ Veränderungen:	-
                             <input class="contact" type="text" name="kundennr"
                                    pattern="[0-9]{1,}" title="Das Feld darf nur Ziffern enthalten!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("kundennr") : vertrag.getKundenNr()%>" >
+                                           ? request.getParameter("kundennr") : vertrag.getKundenNr()%>" >
                         </p>
                         <p>
                             <span class="span_reg">Vertragspartner:</span>
                             <input class="contact" type="text" name="vertragspartner"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("vertragspartner") : vertrag.getVertragsPartner()%>" >
+                                           ? request.getParameter("vertragspartner") : vertrag.getVertragsPartner()%>" >
                         </p>
                         <p>
                             <span class="span_reg">Benachrichtigungsfrist:</span>
                             <input class="contact" type="text" name="benachrichtigungsfrist"
                                    pattern="[1-9]{1}[0-9]*" title="Das Feld darf nur Ziffern enthalten!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("benachrichtigungsfrist") : vertrag.getBenachrichtigungsfrist()%>">
+                                           ? request.getParameter("benachrichtigungsfrist") : vertrag.getBenachrichtigungsfrist()%>">
                             <select name="benachrichtigungsfristeinheit">
                                 <% for (Zeit_Einheit einheit : einheiten) {
-                                    if (einheit.getName().equals(vertrag.getBenachrichtigungsfristEinheit().getName())) {%>
+                                        if (einheit.getName().equals(vertrag.getBenachrichtigungsfristEinheit().getName())) {%>
                                 <option selected><%= einheit.getName()%></option>
                                 <%} else {%>
                                 <option><%= einheit.getName()%></option>
@@ -177,48 +218,48 @@ Veränderungen:	-
                         <input type="hidden" name="vertrag" value="">
                         <br><u>Vertragsspezifische Daten</u>
                             <%
-                            if (vertrag.getVertragArt().getVertragArtId() == Konstanten.ID_VERTRAG_ART_STROM) {%>                        
+                                if (vertrag.getVertragArt().getVertragArtId() == Konstanten.ID_VERTRAG_ART_STROM) {%>                        
                         <p>
                             <span class="span_reg">Stromzählernr:</span>
                             <input class="contact" type="text" name="snr"
                                    pattern="[1-9]{1}[0-9]*" title="Das Feld darf nur Ziffern enthalten!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("snr") : ((Stromvertrag) vertrag).getStromzaehlerNr()%>">
+                                           ? request.getParameter("snr") : ((Stromvertrag) vertrag).getStromzaehlerNr()%>">
                         </p>
                         <p>
                             <span class="span_reg">Stromzählerstand:</span>
                             <input class="contact" type="text" name="sstand"
                                    pattern="[1-9]{1}[0-9]*" title="Das Feld darf nur Ziffern enthalten!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("sstand") : ((Stromvertrag) vertrag).getStromzaehlerStand()%>">
+                                           ? request.getParameter("sstand") : ((Stromvertrag) vertrag).getStromzaehlerStand()%>">
                         </p>
                         <p>
                             <span class="span_reg">Verbrauch pro Jahr(in kWh):</span>
                             <input class="contact" type="text" name="sverbrauch"
                                    pattern="[1-9]{1}[0-9]*" title="Die Verbrauch muss größer als 0 sein und darf nur Ziffern enthalten!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("sverbrauch") : ((Stromvertrag) vertrag).getVerbrauchProJahr()%>">
+                                           ? request.getParameter("sverbrauch") : ((Stromvertrag) vertrag).getVerbrauchProJahr()%>">
                         </p>
                         <p>
                             <span class="span_reg">Preis pro kWh (in Cent):</span>
                             <input class="contact" type="text" name="spreisKwh"
-                                   pattern="[\\d]+[,][\\d]+" title="Es sind nur Fließkommazahlen erlaubt!"
+                                   pattern="[1-9][0-9]{0,}[,.]{0,1}[0-9]*" title="Es sind nur Fließkommazahlen erlaubt!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("spreisKwh") : ((Stromvertrag) vertrag).getPreisProKwh()%>">
+                                           ? request.getParameter("spreisKwh") : ((Stromvertrag) vertrag).getPreisProKwh()%>">
                         </p>
                         <p>
                             <span class="span_reg">Anzahl Personen im Haushalt:</span>
                             <input class="contact" type="text" name="sanzPers"
                                    pattern="[1-9][0-9]*" title="Nur Ziffern erlaubt!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("sanzPers") : ((Stromvertrag) vertrag).getAnzPersonenHaushalt()%>">
+                                           ? request.getParameter("sanzPers") : ((Stromvertrag) vertrag).getAnzPersonenHaushalt()%>">
                         </p>
                         <p>
                             <span class="span_reg">Grundpreis(pro Monat in €):</span>
                             <input class="contact" type="text" name="gPreisMonat"
-                                   pattern="[\\d]+[,][\\d]+" title="Es sind nur Fließkommazahlen erlaubt!"
+                                   pattern="[1-9][0-9]{0,}[,.]{0,1}[0-9]*" title="Es sind nur Fließkommazahlen erlaubt!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("sPreisMonat") : ((Stromvertrag) vertrag).getGrundpreisMonat()%>">
+                                           ? request.getParameter("sPreisMonat") : ((Stromvertrag) vertrag).getGrundpreisMonat()%>">
                         </p>
 
                         <% } else if (vertrag.getVertragArt().getVertragArtId() == Konstanten.ID_VERTRAG_ART_GAS) {%>
@@ -228,35 +269,35 @@ Veränderungen:	-
                             <input class="contact" type="text" name="gnr"
                                    pattern="[1-9][0-9]*" title="Es sind nur Ziffern erlaubt!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("gnr") : ((Gasvertrag) vertrag).getGaszaehlerNr()%>">
+                                           ? request.getParameter("gnr") : ((Gasvertrag) vertrag).getGaszaehlerNr()%>">
                         </p>
                         <p>
                             <span class="span_reg">Gaszählerstand:</span>
                             <input class="contact" type="text" name="gstand"
                                    pattern="[1-9][0-9]*" title="Es sind nur Ziffern erlaubt!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("gnr") : ((Gasvertrag) vertrag).getGaszaehlerStand()%>">
+                                           ? request.getParameter("gnr") : ((Gasvertrag) vertrag).getGaszaehlerStand()%>">
                         </p>
                         <p>
                             <span class="span_reg">Verbrauch pro Jahr(in kWh):</span>
                             <input class="contact" type="text" name="gverbrauch"
                                    pattern="[1-9][0-9]*" title="Es sind nur Ziffern erlaubt!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("gverbrauch") : ((Gasvertrag) vertrag).getVerbrauchProJahr()%>">
+                                           ? request.getParameter("gverbrauch") : ((Gasvertrag) vertrag).getVerbrauchProJahr()%>">
                         </p>
                         <p>
                             <span class="span_reg">Preis pro kWh:</span>
                             <input class="contact" type="text" name="gpreisKwh"
-                                   pattern="[1-9][0-9]+[,][0-9]+" title="Es sind nur Fließkommazahlen erlaubt!"
+                                   pattern="[1-9][0-9]{0,}[,.]{0,1}[0-9]*" title="Es sind nur Fließkommazahlen erlaubt!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("gpreisKwh") : ((Gasvertrag) vertrag).getPreisProKhw()%>">
+                                           ? request.getParameter("gpreisKwh") : ((Gasvertrag) vertrag).getPreisProKhw()%>">
                         </p>
                         <p>
                             <span class="span_reg">Verbrauchsfläche (in m²):</span>
                             <input class="contact" type="text" name="gflaeche"
-                                   pattern="[1-9][0-9]{0,}" title="Es sind nur Ziffern erlaubt."
+                                   pattern="[1-9][0-9]{0,}[,.]{0,1}[0-9]*" title="Es sind nur Ziffern erlaubt."
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("gflaeche") : ((Gasvertrag) vertrag).getVerbrauchsFlaeche()%>">
+                                           ? request.getParameter("gflaeche") : ((Gasvertrag) vertrag).getVerbrauchsFlaeche()%>">
                         </p>
                         <% } else if (vertrag.getVertragArt().getVertragArtId() == Konstanten.ID_VERTRAG_ART_FESTNETZ) {%>
                         <br>Optionale Daten
@@ -264,14 +305,14 @@ Veränderungen:	-
                             <span class="span_reg">Tarifname:</span>
                             <input class="contact" type="text" name="ftarifname"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("ftarifname") : ((Festnetzvertrag) vertrag).getTarifname()%>">
+                                           ? request.getParameter("ftarifname") : ((Festnetzvertrag) vertrag).getTarifname()%>">
                         </p>
                         <p>
                             <span class="span_reg">Empfangstyp:</span>
                             <select name="fempfangstyp">
                                 <% typen = new DatenZugriffsObjekt().getNetztypen(false, true);
-                                for (Netztyp typ : typen) {
-                                    if (typ.getName().equals(((Festnetzvertrag) vertrag).getNetztypp().getName())) {%>
+                                    for (Netztyp typ : typen) {
+                                        if (typ.getName().equals(((Festnetzvertrag) vertrag).getNetztypp().getName())) {%>
                                 <option selected><%= typ.getName()%> </option>  
                                 <%  } else {%>
                                 <option><%= typ.getName()%> </option>  
@@ -302,13 +343,13 @@ Veränderungen:	-
                             <span class="span_reg">Tarifname:</span>
                             <input class="contact" type="text" name="htarifname"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("htarifname") : ((Handyvertrag) vertrag).getTarifname()%>">
+                                           ? request.getParameter("htarifname") : ((Handyvertrag) vertrag).getTarifname()%>">
                         </p>
                         <p>
                             <span class="span_reg">Netztyp:</span>
                             <select name="hnetztyp">
                                 <% typen = new DatenZugriffsObjekt().getNetztypen(true, false);
-                                for (Netztyp typ : typen) {%>
+                                    for (Netztyp typ : typen) {%>
                                 <option><%= typ.getName()%></option>
                                 <% }%> 
                             </select>
@@ -318,7 +359,7 @@ Veränderungen:	-
                             <input class="contact" type="text" name="hrufnummer"
                                    pattern="[01][0-9]*" title="Es sind nur Ziffern die mit 01 anfangen erlaubt!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("hrufnummer") : ((Handyvertrag) vertrag).getRufnummer()%>">
+                                           ? request.getParameter("hrufnummer") : ((Handyvertrag) vertrag).getRufnummer()%>">
                         </p>
                         <% } else if (vertrag.getVertragArt().getVertragArtId() == Konstanten.ID_VERTRAG_ART_ZEITSCHRIFT) {%>
                         <br>Optionale Daten
@@ -326,17 +367,17 @@ Veränderungen:	-
                             <span class="span_reg">Zeitschriftname:</span>
                             <input class="contact" type="text" name="zname"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("zname") : ((Zeitschriftvertrag) vertrag).getZeitschriftName()%>">
+                                           ? request.getParameter("zname") : ((Zeitschriftvertrag) vertrag).getZeitschriftName()%>">
                         </p>
                         <p>
                             <span class="span_reg">Lieferintervall:</span>
                             <input class="contact" type="text" name="zintervall"
                                    pattern="[1-9][0-9]*" title="Es sind nur Ziffern erlaubt!"
                                    value="<%= request.getParameter(Konstanten.REQUEST_ATTR_FEHLER_CHANGE) != null
-                                ? request.getParameter("zintervall") : ((Zeitschriftvertrag) vertrag).getLieferintervall()%>">
+                                           ? request.getParameter("zintervall") : ((Zeitschriftvertrag) vertrag).getLieferintervall()%>">
                             <select name="zeinheit">
                                 <% for (Zeit_Einheit einheit : einheiten) {
-                                    if (((Zeitschriftvertrag) vertrag).getLieferintervallEinheit().getName() == einheit.getName()) {%>
+                                        if (((Zeitschriftvertrag) vertrag).getLieferintervallEinheit().getName() == einheit.getName()) {%>
                                 <option selected><%= einheit.getName()%></option>
                                 <% } else {%> 
                                 <option><%= einheit.getName()%></option>
@@ -348,28 +389,31 @@ Veränderungen:	-
                             <span class="span_reg">Interessengebiet:</span>
                             <select name="zinteressen">
                                 <% gebiete = new DatenZugriffsObjekt().getInteressengebiete();
-                                for (Interessengebiet gebiet : gebiete) { 
-                                    if (((Zeitschriftvertrag)vertrag).
-                                            getInteressengebiet().getName()
-                                            .equals(gebiet.getName())) { %>
-                                        <option selected><%= gebiet.getName() %></option>
-                                <%  } else { %>
-                                        <option><%= gebiet.getName() %></option>
+                                    for (Interessengebiet gebiet : gebiete) {
+                                        if (((Zeitschriftvertrag) vertrag).
+                                                getInteressengebiet().getName()
+                                                .equals(gebiet.getName())) {%>
+                                <option selected><%= gebiet.getName()%></option>
+                                <%  } else {%>
+                                <option><%= gebiet.getName()%></option>
                                 <%  }
-                                } %>  
+                                    } %>  
                             </select>
                         </p>
-                        <% } %>
-                        <input type="hidden" name="kategorie" value="<%= vertrag.getVertragArt().getName() %>">
-                        <input type="hidden" name="vertragID" value="<%= vertrag.getVertragId() %>">
-                        <input type="hidden" name="kundenEmail" value="<%= k.getEmail() %>" >
+                        <% }%>
+                        <input type="hidden" name="kategorie" value="<%= vertrag.getVertragArt().getName()%>">
+                        <input type="hidden" name="vertragID" value="<%= vertrag.getVertragId()%>">
+                        <input type="hidden" name="kundenEmail" value="<%= k.getEmail()%>" >
                         <% if (!vertrag.isIstGeloescht()) { %>
-                        <input class="submit" type="submit" name="contract_change" value="Vertrag ändern"> 
-                        <% } else { %>
-                        <input type="hidden" name="search" value="<%= vertrag.getVertragArt().getName() %>">
-                        <input class="submit" type="submit" name="back" value="Zurück">     
-                        <% } %>
+                        <input class="submit" type="submit" name="contract_change" value="Vertrag ändern">
+                        <input class="submit" type="submit" name="contract_extend" value="Vertrag verlängern">
+                        <% }%>
                     </form>
+                    <form method="POST" action="VertragServlet" style="display:inline">
+                        <input type="hidden" name="search" value="<%= vertrag.getVertragArt().getName()%>">
+                        <input class="submit" type="submit" name="back" value="Zurück">     
+                    </form>
+
                 </div> 
 
             </div>

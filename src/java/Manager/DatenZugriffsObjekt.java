@@ -37,7 +37,6 @@ public class DatenZugriffsObjekt {
     }
 
     public void initializeDB() {
-
     }
 
     /**
@@ -71,17 +70,26 @@ public class DatenZugriffsObjekt {
 
     }
 
+    /**
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 06.06.2015 
+     * Methode: getKunde
+     * Version: 1.0 
+     * 
+     * Holt sich aus der Datenbank ein Kundenobjekt mit Hilfe einer 
+     * übergebenen BenutzerID.
+     * @param benutzerId ID des Kunden
+     * @return Kundenobjekt aus der Datenbank
+     */
     public Kunde getKunde(int benutzerId) {
         return entityManager.find(Kunde.class, benutzerId);
     }
-    
-     /**
-     * Ersteller:    Julie Kenfack 
-     * Erstelldatum: 20.08.2015
-     * Methode:      updateKundeDaten
-     * Version:      1.0
-     * Die Methode soll den in der Datenbank,bestehenden Kunden mit den
-     * übergebenen Kundendaten aktualisieren.
+
+    /**
+     * Ersteller: Julie Kenfack Erstelldatum: 20.08.2015 Methode:
+     * updateKundeDaten Version: 1.0 Die Methode soll den in der
+     * Datenbank,bestehenden Kunden mit den übergebenen Kundendaten
+     * aktualisieren.
      *
      * @param vorname
      * @param nachname
@@ -90,7 +98,8 @@ public class DatenZugriffsObjekt {
      * @param plz
      * @param wohnort
      * @param nummer
-     * @return true, wenn die Aktualisierung der Kundendaten erfolgreich war und false, wenn nicht
+     * @return true, wenn die Aktualisierung der Kundendaten erfolgreich war und
+     * false, wenn nicht
      */
     public boolean updateKundeDaten(String vorname, String nachname,
             Date gebdt, String nummer, int benutzerId) {
@@ -113,12 +122,11 @@ public class DatenZugriffsObjekt {
         }
         return istAktualisiert;
     }
+
     /**
-     * Ersteller:    Julie Kenfack
-     * Erstelldatum: 20.08.2015
-     * Methode:      updateAdresseDaten
-     * Version:      1.0
-     * 
+     * Ersteller: Julie Kenfack Erstelldatum: 20.08.2015 Methode:
+     * updateAdresseDaten Version: 1.0
+     *
      * Die Methode soll den in der Datenbank,bestehenden Kunden mit den
      * übergebenen Adresse aktualisieren.
      *
@@ -129,7 +137,8 @@ public class DatenZugriffsObjekt {
      * @param plz
      * @param wohnort
      * @param nummer
-     * @return true, wenn die Aktualisierung der Adresse erfolgreich war und false, wenn nicht
+     * @return true, wenn die Aktualisierung der Adresse erfolgreich war und
+     * false, wenn nicht
      */
     public boolean updateAdresse(String strasse, String hsnum, String plz, String ort, String land,
             int adresseId) {
@@ -154,17 +163,18 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller:    Julie Kenfack 
-     * Erstelldatum: 20.08.2015
-     * Methode:      updateKundeDaten
-     * Version:      1.0
-     * 
+     * Ersteller: Julie Kenfack 
+     * Erstelldatum: 20.08.2015 
+     * Methode: updateKundeDaten 
+     * Version: 1.0
+     *
      * Die Methode soll den in der Datenbank,bestehenden benutzer mit den
      * übergebenen Benutzerdaten aktualisieren.
      *
      * @param email
      * @param passwort
-     * @return true, wenn die Aktualisierung der Benutzerdaten erfolgreich war und false, wenn nicht
+     * @return true, wenn die Aktualisierung der Benutzerdaten erfolgreich war
+     * und false, wenn nicht
      */
     public boolean updateBenutzerDaten(String email, String passwort, int id) {
         Benutzer ben = entityManager.find(Benutzer.class, id);
@@ -185,6 +195,11 @@ public class DatenZugriffsObjekt {
     }
 
     /**
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 15.08.2015 
+     * Methode: updateVertrag
+     * Version: 1.0 
+     * 
      * Methode zum Update eines Vertrags, wenn der Kunde ihn ändern möchte.
      *
      * @param vertrag Zu verändernde Vertrag
@@ -203,14 +218,6 @@ public class DatenZugriffsObjekt {
             // Setze die Vertragsdaten
             alterVertrag.setVertragsBezeichnung(
                     vertrag.getVertragsBezeichnung());
-//            alterVertrag.setVertragNr(vertrag.getVertragNr());
-//            alterVertrag.setVertragBeginn(vertrag.getVertragBeginn());
-//            alterVertrag.setVertragEnde(vertrag.getVertragEnde());
-//            alterVertrag.setLaufzeit(vertrag.getLaufzeit());
-//            alterVertrag.setLaufzeitEinheit(vertrag.getLaufzeitEinheit());
-//            alterVertrag.setKuendigungsfrist(vertrag.getKuendigungsfrist());
-//            alterVertrag.setKuendigungsfristEinheit(
-//                    vertrag.getKuendigungsfristEinheit());
             alterVertrag.setVertragsPartner(vertrag.getVertragsPartner());
             alterVertrag.setBenachrichtigungsfrist(
                     vertrag.getBenachrichtigungsfrist());
@@ -283,44 +290,149 @@ public class DatenZugriffsObjekt {
             }
             // Abschließen der Transaktion
             entityManager.getTransaction().commit();
+            // Bei Erfolg wird die Returnvariable auf true gesetzt
             istAktualisiert = true;
         } catch (PersistenceException pe) {
-            // Rollback, falls etwas schief,gelaufen ist
+            // Rollback, falls etwas schiefgelaufen ist
             this.entityManager.getTransaction().rollback();
-            istAktualisiert = false;
         }
 
         return istAktualisiert;
     }
 
+    /**
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 16.08.2015 
+     * Methode: loescheVertrag
+     * Version: 1.0 
+     * 
+     * Hier wird ein Vertrag in der Datenbank als gelöscht markiert
+     * 
+     * @param vertragID Primärschlüssel des Vertrags
+     * @return true, bei Erfolg.. false, bei Misserfolg
+     */
     public boolean loescheVertrag(int vertragID) {
+        // Returnvariable initialiseren
         boolean istGeloescht = false;
+        // Vertrag mittels find() aus der Datenbank holen
         Vertrag vertrag = this.entityManager.find(Vertrag.class, vertragID);
 
-        this.entityManager.getTransaction().begin();
         try {
+            // Transaktion starten, setten & committen
+            this.entityManager.getTransaction().begin();
             vertrag.setIstGeloescht(true);
             this.entityManager.getTransaction().commit();
+            // Bei Erfolg wird die Returnvariable auf true gesetezt
             istGeloescht = true;
         } catch (PersistenceException pe) {
             this.entityManager.getTransaction().rollback();
-            istGeloescht = false;
         }
 
         return istGeloescht;
     }
 
+    /**
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 01.09.2015 
+     * Methode: aktualsiereKunde 
+     * Version: 1.0
+     *
+     * Nachdem ein Vertrag erfolgreich angelegt wurde, wird diese Methode
+     * aufgerufen, damit das Kundenobjekt in der Session immer die aktuellen
+     * Verträge eines Kunden besitzt
+     *
+     * @param k alte Kundenobjekt
+     * @return neue Kundenobjekt
+     */
+    public Benutzer aktualisiereKunde(Benutzer k) {
+        // Benutzer mittels find() aus der Datenbank holen
+        Benutzer ku = this.entityManager.find(Benutzer.class, k.getBenutzerId());
+        try {
+            // Transaktion starten, Objekt aktualisieren & committen
+            this.entityManager.getTransaction().begin();
+            this.entityManager.refresh(ku);
+            this.entityManager.getTransaction().commit();
+        } catch (RollbackException re) {
+            this.entityManager.getTransaction().rollback();
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
+        } catch (Throwable th) {
+            this.entityManager.getTransaction().rollback();
+        }
+        return ku;
+    }
+    
+    /**
+     * Ersteller: Sascha Jungenkrüger
+     * Datum: 27.08.2015 
+     * Methode: verlaengereVertrag
+     * Version: 1.0 
+     * 
+     * Methode um die Vertragsverlängerung in die Datenbank zu schreiben.
+     *
+     * @param vertragID Primärschlüssel des Vertrags
+     * @param neuBeginn neue Vertragsbeginn
+     * @param neuEnde neue Vertragsende
+     * @return true, wenn erfolgreich.. false, wenn nicht erfolgreich
+     */
+    public boolean verlaengereVertrag(int vertragID, int laufzeit, 
+            Zeit_Einheit einheit, java.util.Date neuBeginn, java.util.Date neuEnde) {
+        // Returnvariable initialisieren
+        boolean istVerlaengert = false;
+        // Vertrag aus Datenbank holen
+        Vertrag v = this.entityManager.find(Vertrag.class, vertragID);
+
+        try {
+            // Starte Transaktion
+            this.entityManager.getTransaction().begin();
+            // Setten der Variablen für die Verlängerung
+            v.setVertragBeginn(neuBeginn);
+            v.setVertragEnde(neuEnde);
+            v.setLaufzeit(laufzeit);
+            v.setLaufzeitEinheit(einheit);
+            v.setBenachrichtigungVersand(false);
+            v.setIstGeloescht(false);
+            // Commit durchführen
+            this.entityManager.getTransaction().commit();
+            // Vertrag wurde verlängert
+            istVerlaengert = true;
+
+        } catch (RollbackException re) {
+            this.entityManager.getTransaction().rollback();
+        } catch (PersistenceException pe) {
+            this.entityManager.getTransaction().rollback();
+        } catch (Throwable th) {
+            this.entityManager.getTransaction().rollback();
+        }
+
+        return istVerlaengert;
+    }
+
+    /**
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 02.05.2015 
+     * Methode: addBenutzer
+     * Version: 1.0 
+     * 
+     * Methode fügt einen Benutzer zur Datenbank hinzu.
+     * 
+     * @param b Das zu speichernde Benutzerobjekt
+     * @return true, bei Erfolg.. false, bei Misserfolg
+     */
     public boolean addBenutzer(Benutzer b) {
+        // Returnvariable initialisieren
         boolean addComplete = false;
 
         try {
+            // Transaktion starten, Objekte persistieren & committen
             this.entityManager.getTransaction().begin();
             this.entityManager.persist(b);
             this.entityManager.getTransaction().commit();
+            // Bei Erfolg boolsche Variable auf true setzen
             addComplete = true;
 
         } catch (RollbackException re) {
-
+            this.entityManager.getTransaction().rollback();
         } catch (PersistenceException pe) {
             this.entityManager.getTransaction().rollback();
         } catch (Throwable th) {
@@ -331,37 +443,49 @@ public class DatenZugriffsObjekt {
     }
 
     /**
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 02.06.2015 
+     * Methode: isEmailAvailable
+     * Version: 1.0
+     *          1.1 Mladen Sikiric
+     *              - Aufruf der getBenutzer & Überprüfung, ob der 
+     *                Benutzer existiert
+     * 
      * Methode zur Überprüfung, ob die E-Mail Adresse schon existiert
      *
      * @param email Zu überprüfende E-Mail
      * @return true, wenn sie existiert.. false, wenn sie nicht existiert
      */
     public boolean isEmailAvailable(String email) {
-        String query = "select count(b) from Benutzer b where "
-                + "b.email like '" + email + "'";
-        long i = 0;
-        i = (long) this.entityManager.createQuery(query).getSingleResult();
-
-        return i == 0;
+        Benutzer b = getBenutzer(email);
+        return b == null;
     }
 
     /**
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 02.06.2015 
+     * Methode: addContract
+     * Version: 1.0 
+     * 
      * Methode zum Hinzufügen eines Vertrags
      *
      * @param vertrag Der hinzuzufügende Vertrag
      * @return true, wenn erfolgreich.. false, wenn nicht erfolgreich
      */
     public boolean addContract(Vertrag vertrag) {
+        // Boolsche Returnvariable initialisieren
         boolean addComplete = false;
 
         try {
+            // Transaktion starten, Objekt persistieren & speichern
             this.entityManager.getTransaction().begin();
             this.entityManager.persist(vertrag);
             this.entityManager.getTransaction().commit();
+            // Bei Erfolg Rückgabevariable auf true setzen
             addComplete = true;
 
         } catch (RollbackException re) {
-
+            this.entityManager.getTransaction().rollback();
         } catch (PersistenceException pe) {
             this.entityManager.getTransaction().rollback();
         } catch (Throwable th) {
@@ -372,77 +496,18 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Methode dient zur textuellen Suche eines Vertrags
-     *
-     * @param suchText Der zu suchende Text
-     * @param k Das Kundenobjekt
-     * @return Eine Collection der Verträge unter dem Suchbegriff
-     */
-    public Collection<Vertrag> searchContract(String suchText, Kunde k) {
-        Collection<Vertrag> vertraegeErg = null, vertraegeErg2 = null;
-        java.util.Date beginn = null, ende = null;
-        SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-
-        try {
-            beginn = df.parse(suchText);
-        } catch (ParseException ex) {
-            beginn = null;
-        }
-        try {
-            ende = df.parse(suchText);
-        } catch (ParseException ex) {
-            ende = null;
-        }
-
-        suchText = "%" + suchText + "%";
-        // Hiermit werden alle Verträge des Kunden gesucht
-        vertraegeErg = this.entityManager.createQuery(
-                "SELECT v FROM Vertrag v WHERE "
-                + "v.kunde.benutzerId = " + k.getBenutzerId() + " "
-                + "AND v.vertragNr LIKE '" + suchText + "' "
-                + "OR v.vertragsBezeichnung LIKE '" + suchText + "' "
-                + "OR v.kundenNr LIKE '" + suchText + "' "
-                + "OR v.vertragsPartner LIKE '" + suchText + "'").getResultList();
-
-//        if (!vertraegeErg2.isEmpty()) {
-//            for (Vertrag v : vertraegeErg2) {
-//                String beginnV = v.getVertragBeginn() != null ? v.getVertragBeginn().toString() : null;
-//                String endeV = v.getVertragEnde() != null ? v.getVertragEnde().toString() : null;
-//
-//                if (beginnV != null && beginnV.contains(suchText)) {
-//                    vertraegeErg.add(v);
-//                } else if (endeV != null && endeV.contains(suchText)) {
-//                    vertraegeErg.add(v);
-//                }
-//            }
-//        }
-        return vertraegeErg;
-    }
-
-    /**
-     * Methode dient zur kategorisierten Suche der hinzugefügten Verträge
-     *
-     * @param kategorie spezielle Kategorie
-     * @param k Kundenobjekt
-     * @return Collection mit den speziellen Verträgen
-     */
-    public Collection<Vertrag> searchContractCategory(String kategorie, Kunde k) {
-        Collection<Vertrag> vertraegeErg = null;
-
-        vertraegeErg = this.entityManager.createQuery(
-                "SELECT v FROM Vertrag v WHERE "
-                + "v.kunde.benutzerId = " + k.getBenutzerId() + " AND "
-                + "v.vertragArt.name = '" + kategorie + "'").getResultList();
-
-        return vertraegeErg;
-    }
-
-    /**
-     * Ersteller: Sascha Jungenkrüger Erstelldatum: 08.06.2015 Methode: register
-     * Version: -1.0 -1.1 René Kanzenbach 11.06.2015 -Dem Benutzer wird jetzt
-     * bei der Registrierung das Recht "Benutzer_Ansicht" verliehen. -1.2 René
-     * Kanzenbach 22.07.2015 -Dem Benutzer wird jetzt bei der Registrierung der
+     * Ersteller: Sascha Jungenkrüger 
+     * Erstelldatum: 08.06.2015 
+     * Methode: register
+     * Version: -1.0 
+     *          -1.1 René Kanzenbach 11.06.2015 
+     *          -Dem Benutzer wird jetzt bei der Registrierung das 
+     *           Recht "Benutzer_Ansicht" verliehen. 
+     *          -1.2 René Kanzenbach 22.07.2015 
+     *          -Dem Benutzer wird jetzt bei der Registrierung der
      * Status "Aktiv" verliehen.
+     * 
+     * Die Methode schreibt einen neuen Kunden in die Datenbank.
      *
      * @param vname Vorname des Benutzer
      * @param name Nachname des Benutzer
@@ -451,26 +516,33 @@ public class DatenZugriffsObjekt {
      * @return true, wenn die Registrierung erfolgreich war false, wenn die
      * Registrierung fehlgeschlagen ist
      */
-   public boolean register(String vname, String name, String email, String passwort) {
+    public boolean register(String vname, String name, String email, String passwort) {
+        // Initialisierung der Hilfvariablen & Objekte
         boolean istRegistriert = false;
         Kunde neuerKunde = new Kunde();
+        // Benutzerrecht aus der Datenbank holen
         Benutzer_Recht recht = this.entityManager.find(Benutzer_Recht.class,
                 Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT);
         Adresse adr = new Adresse();
 
-	neuerKunde.setVorname(vname);
-	neuerKunde.setNachname(name);
-	neuerKunde.setEmail(email);
-	neuerKunde.setPasswort(passwort);
-	neuerKunde.addRecht(recht);
-	neuerKunde.setStatus(this.entityManager.find(Benutzer_Status.class,
-		Konstanten.ID_BEN_STATUS_UNBESTAETIGT));
+        // Formularwerte setten 
+        neuerKunde.setVorname(vname);
+        neuerKunde.setNachname(name);
+        neuerKunde.setAdresse(adr);
+        neuerKunde.setEmail(email);
+        neuerKunde.setPasswort(passwort);
+        neuerKunde.addRecht(recht);
+        // Status "unbestätigt" einfügen
+        neuerKunde.setStatus(this.entityManager.find(Benutzer_Status.class,
+                Konstanten.ID_BEN_STATUS_UNBESTAETIGT));
 
         try {
+            // Transaktion starten, Objekt persisitieren & speichern
             this.entityManager.getTransaction().begin();
             this.entityManager.persist(neuerKunde);
-            this.entityManager.persist(adr);
+//            this.entityManager.persist(adr);
             this.entityManager.getTransaction().commit();
+            // Bei Erfolg Returnvariable auf true setzen
             istRegistriert = true;
         } catch (RollbackException re) {
 
@@ -482,10 +554,14 @@ public class DatenZugriffsObjekt {
 
         return istRegistriert;
     }
+
     /**
-     * Ersteller: René Kanzenbach Datum: 02.06.2015 Methode: getBenutzer
-     * Version: 1.0 1.1 René Kanzenbach 20.07.2015 -Fehler behoben. Wirft jetzt
-     * keine NullpointerException mehr
+     * Ersteller: René Kanzenbach 
+     * Datum: 02.06.2015 
+     * Methode: getBenutzer
+     * Version: 1.0 1.1 René Kanzenbach 20.07.2015 
+     *              -Fehler behoben. Wirft jetzt
+     *              keine NullpointerException mehr
      *
      * Sucht einen Benutzer anhand der übergebenen E-Mail aus der Datenbank und
      * gibt diesen zurück. Wird kein Benutzer mit der gesuchten E-Mail gefunden
@@ -528,7 +604,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getEinheiten
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getEinheiten
      * Version: 1.0
      *
      * Liest alle Zeiteinheiten aus der Datenbank und gibt Sie zurück.
@@ -542,12 +620,14 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getEinheit
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getEinheit
      * Version: 1.0
      *
      * Liest Zeiteinheiten aus der Datenbank und gibt es zurück.
      *
-     * @param einheitID
+     * @param einheitID Primärschlüssel der ZeitEinheit
      * @return Ein Objekt der übergebenen Zeit_Einheiten
      */
     public Zeit_Einheit getZeitEinheit(int einheitID) {
@@ -555,8 +635,10 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode:
-     * getInteressengebiete Version: 1.0
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getInteressengebiete 
+     * Version: 1.0
      *
      * Liest alle Interessengebiete aus der Datenbank und gibt Sie zurück.
      *
@@ -569,12 +651,14 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode:
-     * getInteressengebiet Version: 1.0
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getInteressengebiet 
+     * Version: 1.0
      *
      * Liest ein Interessengebiet aus der Datenbank und gibt das Objekt zurück.
      *
-     * @param gebietID
+     * @param gebietID Primärschlüssel des Interessengebiet
      * @return Ein Objekt mit speziellem Interessengebieten
      */
     public Interessengebiet getInteressengebiet(int gebietID) {
@@ -582,7 +666,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getNetztyp
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getNetztyp
      * Version: 1.0
      *
      * @param netztypID Primärschlüssel für ein Netztyp-Objekt
@@ -593,7 +679,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getNetztypen
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getNetztypen
      * Version: 1.0
      *
      * Liest alle Netztypen aus der Datenbank und gibt Sie zurück.
@@ -603,19 +691,24 @@ public class DatenZugriffsObjekt {
      * @return Eine Liste mit allen Netztypen der Datenbank
      */
     public List<Netztyp> getNetztypen(boolean istHandyTyp, boolean istFestnetzTyp) {
+        // Query mit Übergabeparamaeter erzeugen
         Query query = this.entityManager.createQuery(
                 "SELECT typ FROM Netztyp typ "
                 + "WHERE typ.istHandyTyp = :HandyTyp "
                 + "OR typ.istFestnetzTyp = :FestnetzTyp"
         );
+        // Übergabeparamter setzen
         query.setParameter("HandyTyp", istHandyTyp);
         query.setParameter("FestnetzTyp", istFestnetzTyp);
-
+        
+        // Ergebnisse ausgeben
         return query.getResultList();
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getVertrag
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getVertrag
      * Version: 1.0
      *
      * Liest einen Vertrag über den übergebenen Index aus der Datenbank und
@@ -629,7 +722,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode: getVertragsArt
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getVertragsArt
      * Version: 1.0
      *
      * Liest eine Vertragsart über den übergebenen Index aus der Datenbank und
@@ -643,8 +738,10 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Sascha Jungenkrüger Datum: 29.07.2015 Methode:
-     * getVertragsStatus Version: 1.0
+     * Ersteller: Sascha Jungenkrüger 
+     * Datum: 29.07.2015 
+     * Methode: getVertragsStatus 
+     * Version: 1.0
      *
      * Liest eine VertragsStatus über den übergebenen Index aus der Datenbank
      * und liefert das entsprechende Objekt zurück.
@@ -657,9 +754,13 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach Datum:	28.07.2015 Version:	1.0 1.1 René
-     * Kanzenbach 01.09.2015 - Die verschiedenen Status bekommen jetzt immer
-     * eine feste Farbe zugewiesen
+     * Ersteller: René Kanzenbach 
+     * Datum:	28.07.2015 
+     * Version:	1.0 1.1 René Kanzenbach 01.09.2015 
+     *          - Die verschiedenen Status bekommen jetzt immer
+     *              eine feste Farbe zugewiesen. 
+     *              1.2 René Kanzenbach 03.09.2015 - Benutzer
+     *  die Adminrechte haben werden der Statistik nicht mehr hinzugefügt.
      *
      * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Benutzer im System
      * registriert sind und welchen Status diese besitzen. Die unterschiedlichen
@@ -671,6 +772,10 @@ public class DatenZugriffsObjekt {
 
         JFreeChart chart;
         Benutzer_Status status;
+	//Recht zum Prüfen ob der jeweilige Benutzer über Benutzerrechte und
+        //nicht Adminrechte verfügt
+        Benutzer_Recht benRecht = this.entityManager.find(Benutzer_Recht.class,
+                Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT);
         DefaultPieDataset dataset = new DefaultPieDataset();
         List<Benutzer> benutzerListe = this.getAllBenutzer();
         PiePlot plot;
@@ -678,22 +783,34 @@ public class DatenZugriffsObjekt {
         //Ermitteln, wie viele Benutzer es mit welchem Status gibt.
         for (Benutzer ben : benutzerListe) {
 
+	    //Namen des Benuzerstatus auslesen, um ihn als Key für das Dataset
+            //zu nutzen
             String benutzerStatus = ben.getStatus().getName();
 
-            if (dataset.getKeys().contains(benutzerStatus)) {
-                /*
-                 Wenn sich bereits Benutzer mit dem gleichen Status im Dataset
-                 befinden, erhoehe den Wert um 1.
-                 */
-                dataset.setValue(benutzerStatus, dataset.getValue(benutzerStatus)
-                        .intValue() + 1);
-            } else {
-                /*
-                 Wenn noch keine Benutzer mit gleichem Status im Dataset sind,
-                 setze den Wert auf 1;
-                 */
-                dataset.setValue(benutzerStatus, 1);
-            }
+            //Prüfen ob der Benutzer normale Benutzerrechte hat
+            if (ben.getRechte().contains(benRecht)) {
+		//Benutzer hat normale Benutzerrechte und kann der Statistik
+                //hinzugefügt werden
+
+                //Prüfen ob es bereits einen Eintrag mit diesem Status gibt
+                if (dataset.getKeys().contains(benutzerStatus)) {
+                    /*
+                     Wenn sich bereits Benutzer mit dem gleichen Status im 
+                     Dataset befinden, erhoehe den Wert um 1.
+                     */
+                    dataset.setValue(benutzerStatus, dataset.getValue(
+                            benutzerStatus).intValue() + 1);
+                } else {
+                    /*
+                     Wenn noch keine Benutzer mit gleichem Status im Dataset sind,
+                     setze den Wert auf 1;
+                     */
+                    dataset.setValue(benutzerStatus, 1);
+                }
+
+            } //Benutzer hat Adminrechte und wird der Statistik nicht
+            //hinzugefügt
+
         }
 
         //Diagramm erstellen.
@@ -702,7 +819,7 @@ public class DatenZugriffsObjekt {
         //Anpassen des Labelformates im Diagramm.
         plot = (PiePlot) chart.getPlot();
         plot.setLabelGenerator(
-                new StandardPieSectionLabelGenerator("{0} Anzahl: {1} ({2})"));
+                new StandardPieSectionLabelGenerator("{0} \n Anzahl: {1} ({2})"));
 
         //Diagrammhintergrund transparent setzen
         plot.setBackgroundPaint(new Color(255, 255, 255, 0));
@@ -729,7 +846,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach Datum:	28.07.2015 Version:	1.0
+     * Ersteller: René Kanzenbach 
+     * Datum:	28.07.2015 
+     * Version:	1.0
      *
      * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Vertraege im
      * System registriert sind und was es fuer Vertraege sind.
@@ -774,7 +893,7 @@ public class DatenZugriffsObjekt {
         //Anpassen des Labelformates im Diagramm.
         plot = (PiePlot) chart.getPlot();
         plot.setLabelGenerator(
-                new StandardPieSectionLabelGenerator("{0} Anzahl: {1} ({2})"));
+                new StandardPieSectionLabelGenerator("{0} \n Anzahl: {1} ({2})"));
 
         //Diagrammhintergrund transparent setzen
         plot.setBackgroundPaint(new Color(255, 255, 255, 0));
@@ -885,7 +1004,7 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller:	René Kanzenbach Datum:	19.08.2015 Version:	1.0
+     * Ersteller: René Kanzenbach Datum:	19.08.2015 Version:	1.0
      *
      * Ändert den Status des übergebenen Benutzers auf den Status, mit der
      * übergebenen Id.
@@ -952,38 +1071,6 @@ public class DatenZugriffsObjekt {
         }
     }
 
-    /**
-     *
-     * @param benutzer
-     * @param vertrag
-     */
-    public void setKundeVertrag(Kunde kunde, Vertrag vertrag) {
-
-        EntityTransaction tr = this.entityManager.getTransaction();
-	//Sicherstellen, dass sich der Kunde im PersistenceContext
-        //des EntityManagers befindet
-        Kunde updateKunde = this.entityManager.merge(kunde);
-
-        try {
-            //Transaktion beginnen.
-            tr.begin();
-            //Benutzerstatus ändern.
-            updateKunde.getVertraege().add(vertrag);
-            //Transaktion bestätigen.
-            tr.commit();
-        } catch (RollbackException rbe) {
-            System.out.println("RollbackException aufgetreten in "
-                    + "DatenZugriffsObjekt -> setKundeVertrag() \n"
-                    + rbe.getMessage());
-        } catch (Exception e) {
-            this.entityManager.getTransaction().rollback();
-            System.out.println("Allgemeine Exception aufgetreten in "
-                    + "DatenZugriffsObjekt -> setKundeVertrag()"
-                    + e.getMessage());
-        }
-
-    }
-
     public Benutzer updateBenutzer(Benutzer b) {
         this.entityManager.getTransaction().begin();
         b = this.entityManager.merge(b);
@@ -992,7 +1079,7 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller:	René Kanzenbach Datum:	24.08.2015 Version:	1.0
+     * Ersteller: René Kanzenbach Datum:	24.08.2015 Version:	1.0
      *
      * Erstellt einen neuen Adminaccount und fügt ihn in die Datenbank ein. Der
      * neu erzeugte Admin erhält sofort den Status "aktiv".
@@ -1043,6 +1130,19 @@ public class DatenZugriffsObjekt {
 
     public Benutzer_Status getStatusByID(int id) {
         return this.entityManager.find(Benutzer_Status.class, id);
+    }
+
+    /**
+     * Ersteller: René Kanzenbach Datum:	29.08.2015 Version:	1.0
+     *
+     * Gibt das Benutzerrecht mit der übergebenen Id zurück. Existiert kein
+     * Benutzerrecht mit der gesuchten Id wird NULL zurückgegeben.
+     *
+     * @param id
+     * @return
+     */
+    public Benutzer_Recht getBenutzerRecht(int id) {
+        return this.entityManager.find(Benutzer_Recht.class, id);
     }
 
     /**

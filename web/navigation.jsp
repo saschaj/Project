@@ -43,14 +43,15 @@ Veränderungen:	-
     <ul id="nav">
 
 		<!--BENUTZER-->
-        <% if (benRechte.contains(Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT)) { %>
+        <% if (benutzer != null && 
+                benRechte.contains(Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT)) { %>
 
-        <!-- Benutzerstartseite -->
+        <!-- Vertragsverwaltung -->
         <li 
             <% if (highlightLink.equals("BENUTZER")) { %>
             class="current" 
             <% } %>>
-            <a href="user.jsp">Benutzer</a>
+            <a href="user.jsp">Vertragsverwaltung</a>
         </li>
 		
 		<!-- BenutzerAccountSeite -->
@@ -58,7 +59,7 @@ Veränderungen:	-
             <% if (highlightLink.equals("BENUTZER_ACCOUNT")) { %>
             class="current" 
             <% } %>>
-            <a href="user_account.jsp">Benutzer Account</a>
+            <a href="user_account.jsp">Benutzerprofil</a>
         </li>
 		
 		<!-- Kontakt -->
@@ -81,7 +82,8 @@ Veränderungen:	-
 
 		
 		<!--ADMIN-->
-        <% } else if (benRechte.contains(Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT)) { %>
+        <% } else if (benutzer != null && 
+                benRechte.contains(Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT)) { %>
 
         <!-- Adminstartseite -->
         <li <% if (highlightLink.equals("ADMIN")) {

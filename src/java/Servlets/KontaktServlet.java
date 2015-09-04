@@ -30,110 +30,116 @@ import javax.servlet.http.HttpSession;
 
 public class KontaktServlet extends HttpServlet {
 
-    /**
-     * Ersteller: Julie Kenfack Datum: 20.07.2015 Version: 1.1 Änderungen: -
-     *
-     * Diese Methode prüft, ob alle kontaktdaten(Captcha erforderlich) die
-     * eingegeben wurden, korrekt sind. Wenn ja dann werden die Daten per email
-     * an uns geschickt und der User wird auf Startseite weitergeleitet.
-     *
-     * @param request
-     * @param response
-     * @throws ServletException
-     * @throws IOException
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+	/**
+	 * Ersteller:	Julie Kenfack 
+	 * Datum:		20.07.2015 
+	 * Version:		1.1 
+	 *
+	 * Diese Methode prüft, ob alle kontaktdaten(Captcha erforderlich) die
+	 * eingegeben wurden, korrekt sind. Wenn ja dann werden die Daten per email
+	 * an uns geschickt und der User wird auf Startseite weitergeleitet.
+	 *
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		
+		//Zeichensatz des Request-Objektes auf "UTF-8" setzen
+		//Ermöglicht die korrekte Verwendung von Umlauten
+		request.setCharacterEncoding("UTF-8");
 
-        HttpSession session = request.getSession();
-        String ausgabe = "", meta = "";
-        String fehler[];
+		HttpSession session = request.getSession();
+		String ausgabe = "", meta = "";
+		String fehler[];
 
-        // Formulardaten in Variablen speichern
-        String name = request.getParameter("your_name");
-        String email = request.getParameter("your_email");
-        String mitteilung = request.getParameter("your_message");
+		// Formulardaten in Variablen speichern
+		String name = request.getParameter("your_name");
+		String email = request.getParameter("your_email");
+		String mitteilung = request.getParameter("your_message");
 
-        //Abschicken wurde geklickt
-        if (request.getParameter("contact_submitted") != null) {
-            // Überprüfung, ob der Name leer ist
-            if (name.equals("")) {
-                ausgabe = "Bitte geben Sie Ihrer Name ein.<br/>";
-            }
-            // Überprüfung, ob die email leer ist
-            if (email.equals("")) {
-                ausgabe += "Bitte geben Sie Ihre E-Mail-Adresse ein.<br/>";
-            } // Überprüfung, ob die email konform ist
-            else if (!email.matches("^[a-zA-Z0-9][\\w\\.-]*@(?:[a-zA-Z0-9][a-zA-Z0-9_-]+\\.)+[A-Z,a-z]{2,5}$")) {
-                ausgabe += "Deine Email entspricht das Format nicht.<br/>";
-            }
-            // Überprüfung, ob die Mitteilung leer ist
-            if (mitteilung.equals("")) {
-                ausgabe += "Bitte geben Sie Ihre Mitteilung ein.<br/>";
-            }
-            // Überprüfung, ob bei dem Captcha die richtige Antwort eingetragen wurde.
-            if (!(request.getParameter("benutzer_antwort") != null && request.getParameter("antwort") != null
-                    && request.getParameter("antwort").equals(request.getParameter("benutzer_antwort")))) {
-                ausgabe += "captcha falsch, ewartet ist:" + request.getParameter("antwort") + ", Deine Antwort ist aber:" + request.getParameter("benutzer_antwort");
-            }
-            if (!ausgabe.equals("")) {
+		//Abschicken wurde geklickt
+		if (request.getParameter("contact_submitted") != null) {
+			// Überprüfung, ob der Name leer ist
+			if (name.equals("")) {
+				ausgabe = "Bitte geben Sie Ihrer Name ein.<br/>";
+			}
+			// Überprüfung, ob die email leer ist
+			if (email.equals("")) {
+				ausgabe += "Bitte geben Sie Ihre E-Mail-Adresse ein.<br/>";
+			} // Überprüfung, ob die email konform ist
+			else if (!email.matches("^[a-zA-Z0-9][\\w\\.-]*@(?:[a-zA-Z0-9][a-zA-Z0-9_-]+\\.)+[A-Z,a-z]{2,5}$")) {
+				ausgabe += "Deine Email entspricht das Format nicht.<br/>";
+			}
+			// Überprüfung, ob die Mitteilung leer ist
+			if (mitteilung.equals("")) {
+				ausgabe += "Bitte geben Sie Ihre Mitteilung ein.<br/>";
+			}
+			// Überprüfung, ob bei dem Captcha die richtige Antwort eingetragen wurde.
+			if (!(request.getParameter("benutzer_antwort") != null && request.getParameter("antwort") != null
+					&& request.getParameter("antwort").equals(request.getParameter("benutzer_antwort")))) {
+				ausgabe += "captcha falsch, ewartet ist:" + request.getParameter("antwort") + ", Deine Antwort ist aber:" + request.getParameter("benutzer_antwort");
+			}
+			if (!ausgabe.equals("")) {
                 // Fehlermeldung wird gesplittet und im Array gespeichert
-                // und auf der contact.jsp ausgegeben.
-                fehler = ausgabe.split("!");
-                // Setzen der Fehler in den Request                    
-                request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, fehler);
+				// und auf der contact.jsp ausgegeben.
+				fehler = ausgabe.split("!");
+				// Setzen der Fehler in den Request                    
+				request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, fehler);
 
-                // Weiterleitung an contact.jsp
-                request.getRequestDispatcher("/contact.jsp").forward(request, response);
-            } else {
-                // Erzeugung eines EmailHanhlers
-                EmailHandler eh = new EmailHandler();
-                // Aufruf der Methode für die Email-Benachrichtung
-                eh.sendInfoMail(email, mitteilung, name);
-                //Weiterleitung an contact_complete.jsp
-                 request.getRequestDispatcher("/contact_complete.jsp")
-                            .forward(request, response);
-            }
-        }
-    }
+				// Weiterleitung an contact.jsp
+				request.getRequestDispatcher("/contact.jsp").forward(request, response);
+			} else {
+				// Erzeugung eines EmailHanhlers
+				EmailHandler eh = new EmailHandler();
+				// Aufruf der Methode für die Email-Benachrichtung
+				eh.sendInfoMail(email, mitteilung, name);
+				//Weiterleitung an contact_complete.jsp
+				request.getRequestDispatcher("/contact_complete.jsp")
+						.forward(request, response);
+			}
+		}
+	}
 
 // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
+	/**
+	 * Handles the HTTP <code>GET</code> method.
+	 *
+	 * @param request servlet request
+	 * @param response servlet response
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException if an I/O error occurs
+	 */
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		processRequest(request, response);
+	}
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
+	/**
+	 * Handles the HTTP <code>POST</code> method.
+	 *
+	 * @param request servlet request
+	 * @param response servlet response
+	 * @throws ServletException if a servlet-specific error occurs
+	 * @throws IOException if an I/O error occurs
+	 */
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		processRequest(request, response);
+	}
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+	/**
+	 * Returns a short description of the servlet.
+	 *
+	 * @return a String containing servlet description
+	 */
+	@Override
+	public String getServletInfo() {
+		return "Short description";
+	}// </editor-fold>
 
 }

@@ -50,7 +50,7 @@ Version:	1.0
             </div><!--close site_content-->
 
             <footer>
-                SWP SS 2015 by Julie Kenfack, Mladen Sikiric, René Kanzenbach & Sascha Jungenkrüger
+                SWP SS 2015 von Julie Kenfack, Mladen Sikiric, René Kanzenbach & Sascha Jungenkrüger
             </footer>
 
         </div>        
