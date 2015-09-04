@@ -43,7 +43,8 @@ Version:	1.0
 
                     <p>Ihre Daten wurden erfolgreich gesendet.</p>
                     <p>Wir werden ifre Daten sorgfältig prüfen und uns in Kürze wieder mit
-                       Ihnen in Verbindung setzen. Bis dahin bitten wir um ein wenig Geduld.</p>
+                        Ihnen in Verbindung setzen.</br>
+                       Bis dahin bitten wir um ein wenig Geduld.</p>
 
                 </div><!--close content-->                  
             </div><!--close site_content-->

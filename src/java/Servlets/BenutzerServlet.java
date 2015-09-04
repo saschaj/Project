@@ -6,7 +6,7 @@
  * Veränderungen:   1.0 (Sascha Jungenkrüger)
  *                  - Überprüfung der Verlinkungen mit passender Ausgabe 
  *                    eingebunden
- *                  1.1 (Julie Kenfack) 20.07.2015
+ *                  1.1 (Julie Kenfack) 30.07.2015
  *                    - Prüfungen ob die Felder leer sind.
  *                    - Lexikalische und syntaktische Korrektheit der Eingaben.
  *                    - Vollständigkeitsprüfungen der Eingaben.
@@ -87,11 +87,11 @@ public class BenutzerServlet extends HttpServlet {
 
         // Session
         HttpSession session = request.getSession();
-
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
         Benutzer ben = (Benutzer) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
         Kunde k = dao.getKunde(ben.getBenutzerId());
         Adresse adr = k.getAdresse();
+        //hole den Benutzer und den Kunde
         k = dao.getKunde(ben.getBenutzerId());
         ben = dao.getBenutzer(ben.getEmail());
         // Formulardaten in Variablen speichern
@@ -250,9 +250,9 @@ public class BenutzerServlet extends HttpServlet {
             dao.updateAdresse(strasse, hnr, plz, ort, land, aId);
 
             //Weiterleitung an update_user_complete.jsp
-                 request.getRequestDispatcher("/update_user_complete.jsp")
-                            .forward(request, response);
-
+            request.getRequestDispatcher("/update_user_complete.jsp")
+                    .forward(request, response);
+            //BenutzerObjekt in Session laden
             session.setAttribute(Konstanten.SESSION_ATTR_BENUTZER, ben);
         } else {
 
@@ -288,8 +288,9 @@ public class BenutzerServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
         DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
-        Kunde k = (Kunde) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
         Benutzer ben = (Benutzer) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
+        //hole den Benutzer
+        ben = dao.getBenutzer(ben.getEmail());
 
         // Formulardaten in Variablen speichern
         String email1 = request.getParameter("e-mail");
@@ -352,9 +353,11 @@ public class BenutzerServlet extends HttpServlet {
         if (emailIsTrue && pwIsTrue) {
             // Änderungen der Kundendaten werden durchgeführt.
             dao.updateBenutzerDaten(email1, pw1, bId);
-             //Weiterleitung an update_user_complete.jsp
-                 request.getRequestDispatcher("/update_user_complete.jsp")
-                            .forward(request, response);
+            //Weiterleitung an update_user_complete.jsp
+            request.getRequestDispatcher("/update_user_complete.jsp")
+                    .forward(request, response);
+            //BenutzerObjekt in Session laden 
+            session.setAttribute(Konstanten.SESSION_ATTR_BENUTZER, ben);
 
         } else {
 

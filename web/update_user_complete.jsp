@@ -42,7 +42,7 @@ Version:	1.0
                 <div id="content">
 
                     <p>Ihre Daten wurden erfolgreich aktualisiert.</p>
-                    <p>Sie können sich ab sofort mit ihren neuen Daten anmelden!.</p>
+                    <p>Sie können sich ab sofort mit ihren neuen Daten anmelden.</p>
 
                 </div><!--close content-->                  
             </div><!--close site_content-->

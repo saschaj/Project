@@ -9,7 +9,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Kontakformular erstellt und eingefügt
                 1.1 (René Kanzenbach) 07.06.2015
                 - Navigationsbereich ausgelagert
-                1.2(Julie Kenfack)
+                1.2(Julie Kenfack)20.07.2015
                 - Kontaktformular angepasst
                 - Automatische erzeugung von Captcha.
                 - Button "Zuruecksetzen" hinzugefügt.

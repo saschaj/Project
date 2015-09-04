@@ -12,7 +12,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Einfügen der Formulardaten
                 1.2 (René Kanzenbach) 11.06.2015
                 - Navigationsleiste ausgelagert
-                1.3(Julie Kenfack) 20.07.2015
+                1.3(Julie Kenfack) 27.07.2015
                 - Formular angepasst, damit der User beim Ausfüllen der Formular
                   die Möglichkeit hat,die Fehlern zu korrigieren.
                 - Fehlern in dem Formular auswerfen und Konstanten.REQUEST_ATTR_FEHLER
@@ -174,15 +174,6 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 
                     <div id="form_settings">
                         <h2>Benutzerdaten:</h2>
-                        <%-- Formular der Anmeldung --%>
-                            <%--     <% if (request.getAttribute(
-                                            "error") != null) {
-                                        error = (String[]) request.getAttribute("error");
-                                        for (int i = 0; i < error.length; i++) {%>
-                                <span class="span_error"><%= error[i]%></span><br>
-                                <%  }
-                                        request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, null);
-                                    }%> --%>
                         <form method="POST" action="BenutzerServlet">
                               <%     if (request.getAttribute("fehler2") != null) {
                                        fehler2 = (String[]) request.getAttribute("fehler2");

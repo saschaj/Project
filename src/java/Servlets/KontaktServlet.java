@@ -6,7 +6,7 @@
  * Veränderungen:   1.0 (Sascha Jungenkrüger)
  *                  - Überprüfung der Verlinkungen mit passender Ausgabe 
  *                    eingebunden
- *                  1.1 (Julie Kenfack) 20.07.2015
+ *                  1.1 (Julie Kenfack) 23.07.2015
  *                    - Prüfungen ob die Pflichtfelder leer sind.
  *                    - Lexikalische und syntaktische Korrektheit der Eingaben.
  *                    - Vollständigkeitsprüfungen der Eingaben.
