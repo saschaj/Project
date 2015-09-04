@@ -43,7 +43,8 @@ Veränderungen:	-
     <ul id="nav">
 
 		<!--BENUTZER-->
-        <% if (benRechte.contains(Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT)) { %>
+        <% if (benutzer != null && 
+                benRechte.contains(Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT)) { %>
 
         <!-- Vertragsverwaltung -->
         <li 
@@ -81,7 +82,8 @@ Veränderungen:	-
 
 		
 		<!--ADMIN-->
-        <% } else if (benRechte.contains(Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT)) { %>
+        <% } else if (benutzer != null && 
+                benRechte.contains(Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT)) { %>
 
         <!-- Adminstartseite -->
         <li <% if (highlightLink.equals("ADMIN")) {

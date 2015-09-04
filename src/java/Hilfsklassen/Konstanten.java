@@ -91,6 +91,16 @@ public class Konstanten {
     public static final String URL_AKTION_LOGIN = "LOGIN";
     
     
+    /*
+    ----------------------------------------------------------------------------
+    FEHLERTEXTE
+    ----------------------------------------------------------------------------
+    */
+    
+    public static final String FEHLERTEXT_SUCHE = "Bitten füllen sie das "
+            + "Suchfeld aus damit Ihnen, bei erfolgreicher Suche, "
+            + "Verträge angezeigt werden.";
+    
     
     /*
     ----------------------------------------------------------------------------

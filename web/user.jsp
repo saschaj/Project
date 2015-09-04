@@ -11,9 +11,23 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                   eingefügt
                 1.1 (René Kanzenbach) 07.06.2015
                 - Navigationsbereich ausgelagert
+                1.2 (Sascha Jungenkrüger) 02.09.2015
+                - Ist eine Benutzersession abgelaufen und der Kunde drückt 
+                  auf einen Button der zur Vertragsverwaltung führt, wird
+                  dieser automatisch auf die Startseite verweist
+                  --> NullPointerException behoben
 
 --%>
-
+<%@page import="java.util.Locale"%>
+<%@page import="Entitys.Benutzer"%>
+<%  
+    Locale test = response.getLocale();
+    //response.sendRedirect("user.jsp");
+    
+    if ((Benutzer)request.getSession().getAttribute(Konstanten.SESSION_ATTR_BENUTZER) == null) {
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
+    }
+%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -47,7 +61,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                         <div class="sidebar_user" style="width:650px">
                             <div class="sidebar_item_user" style="widht:650px">
                                 <%-- Dynmaische JSP & Button neuer Vertrag --%>
-                                <form method="POST" action="user.jsp">
+                                <form method="POST" action="VertragServlet">
                                 <p><input class="submit" type="submit" name="add" value="Neuen Vertrag anlegen" /></p>
                                 </form>
                                 
@@ -69,7 +83,10 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                                     }
                                     if (request.getParameter("aendern") != null) { %>
                                     <%@include file="contract_change.jsp"%>    
-                                <%    }%>
+                                <%  } if (request.getParameter("contract_extend") != null 
+                                        || request.getAttribute("verlaengern") != null) { %>
+                                    <%@include file="contract_extend.jsp"%>
+                                <%}%>
                                 
                             </div><!--close sidebar_item--> 
                         </div><!--close sidebar-->
@@ -101,7 +118,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
             </div>
 
             <footer>
-                SWP SS 2015 von Julie Kenfack, Mladen Sikiric, René Kanzenbach & Sascha Jungenkrüger
+                SWP SS 2015 by Julie Kenfack, Mladen Sikiric, René Kanzenbach & Sascha Jungenkrüger
             </footer>
 
         </div>
