@@ -37,6 +37,59 @@ public class DatenZugriffsObjekt {
     }
 
     public void initializeDB() {
+         /* 
+             Es gibt keinen Benutzer, keinen Admin, das heißt es wird ange-
+             das die Datenbank zum ersten mal gestartet wird. Oder jemand
+             alle Admins gelöscht hat...
+             Zusätzlich werden benötigte Felder via SQL inserts in die 
+             Datenbank geschrieben.
+             */
+        if (this.entityManager.find(Benutzer.class, 1) == null) {
+            this.entityManager.getTransaction().begin();
+            this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT (BENUTZER_RECHT_ID, \"NAME\", BESCHREIBUNG) VALUES (1, 'Benutzer_verwalten', 'Das Recht BenutzerAccountDaten zu hinzuzufügen, aendern und zu loeschen')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT (BENUTZER_RECHT_ID, \"NAME\", BESCHREIBUNG) VALUES (2, 'Vertrag_verwalten', 'Das Recht Verträge anzulegen, zu ändern und zu löschen.')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT (BENUTZER_RECHT_ID, \"NAME\", BESCHREIBUNG) VALUES (3, 'Statistik_anzeigen', 'Das Recht sich Statistiken anzeigen zu lassen.')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT (BENUTZER_RECHT_ID, \"NAME\", BESCHREIBUNG) VALUES (4, 'Fremde_Benutzer_verwalten', 'Das Recht fremde BenutzerAccountDaten zu hinzuzufügen, zu ändern und zu löschen')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT (BENUTZER_RECHT_ID, \"NAME\", BESCHREIBUNG) VALUES (5, 'Benutzer_wiederherstellen', 'Das Recht Benutzeraccounts wiederherzustellen.')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT (BENUTZER_RECHT_ID, \"NAME\", BESCHREIBUNG) VALUES (6, 'Benutzer_Ansicht', 'Das Recht alle für einen Benutzer geeigneten Webseiten aufzurufen.')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT (BENUTZER_RECHT_ID, \"NAME\", BESCHREIBUNG) VALUES (7, 'Admin_Ansicht', 'Das Recht alle für einen Admin geeigneten Webseiten aufzurufen.')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO BENUTZER_STATUS (BENUTZER_STATUS_ID, \"NAME\", BESCHREIBUNG) VALUES (1, 'Aktiv', 'Benutzer ist normal im System registriert und der Account kann genutzt werden.')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO BENUTZER_STATUS (BENUTZER_STATUS_ID, \"NAME\", BESCHREIBUNG) VALUES (2, 'Gelöscht', 'Benutzer ist als gelöscht markiert. Der Account kann nicht genutzt werden.')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO BENUTZER_STATUS (BENUTZER_STATUS_ID, \"NAME\", BESCHREIBUNG) VALUES (3, 'Unbestätigt', 'Der Benutzer hat noch nicht den Registrationslink bestätigt. Der Account kann nicht genutzt werden.')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO ZEIT_EINHEIT (ZEITEINHEITID, \"NAME\", BESCHREIBUNG) VALUES (1, 'Tag(e)', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO ZEIT_EINHEIT (ZEITEINHEITID, \"NAME\", BESCHREIBUNG) VALUES (2, 'Woche(n)', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO ZEIT_EINHEIT (ZEITEINHEITID, \"NAME\", BESCHREIBUNG) VALUES (3, 'Monat(e)', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO ZEIT_EINHEIT (ZEITEINHEITID, \"NAME\", BESCHREIBUNG) VALUES (4, 'Jahr(e)', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO INTERESSENGEBIET (INTERESSENGEBIET_ID, \"NAME\", BESCHREIBUNG) VALUES (1, 'Audio- und Hifimagazin', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO INTERESSENGEBIET (INTERESSENGEBIET_ID, \"NAME\", BESCHREIBUNG) VALUES (2, 'Automobilzeitschrift', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO INTERESSENGEBIET (INTERESSENGEBIET_ID, \"NAME\", BESCHREIBUNG) VALUES (3, 'Computermagazin', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO INTERESSENGEBIET (INTERESSENGEBIET_ID, \"NAME\", BESCHREIBUNG) VALUES (4, 'Fachzeitschrift', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO INTERESSENGEBIET (INTERESSENGEBIET_ID, \"NAME\", BESCHREIBUNG) VALUES (5, 'Fitnessmagazin', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO INTERESSENGEBIET (INTERESSENGEBIET_ID, \"NAME\", BESCHREIBUNG) VALUES (6, 'Gartenmagazin', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO INTERESSENGEBIET (INTERESSENGEBIET_ID, \"NAME\", BESCHREIBUNG) VALUES (7, 'Kindermagazin', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO INTERESSENGEBIET (INTERESSENGEBIET_ID, \"NAME\", BESCHREIBUNG) VALUES (8, 'Kochen & Rezepte', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO INTERESSENGEBIET (INTERESSENGEBIET_ID, \"NAME\", BESCHREIBUNG) VALUES (9, 'Reisemagazin', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO INTERESSENGEBIET (INTERESSENGEBIET_ID, \"NAME\", BESCHREIBUNG) VALUES (10, 'Sonstiges', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO INTERESSENGEBIET (INTERESSENGEBIET_ID, \"NAME\", BESCHREIBUNG) VALUES (11, 'Tageszeitung', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO INTERESSENGEBIET (INTERESSENGEBIET_ID, \"NAME\", BESCHREIBUNG) VALUES (12, 'Wissensmagazin', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO INTERESSENGEBIET (INTERESSENGEBIET_ID, \"NAME\", BESCHREIBUNG) VALUES (13, 'Wohnideenmagazin', '')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO NETZTYP(NETZTYPID, \"NAME\", BESCHREIBUNG, IST_HANDY_TYP, IST_FESTNETZ_TYP) VALUES (1, 'GPRS', '', 1, 0)").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO NETZTYP(NETZTYPID, \"NAME\", BESCHREIBUNG, IST_HANDY_TYP, IST_FESTNETZ_TYP) VALUES (2, 'EDGE', '', 1, 0)").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO NETZTYP(NETZTYPID, \"NAME\", BESCHREIBUNG, IST_HANDY_TYP, IST_FESTNETZ_TYP) VALUES (3, 'UMTS', '', 1, 0)").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO NETZTYP(NETZTYPID, \"NAME\", BESCHREIBUNG, IST_HANDY_TYP, IST_FESTNETZ_TYP) VALUES (4, 'HSDPA', '', 1, 0)").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO NETZTYP(NETZTYPID, \"NAME\", BESCHREIBUNG, IST_HANDY_TYP, IST_FESTNETZ_TYP) VALUES (5, 'LTE', '', 1, 1)").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO NETZTYP(NETZTYPID, \"NAME\", BESCHREIBUNG, IST_HANDY_TYP, IST_FESTNETZ_TYP) VALUES (6, 'DSL', '', 0, 1)").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO NETZTYP(NETZTYPID, \"NAME\", BESCHREIBUNG, IST_HANDY_TYP, IST_FESTNETZ_TYP) VALUES (7, 'VDSL', '', 0, 1)").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTo VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(1, 'Festnetzvertrag')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTo VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(2, 'Gasvertrag')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTo VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(3, 'Handyvertrag')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTo VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(4, 'Stromvertrag')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTo VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(5, 'Zeitschriftvertrag')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO VERTRAG_STATUS(VERTRAG_STATUS_ID, \"NAME\", BESCHREIBUNG) VALUES(1, 'aktiv', 'Der Vertrag ist zurzeit noch aktiv.')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO VERTRAG_STATUS(VERTRAG_STATUS_ID, \"NAME\", BESCHREIBUNG) VALUES(2, 'gekündigt', 'Der Vertrag wurde gekündigt.')").executeUpdate();
+            this.entityManager.getTransaction().commit();   
+            addAdmin("admin", "1234");
+        }
     }
 
     /**

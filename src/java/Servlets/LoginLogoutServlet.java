@@ -131,22 +131,22 @@ public class LoginLogoutServlet extends HttpServlet {
 					.forward(request, response);
 		}
 
-		// Automatisch generiert
-		response.setContentType("text/html;charset=UTF-8");
-
-		try (PrintWriter out = response.getWriter()) {
-			/* TODO output your page here. You may use following sample code. */
-			out.println("<!DOCTYPE html>");
-			out.println("<html>");
-			out.println("<head>");
-			out.println("<title>Servlet LoginServlet</title>");
-			out.println(meta);
-			out.println("</head>");
-			out.println("<body>");
-			out.println(ausgabe);
-			out.println("</body>");
-			out.println("</html>");
-		}
+//		// Automatisch generiert
+//		response.setContentType("text/html;charset=UTF-8");
+//
+//		try (PrintWriter out = response.getWriter()) {
+//			/* TODO output your page here. You may use following sample code. */
+//			out.println("<!DOCTYPE html>");
+//			out.println("<html>");
+//			out.println("<head>");
+//			out.println("<title>Servlet LoginServlet</title>");
+//			out.println(meta);
+//			out.println("</head>");
+//			out.println("<body>");
+//			out.println(ausgabe);
+//			out.println("</body>");
+//			out.println("</html>");
+//		}
 
 	}
 
