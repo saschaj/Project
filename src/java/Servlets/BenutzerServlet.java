@@ -81,208 +81,213 @@ public class BenutzerServlet extends HttpServlet {
 	}
 
 	/**
-	 * Ersteller: Julie Kenfack Datum: 28.07.2015 Version:1.1
-	 *
-	 * Diese Methode prüft, ob alle Kundendaten die eingegeben wurden, korrekt
-	 * sind Wenn ja dann werden die Daten in der Datenbank aktualisiert und der
-	 * Kunde wird auf Startseite weitergeleitet.
-	 *
-	 * @param request
-	 * @param response
-	 * @throws ServletException
-	 * @throws IOException
-	 */
-	private void kundenDatenAendern(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// Datumsobjekte erzeugt.
-		Datum date = new Datum();
-		Datum aktuellesDatum = new Datum();
+     * Ersteller: Julie Kenfack 
+     * Datum: 28.07.2015 
+     * Version: 1.1 
+     *          2.0 Sascha Jungenkrüger 
+     *          - Überarbeitung der regulären Ausdrücke
+     *
+     * Diese Methode prüft, ob alle Kundendaten die eingegeben wurden, korrekt
+     * sind Wenn ja dann werden die Daten in der Datenbank aktualisiert und der
+     * Kunde wird auf Startseite weitergeleitet.
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
+    private void kundenDatenAendern(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Datumsobjekte erzeugt.
+        Datum date = new Datum();
+        Datum aktuellesDatum = new Datum();
 
-		// Session
-		HttpSession session = request.getSession();
-		DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
-		Benutzer ben = (Benutzer) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
-		Kunde k = dao.getKunde(ben.getBenutzerId());
-		Adresse adr = k.getAdresse();
-		//hole den Benutzer und den Kunde
-		k = dao.getKunde(ben.getBenutzerId());
-		ben = dao.getBenutzer(ben.getEmail());
-		// Formulardaten in Variablen speichern
-		String vname = request.getParameter("acc_vname");
-		String name = request.getParameter("acc_name");
-		String tel = request.getParameter("acc_tel");
-		String strasse = request.getParameter("acc_strasse");
-		String hnr = request.getParameter("acc_hnr");
-		String plz = request.getParameter("acc_plz");
-		String ort = request.getParameter("acc_ort");
-		String land = request.getParameter("acc_land");
-		String gebdatum = request.getParameter("acc_gebdat");
+        // Session
+        HttpSession session = request.getSession();
+        DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+        Benutzer ben = (Benutzer) session.getAttribute(Konstanten.SESSION_ATTR_BENUTZER);
+        Kunde k = dao.getKunde(ben.getBenutzerId());
+        Adresse adr = k.getAdresse();
+        //hole den Benutzer und den Kunde
+        k = dao.getKunde(ben.getBenutzerId());
+        ben = dao.getBenutzer(ben.getEmail());
+        // Formulardaten in Variablen speichern
+        String vname = request.getParameter("acc_vname");
+        String name = request.getParameter("acc_name");
+        String tel = request.getParameter("acc_tel");
+        String strasse = request.getParameter("acc_strasse");
+        String hnr = request.getParameter("acc_hnr");
+        String plz = request.getParameter("acc_plz");
+        String ort = request.getParameter("acc_ort");
+        String land = request.getParameter("acc_land");
+        String gebdatum = request.getParameter("acc_gebdat");
 
-		// Hilfsvariablen
-		boolean vnameIsTrue = false, nameIsTrue = false,
-				gedatumIsTrue = false, strasseIsTrue = false,
-				HnumIsTrue = false, plzIsTrue = false,
-				ortIsTrue = false, landIstrue = false, telIsTrue = false;
+        // Hilfsvariablen
+        boolean vnameIsTrue = false, nameIsTrue = false,
+                gedatumIsTrue = false, strasseIsTrue = false,
+                HnumIsTrue = false, plzIsTrue = false,
+                ortIsTrue = false, landIstrue = false, telIsTrue = false;
 
-		// variable für die Speicherung von Fehlern.
-		String fehler[], fehler2[];
+        // variable für die Speicherung von Fehlern.
+        String fehler[], fehler2[];
 
-		//Hilfsvariable für die Ausgabe
-		String ausgabe = "";
+        //Hilfsvariable für die Ausgabe
+        String ausgabe = "";
 
-		// KundenId,BenutzerId und AdresseId in den Variablen gespeichert.
-		int kId = k.getBenutzerId();
-		int bId = ben.getBenutzerId();
-		int aId = adr.getAdressId();
+        // KundenId,BenutzerId und AdresseId in den Variablen gespeichert.
+        int kId = k.getBenutzerId();
+        int bId = ben.getBenutzerId();
+        int aId = adr.getAdressId();
 
-		//Formateingaben für das Datum
-		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-		java.util.Date parseDate = null;
+        //Formateingaben für das Datum
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        java.util.Date parseDate = null;
 
-		// Ueberpruefung, ob der Vorname leeroder konform ist
-		if (vname.equals("")) {
-			// Fehlermeldung in Variable ausgabe gespeichert
-			ausgabe = "Bitte geben Sie Ihren Vornamen ein!";
+        // Ueberpruefung, ob der Vorname leeroder konform ist
+        if (vname.equals("")) {
+            // Fehlermeldung in Variable ausgabe gespeichert
+            ausgabe = "Bitte geben Sie Ihren Vornamen ein!";
 
-		} else if (!vname.matches("[A-Za-z]{1,30}")) {
-			ausgabe += "\n Vorname ist nicht konform!";
-		} else {
-			vnameIsTrue = true;
-		}
-		// Ueberpruefung, ob der Name leer oder konform ist
-		if (name.equals("")) {
-			// Fehlermeldung in Variable ausgabe gespeichert
-			ausgabe = ausgabe + "\n Bitte geben Sie Ihren Nachnamen ein!";
+        } else if (!vname.matches("[^\\d]{1,50}")) {
+            ausgabe += "\n Vorname ist nicht konform!";
+        } else {
+            vnameIsTrue = true;
+        }
+        // Ueberpruefung, ob der Name leer oder konform ist
+        if (name.equals("")) {
+            // Fehlermeldung in Variable ausgabe gespeichert
+            ausgabe = ausgabe + "\n Bitte geben Sie Ihren Nachnamen ein!";
 
-		} else if (!name.matches("[A-Za-z]{1,30}")) {
-			ausgabe += "\n Name ist nicht konform!";
-		} else {
-			nameIsTrue = true;
-		}
+        } else if (!name.matches("[^\\d]{1,50}")) {
+            ausgabe += "\n Name ist nicht konform!";
+        } else {
+            nameIsTrue = true;
+        }
 
-		// Ueberpruefung ob das Geburtsdatum konform ist. 
-		try {
-			if (!gebdatum.equals("")) {
-				parseDate = format.parse(gebdatum);
-				if ((gebdatum.charAt(2) == '.') && (gebdatum.charAt(5) == '.')) {
-					int tag = Integer.parseInt(gebdatum.substring(0, 2));
-					int mon = Integer.parseInt(gebdatum.substring(3, 5));
-					int jah = Integer.parseInt(gebdatum.substring(6, 10));
-					date.setzeDatum(tag, mon, jah);
-					if (aktuellesDatum.fueherAls(date)) {
-						gedatumIsTrue = false;
-						ausgabe += "\n Datum Liegt in die Zukunft.";
-					} else {
-						gedatumIsTrue = true;
-					}
-				} else {
-					gedatumIsTrue = false;
-					ausgabe += "\n Datum Muss in der TT.MM.JJJJ sein. Bitte Korigieren.";
-				}
-			} else {
-				gedatumIsTrue = true;
-			}
-		} catch (ParseException ex) {
-			ausgabe += "\n Geburtsdatum ist nicht konform.";
-		} catch (IllegalArgumentException iex) {
-			ausgabe += iex.getMessage();
-		}
+        // Ueberpruefung ob das Geburtsdatum konform ist. 
+        try {
+            if (!gebdatum.equals("")) {
+                parseDate = format.parse(gebdatum);
+                if ((gebdatum.charAt(2) == '.') && (gebdatum.charAt(5) == '.')) {
+                    int tag = Integer.parseInt(gebdatum.substring(0, 2));
+                    int mon = Integer.parseInt(gebdatum.substring(3, 5));
+                    int jah = Integer.parseInt(gebdatum.substring(6, 10));
+                    date.setzeDatum(tag, mon, jah);
+                    if (aktuellesDatum.fueherAls(date)) {
+                        gedatumIsTrue = false;
+                        ausgabe += "\n Datum Liegt in die Zukunft.";
+                    } else {
+                        gedatumIsTrue = true;
+                    }
+                } else {
+                    gedatumIsTrue = false;
+                    ausgabe += "\n Datum Muss in der TT.MM.JJJJ sein. Bitte Korigieren.";
+                }
+            } else {
+                gedatumIsTrue = true;
+            }
+        } catch (ParseException ex) {
+            ausgabe += "\n Geburtsdatum ist nicht konform.";
+        } catch (IllegalArgumentException iex) {
+            ausgabe += iex.getMessage();
+        }
 
-		// Ueberpruefung ob die Strasse konform ist.
-		if (!strasse.equals("")) {
-			if (!strasse.matches("[A-Za-z]{1,30}")) {
-				ausgabe += "\n Strasse ist nicht konform!";
-			} else {
-				strasseIsTrue = true;
-			}
-		} else {
-			strasseIsTrue = true;
-		}
+        // Ueberpruefung ob die Strasse konform ist.
+        if (!strasse.equals("")) {
+            if (!strasse.matches("[^\\d]{1,50}")) {
+                ausgabe += "\n Strasse ist nicht konform!";
+            } else {
+                strasseIsTrue = true;
+            }
+        } else {
+            strasseIsTrue = true;
+        }
 
-		// Ueberpruefung ob der Hausnummer konform ist.
-		if (!hnr.equals("")) {
-			if (!hnr.matches("[0-9]{1,30}")) {
-				ausgabe += "\n Hausnummer ist nicht konform!";
-			} else {
-				HnumIsTrue = true;
-			}
-		} else {
-			HnumIsTrue = true;
-		}
-		// Ueberpruefung ob der Plz konform ist.
-		if (!plz.equals("")) {
-			if (!plz.matches("[0-9]{5,5}")) {
-				ausgabe += "\n Postleitzahl ist nicht konform!";
-			} else {
-				plzIsTrue = true;
-			}
-		} else {
-			plzIsTrue = true;
-		}
+        // Ueberpruefung ob der Hausnummer konform ist.
+        if (!hnr.equals("")) {
+            if (!hnr.matches("[1-9]{1}[0-9]*")) {
+                ausgabe += "\n Hausnummer ist nicht konform!";
+            } else {
+                HnumIsTrue = true;
+            }
+        } else {
+            HnumIsTrue = true;
+        }
+        // Ueberpruefung ob der Plz konform ist.
+        if (!plz.equals("")) {
+            if (!plz.matches("[0-9]{1}[1-9]{4}")) {
+                ausgabe += "\n Postleitzahl ist nicht konform!";
+            } else {
+                plzIsTrue = true;
+            }
+        } else {
+            plzIsTrue = true;
+        }
 
-		// Ueberpruefung ob der Ort konform ist.
-		if (!ort.equals("")) {
-			if (!ort.matches("[A-Za-z]{1,30}")) {
-				ausgabe += "\n Ort ist nicht konform!";
-			} else {
-				ortIsTrue = true;
-			}
-		} else {
-			ortIsTrue = true;
-		}
+        // Ueberpruefung ob der Ort konform ist.
+        if (!ort.equals("")) {
+            if (!ort.matches("[^\\d]{1,50}")) {
+                ausgabe += "\n Ort ist nicht konform!";
+            } else {
+                ortIsTrue = true;
+            }
+        } else {
+            ortIsTrue = true;
+        }
 
-		// Ueberpruefung ob das Land konform ist.
-		if (!land.equals("")) {
-			if (!land.matches("[A-Za-z]{1,30}")) {
-				ausgabe += "\n Land ist nicht konform!";
-			} else {
-				landIstrue = true;
-			}
-		} else {
-			landIstrue = true;
-		}
+        // Ueberpruefung ob das Land konform ist.
+        if (!land.equals("")) {
+            if (!land.matches("[^\\d]{1,50}")) {
+                ausgabe += "\n Land ist nicht konform!";
+            } else {
+                landIstrue = true;
+            }
+        } else {
+            landIstrue = true;
+        }
 
-		// Ueberpruefung ob die Telefonummer konform ist. 
-		if (!tel.equals("")) {
-			if (!tel.matches("[0-9]{5,12}")) {
-				// Fehlermeldung in Variable ausgabe gespeichert
-				ausgabe += "\n Telefonnummer ist nicht konform!";
-			} else {
-				telIsTrue = true;
-			}
-		} else {
-			telIsTrue = true;
-		}
+        // Ueberpruefung ob die Telefonummer konform ist. 
+        if (!tel.equals("")) {
+            if (!tel.matches("[0-9]{1}[0]*[1-9/. -]{4,18}")) {
+                // Fehlermeldung in Variable ausgabe gespeichert
+                ausgabe += "\n Telefonnummer ist nicht konform!";
+            } else {
+                telIsTrue = true;
+            }
+        } else {
+            telIsTrue = true;
+        }
 
-		// Überprüfung, ob alle Daten des Formulars korrekt sind
-		if (vnameIsTrue && nameIsTrue && strasseIsTrue && gedatumIsTrue
-				&& HnumIsTrue && plzIsTrue && ortIsTrue && landIstrue && telIsTrue) {
-			// Änderungen der Kundendaten werden durchgeführt
-			dao.updateKundeDaten(vname, name, parseDate, tel, bId);
-			// Änderungen der Adressedaten werden durchgeführt.
-			dao.updateAdresse(strasse, hnr, plz, ort, land, aId);
+        // Überprüfung, ob alle Daten des Formulars korrekt sind
+        if (vnameIsTrue && nameIsTrue && strasseIsTrue && gedatumIsTrue
+                && HnumIsTrue && plzIsTrue && ortIsTrue && landIstrue && telIsTrue) {
+            // Änderungen der Kundendaten werden durchgeführt
+            dao.updateKundeDaten(vname, name, parseDate, tel, bId);
+            // Änderungen der Adressedaten werden durchgeführt.
+            dao.updateAdresse(strasse, hnr, plz, ort, land, aId);
 
-			//Weiterleitung an update_user_complete.jsp
-			request.getRequestDispatcher("/update_user_complete.jsp")
-					.forward(request, response);
-			//BenutzerObjekt in Session laden
-			session.setAttribute(Konstanten.SESSION_ATTR_BENUTZER, ben);
-		} else {
+            //BenutzerObjekt in Session laden
+            session.setAttribute(Konstanten.SESSION_ATTR_BENUTZER, ben);
+            request.setAttribute("kDaten", true);
+            //Weiterleitung an update_user_complete.jsp
+            request.getRequestDispatcher("/update_user_complete.jsp")
+                    .forward(request, response);
+        } else {
 
-			// Fehlermeldung wird gesplittet und im Array gespeichert
-			// und auf der user_account.jsp ausgegeben.
-			fehler = ausgabe.split("!");
-			// Setzen der Fehler in den Request                    
-			request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehler);
-			// Weiterleitung an user_account.jsp                
-			request.getRequestDispatcher("/user_account.jsp")
-					.forward(request, response);
+                // Fehlermeldung wird gesplittet und im Array gespeichert
+            // und auf der user_account.jsp ausgegeben.
+            fehler = ausgabe.split("!");
+            // Setzen der Fehler in den Request                    
+            request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehler);
+            // Weiterleitung an user_account.jsp                
+            request.getRequestDispatcher("/user_account.jsp")
+                    .forward(request, response);
 
-		}
-		// DAO-Verbindung wird geschlossen
-		dao.close();
+        }
+        // DAO-Verbindung wird geschlossen
+        dao.close();
+    }
 
-	}
 
 	/**
 	 * Ersteller: Julie Kenfack 
