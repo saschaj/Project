@@ -1,6 +1,6 @@
 <%--
 
-Ersteller:	Sascha Jungenkrüger
+Ersteller:	René Kanzenbach
 Erstelldatum:   30.05.2015
 Dokument:	admin_dynamic.jsp
 Version:	1.0

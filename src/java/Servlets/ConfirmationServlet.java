@@ -41,6 +41,15 @@ public class ConfirmationServlet extends HttpServlet {
 		//Zeichensatz des Request-Objektes auf "UTF-8" setzen
 		//Ermöglicht die korrekte Verwendung von Umlauten
 		request.setCharacterEncoding("UTF-8");
+		
+		//Prüfung ob Session abgelaufen ist
+		if (!request.isRequestedSessionIdValid()) {
+			//Session abgelaufen
+			//Weiterleiten auf Startseite
+			request.getRequestDispatcher("index.jsp").forward(request, response);
+			//Servlet beenden
+			return;
+		}
 
 		String info = "Unglütiger Link. Es gab Probleme mit der Verarbeitung "
 				+ "ihrer Daten. Versuchen Sie es erneut oder lassen Sie sich "

@@ -22,10 +22,11 @@ import org.jfree.chart.servlet.ServletUtilities;
 public class AdminServlet extends HttpServlet {
 
 	/**
-	 * Ersteller: René Kanzenbach
-	 * Datum: 28.07.2015
-	 * Version: 1.0
-	 * Änderungen: -
+	 * Ersteller:	René Kanzenbach
+	 * Datum:		28.07.2015
+	 * Version:		1.0
+	 *				1.1 René Kanzenbach
+	 *				-Es wird jetzt geprüft ob die Session abgelaufen ist.
 	 *
 	 * Prüft, welche Aktion in der admin.jsp aufgerufen wurde und führt dann die
 	 * entsprechende Methode auf.
@@ -38,9 +39,18 @@ public class AdminServlet extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-	//Zeichensatz des Request-Objektes auf "UTF-8" setzen
+		//Zeichensatz des Request-Objektes auf "UTF-8" setzen
 		//Ermöglicht die korrekte Verwendung von Umlauten
 		request.setCharacterEncoding("UTF-8");
+		
+		//Prüfung ob Session abgelaufen ist
+		if (!request.isRequestedSessionIdValid()) {
+			//Session abgelaufen
+			//Weiterleiten auf Startseite
+			request.getRequestDispatcher("index.jsp").forward(request, response);
+			//Servlet beenden
+			return;
+		}
 
 		//Pruefen, welche Aktion ausgeführt wurde.
 		if (request.getParameter("BenutzerStatistik") != null) {

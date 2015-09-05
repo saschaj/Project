@@ -56,6 +56,19 @@ public class BenutzerServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+		
+		//Zeichensatz des Request-Objektes auf "UTF-8" setzen
+		//Ermöglicht die korrekte Verwendung von Umlauten
+		request.setCharacterEncoding("UTF-8");
+		
+		//Prüfung ob Session abgelaufen ist
+		if (!request.isRequestedSessionIdValid()) {
+			//Session abgelaufen
+			//Weiterleiten auf Startseite
+			request.getRequestDispatcher("index.jsp").forward(request, response);
+			//Servlet beenden
+			return;
+		}
 
         //Pruefen, welche Aktion ausgeführt wurde.
         if (request.getParameter("kd_speichern") != null) {

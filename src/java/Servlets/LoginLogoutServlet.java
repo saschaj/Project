@@ -68,6 +68,15 @@ public class LoginLogoutServlet extends HttpServlet {
         //Zeichensatz des Request-Objektes auf "UTF-8" setzen
 		//Ermöglicht die korrekte Verwendung von Umlauten
 		request.setCharacterEncoding("UTF-8");
+		
+		//Prüfung ob Session abgelaufen ist
+		if (!request.isRequestedSessionIdValid()) {
+			//Session abgelaufen
+			//Weiterleiten auf Startseite
+			request.getRequestDispatcher("index.jsp").forward(request, response);
+			//Servlet beenden
+			return;
+		}
 
 		// Deklaration des Hilfsvariablen für die demenstprechenden Funktionen
 		String meta = "", ausgabe = "";

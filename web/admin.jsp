@@ -1,12 +1,12 @@
 <%--
 
-Ersteller:	Sascha Jungenkrüger
+Ersteller:		René Kanzenbach
 Erstelldatum:   25.05.2015
-Dokument:	admin.jsp
-Version:	1.1
+Dokument:		admin.jsp
+Version:		1.1
 Veränderungen:	1.0 (Sascha Jungenkrüger)
                 - Template an Entwurf angepasst
-		- Textsuche und Button für Statistiken eingefügt
+				- Textsuche und Button für Statistiken eingefügt
                 - JSP zur Ergebnisanzeige eingefügt
                 1.1 (René Kanzenbach) 07.06.2015
                 - Navigationsbereich ausgelagert
