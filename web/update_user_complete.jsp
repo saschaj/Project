@@ -12,7 +12,7 @@ Version:	1.0
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <meta http-equiv='refresh' content='4; URL=index.jsp'>
+        <meta http-equiv='refresh' content='4; URL=user.jsp'>
         <link rel="stylesheet" type="text/css" href="css/style.css" />
         <title>SWP SS 2015</title>
     </head>
@@ -41,8 +41,16 @@ Version:	1.0
             <div id="site_content">                
                 <div id="content">
 
-                    <p>Ihre Daten wurden erfolgreich aktualisiert.</p>
-                    <p>Sie können sich ab sofort mit ihren neuen Daten anmelden.</p>
+                    <% if (request.getAttribute("kDaten") != null) { 
+                        request.setAttribute("kDaten", null);%>
+                        <p>Ihre Kundendaten wurden erfolgreich aktualisiert.</p>
+                        <p>Sie werden automatisch zur Startseite weitergeleitet.</p>
+                    <% } else { %>
+                        <p>Ihre Benuzterdaten wurden erfolgreich aktualisiert.</p>
+                        <p>Sie können sich ab sofort mit ihren neuen Daten anmelden &</p>
+                        <p>werden automatisch zur Startseite weitergeleitet.</p>
+                    <% } %>
+                    
 
                 </div><!--close content-->                  
             </div><!--close site_content-->
