@@ -183,7 +183,9 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                                        request.setAttribute(Konstanten.REQUEST_ATTR_FEHLER, null);
                                    }%>
                             <p>Wenn Sie Ihre Benutzerdaten ändern wollen, müssen Sie alle Felder ausfüllen!</p>
-                            <p><span class="span_contact">Aktuelle E-mail:</span><input type="text" name="aktuelle e-mail" value="<%= k.getEmail()%>" /></p>
+                            <p><span class="span_contact">Aktuelle E-mail:</span>
+								<span style="font: bold 105% 'News Cycle', Arial, sans-serif;"><%= k.getEmail()%></span>
+							</p>
                                 <%
                                     if (request.getParameter("e-mail") != null) {%>   
 
