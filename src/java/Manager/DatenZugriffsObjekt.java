@@ -530,7 +530,7 @@ public class DatenZugriffsObjekt {
         neuerKunde.setPasswort(passwort);
         neuerKunde.addRecht(recht);
         neuerKunde.setStatus(this.entityManager.find(Benutzer_Status.class,
-                Konstanten.ID_BEN_STATUS_AKTIV));
+                Konstanten.ID_BEN_STATUS_UNBESTAETIGT));
         
         adr.setHausNr("");
         adr.setLand("");
