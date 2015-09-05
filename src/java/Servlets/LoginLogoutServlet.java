@@ -101,7 +101,19 @@ public class LoginLogoutServlet extends HttpServlet {
 			this.logIn(request, response);
 		} else if (getPassword != null) {
 			if (email != null && !email.equals("")) {
-				sendeMail = true;
+				DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
+		if (dao.isEmailAvailable(email)) {
+			String info = "Ihnen wird ein Bestätigungslink zugesandt mit dem Sie ein neues Passwort anfordern können.";
+			request.setAttribute("info", info);
+			request.getRequestDispatcher("/confirmation.jsp")
+					.forward(request, response);
+			passwortZuruecksetzen(email, request.getRequestURL().toString());
+		} else {
+			String fehler[] = {"Diese E-Mail-Adresse ist nicht registriert"};
+			request.setAttribute("error", fehler);
+			request.getRequestDispatcher("/login_register.jsp")
+					.forward(request, response);
+		}
 			} else {
 				String fehler[] = {"Geben Sie ihre E-Mail-Adresse an."};
 				request.setAttribute("error", fehler);
@@ -117,19 +129,7 @@ public class LoginLogoutServlet extends HttpServlet {
 		} else {
 			ausgabe = "Irgendwas wurde nicht richtig programmiert!";
 		}
-		DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
-		if (sendeMail && !dao.isEmailAvailable(email)) {
-			String info = "Ihnen wird ein Bestätigungslink zugesandt mit dem Sie ein neues Passwort anfordern können.";
-			request.setAttribute("info", info);
-			request.getRequestDispatcher("/confirmation.jsp")
-					.forward(request, response);
-			passwortZuruecksetzen(email, request.getRequestURL().toString());
-		} else {
-			String fehler[] = {"Diese E-Mail-Adresse ist nicht registriert"};
-			request.setAttribute("error", fehler);
-			request.getRequestDispatcher("/login_register.jsp")
-					.forward(request, response);
-		}
+		
 
 //		// Automatisch generiert
 //		response.setContentType("text/html;charset=UTF-8");
@@ -358,7 +358,7 @@ public class LoginLogoutServlet extends HttpServlet {
 					//das "login_register.jsp"
 					fehlerText = new String[1];
 					fehlerText[0] = this.FEHLER_ACCOUNT_NICHT_AKTIVIERT;
-					request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehlerText);
+					request.setAttribute(Konstanten.URL_PARAM_FEHLER_RECHTS, fehlerText);
 
 					//Weiterleitung auf login_register.jsp
 					request.getRequestDispatcher("/login_register.jsp")
@@ -373,7 +373,7 @@ public class LoginLogoutServlet extends HttpServlet {
 					//das "login_register.jsp"
 					fehlerText = new String[1];
 					fehlerText[0] = this.FEHLER_ACCOUNT_GELOESCHT;
-					request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehlerText);
+					request.setAttribute(Konstanten.URL_PARAM_FEHLER_RECHTS, fehlerText);
 
 					//Weiterleitung auf login_register.jsp
 					request.getRequestDispatcher("/login_register.jsp")
@@ -386,7 +386,7 @@ public class LoginLogoutServlet extends HttpServlet {
 			//Übergabe des Fehlertextes an das "login_register.jsp"
 			fehlerText = new String[1];
 			fehlerText[0] = this.LOGINFEHLER_TEXT;
-			request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehlerText);
+			request.setAttribute(Konstanten.URL_PARAM_FEHLER_RECHTS, fehlerText);
 
 			//Weiterleitung auf login_register.jsp
 			request.getRequestDispatcher("/login_register.jsp")
