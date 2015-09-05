@@ -31,7 +31,7 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
 		<%	//Aktuell eingeloggten Benutzer aus Session lesen
 			Kunde benutzer = (Kunde) session.getAttribute(
 					Konstanten.SESSION_ATTR_BENUTZER);
-			
+
 		%>
     </head>
 
@@ -85,23 +85,28 @@ Veränderungen:	1.0 (Sascha Jungenkrüger)
                                 <p><span class="span_contact">Name*:</span>
 									<input class="contact" type="text" name="your_name" 
 										   value="<%=(benutzer == null)
-												   ? "" + request.getParameter("your_name")
-												   : "" + benutzer.getVorname() + " " + benutzer.getNachname()%>" /></p>
-                                    <% }
-										if (request.getParameter("your_email") != null) {%>
+												   ? (request.getParameter("your_name") == null)
+														   ? ""
+														   : request.getParameter("your_name")
+												   : benutzer.getVorname() + " " + benutzer.getNachname()%>" /></p>
+                                    <% }%>
+
                                 <p><span class="span_contact">Email Adresse*:</span>
 									<input class="contact" type="text" name="your_email" 
 										   value="<%=(benutzer == null)
-												   ? "" + request.getParameter("your_email")
-												   : "" + benutzer.getEmail()%>" /></p>
-                                    <% } else {%>
-                                <p><span class="span_contact">Email Adresse*:</span><input class="contact" type="text" name="your_email" value="" /></p>
-                                    <% }
-										if (request.getParameter("your_message") != null) {%>
-                                <p><span class="span_contact">Mitteilung*:</span><textarea class="contact textarea" rows="4" cols="50" name="your_message"></textarea></p>
-                                    <% } else {%>
-                                <p><span class="span_contact">Mitteilung*:</span><textarea class="contact textarea" rows="4" cols="50" name="your_message"></textarea></p>
-                                    <% }%>
+												   ? (request.getParameter("your_email") == null)
+														   ? ""
+														   : request.getParameter("your_email")
+												   : benutzer.getEmail()%>" /></p>
+
+
+                                <p><span class="span_contact">Mitteilung*:</span>
+									<textarea class="contact textarea" rows="4" 
+											  cols="50" name="your_message"
+										><%= (request.getParameter("your_message") == null)
+													  ? ""
+													  : request.getParameter("your_message")%></textarea></p>
+
                                 <p><span>Bitte beantworten Sie die folgende einfache Aufgabe:</span></p>
                                 <p><span class="span_contact"><%=op1%> + <%=op2%> = ?</span><input class="contact" type="text" name="benutzer_antwort" /><input type="hidden" name="antwort" value="<%=(op1 + op2)%>" /></p>                                    
                                 <p>* Bitte füllen Sie die Felder aus</p>

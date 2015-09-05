@@ -51,8 +51,8 @@ public class DatenZugriffsObjekt {
             this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT (BENUTZER_RECHT_ID, \"NAME\", BESCHREIBUNG) VALUES (3, 'Statistik_anzeigen', 'Das Recht sich Statistiken anzeigen zu lassen.')").executeUpdate();
             this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT (BENUTZER_RECHT_ID, \"NAME\", BESCHREIBUNG) VALUES (4, 'Fremde_Benutzer_verwalten', 'Das Recht fremde BenutzerAccountDaten zu hinzuzufügen, zu ändern und zu löschen')").executeUpdate();
             this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT (BENUTZER_RECHT_ID, \"NAME\", BESCHREIBUNG) VALUES (5, 'Benutzer_wiederherstellen', 'Das Recht Benutzeraccounts wiederherzustellen.')").executeUpdate();
-            this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT (BENUTZER_RECHT_ID, \"NAME\", BESCHREIBUNG) VALUES (6, 'Benutzer_Ansicht', 'Das Recht alle für einen Benutzer geeigneten Webseiten aufzurufen.')").executeUpdate();
-            this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT (BENUTZER_RECHT_ID, \"NAME\", BESCHREIBUNG) VALUES (7, 'Admin_Ansicht', 'Das Recht alle für einen Admin geeigneten Webseiten aufzurufen.')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT (BENUTZER_RECHT_ID, \"NAME\", BESCHREIBUNG) VALUES (6, 'Benutzer', 'Das Recht alle für einen Benutzer geeigneten Webseiten aufzurufen.')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT (BENUTZER_RECHT_ID, \"NAME\", BESCHREIBUNG) VALUES (7, 'Admin', 'Das Recht alle für einen Admin geeigneten Webseiten aufzurufen.')").executeUpdate();
             this.entityManager.createNativeQuery("INSERT INTO BENUTZER_STATUS (BENUTZER_STATUS_ID, \"NAME\", BESCHREIBUNG) VALUES (1, 'Aktiv', 'Benutzer ist normal im System registriert und der Account kann genutzt werden.')").executeUpdate();
             this.entityManager.createNativeQuery("INSERT INTO BENUTZER_STATUS (BENUTZER_STATUS_ID, \"NAME\", BESCHREIBUNG) VALUES (2, 'Gelöscht', 'Benutzer ist als gelöscht markiert. Der Account kann nicht genutzt werden.')").executeUpdate();
             this.entityManager.createNativeQuery("INSERT INTO BENUTZER_STATUS (BENUTZER_STATUS_ID, \"NAME\", BESCHREIBUNG) VALUES (3, 'Unbestätigt', 'Der Benutzer hat noch nicht den Registrationslink bestätigt. Der Account kann nicht genutzt werden.')").executeUpdate();
@@ -80,47 +80,32 @@ public class DatenZugriffsObjekt {
             this.entityManager.createNativeQuery("INSERT INTO NETZTYP(NETZTYPID, \"NAME\", BESCHREIBUNG, IST_HANDY_TYP, IST_FESTNETZ_TYP) VALUES (5, 'LTE', '', 1, 1)").executeUpdate();
             this.entityManager.createNativeQuery("INSERT INTO NETZTYP(NETZTYPID, \"NAME\", BESCHREIBUNG, IST_HANDY_TYP, IST_FESTNETZ_TYP) VALUES (6, 'DSL', '', 0, 1)").executeUpdate();
             this.entityManager.createNativeQuery("INSERT INTO NETZTYP(NETZTYPID, \"NAME\", BESCHREIBUNG, IST_HANDY_TYP, IST_FESTNETZ_TYP) VALUES (7, 'VDSL', '', 0, 1)").executeUpdate();
-            this.entityManager.createNativeQuery("INSERT INTo VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(1, 'Festnetzvertrag')").executeUpdate();
-            this.entityManager.createNativeQuery("INSERT INTo VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(2, 'Gasvertrag')").executeUpdate();
-            this.entityManager.createNativeQuery("INSERT INTo VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(3, 'Handyvertrag')").executeUpdate();
-            this.entityManager.createNativeQuery("INSERT INTo VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(4, 'Stromvertrag')").executeUpdate();
-            this.entityManager.createNativeQuery("INSERT INTo VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(5, 'Zeitschriftvertrag')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(1, 'Festnetzvertrag')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(2, 'Gasvertrag')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(3, 'Handyvertrag')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(4, 'Stromvertrag')").executeUpdate();
+            this.entityManager.createNativeQuery("INSERT INTO VERTRAG_ART(VERTRAG_ART_ID, \"NAME\") VALUES(5, 'Zeitschriftvertrag')").executeUpdate();
             this.entityManager.createNativeQuery("INSERT INTO VERTRAG_STATUS(VERTRAG_STATUS_ID, \"NAME\", BESCHREIBUNG) VALUES(1, 'aktiv', 'Der Vertrag ist zurzeit noch aktiv.')").executeUpdate();
             this.entityManager.createNativeQuery("INSERT INTO VERTRAG_STATUS(VERTRAG_STATUS_ID, \"NAME\", BESCHREIBUNG) VALUES(2, 'gekündigt', 'Der Vertrag wurde gekündigt.')").executeUpdate();
-            this.entityManager.getTransaction().commit();   
-            addAdmin("admin", "1234");
+//			
+			//Admin anlegen
+//			this.entityManager.createNativeQuery("INSERT INTO BENUTZER(BENUTZERID, DTYPE, EMAIL, PASSWORT, BENUTZER_STATUS_ID) "
+//					+ "VALUES(1, 'Benutzer', 'admin', '81dc9bdb52d04dc20036dbd8313ed055', 1)").executeUpdate();
+//			this.entityManager.createNativeQuery("INSERT INTO BENUTZER_RECHT_ZUORDNUNG(BENUTZER_BENUTZERID,RECHTE_BENUTZER_RECHT_ID) "
+//					+ "VALUES(1, 7)").executeUpdate();
+			
+			Benutzer admin = new Benutzer();
+			
+			admin.setEmail("admin");
+			admin.setPasswort("1234");
+			admin.setStatus(this.entityManager.find(Benutzer_Status.class,
+					Konstanten.ID_BEN_STATUS_AKTIV));
+			admin.addRecht(this.entityManager.find(Benutzer_Recht.class,
+					Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT));
+			this.entityManager.persist(admin);
+			
+            this.entityManager.getTransaction().commit(); 
         }
-    }
-
-    /**
-     * Legt Testweise einen neuen Kunden und einen Vertrag zum Kunden an.
-     */
-    public void beispiel() {
-        Kunde neuerKunde = new Kunde();
-        Stromvertrag stromVertrag = new Stromvertrag();
-
-        neuerKunde.setVorname("Saul Slash");
-        neuerKunde.setNachname("Hudson");
-        neuerKunde.setGeburtsdatum(new java.util.Date(1965, 7, 23));
-        neuerKunde.setEmail("gunsNroses@web.de");
-
-        stromVertrag.setLaufzeit(30);
-        stromVertrag.setStromzaehlerNr("1337#YOLO");
-        stromVertrag.setKunde(neuerKunde);
-
-        try {
-            this.entityManager.getTransaction().begin();
-            this.entityManager.persist(neuerKunde);
-            this.entityManager.persist(stromVertrag);
-            this.entityManager.getTransaction().commit();
-        } catch (RollbackException re) {
-
-        } catch (PersistenceException pe) {
-            this.entityManager.getTransaction().rollback();
-        } catch (Throwable th) {
-            this.entityManager.getTransaction().rollback();
-        }
-
     }
 
     /**
@@ -599,7 +584,7 @@ public class DatenZugriffsObjekt {
             this.entityManager.getTransaction().commit();
             istRegistriert = true;
         } catch (RollbackException re) {
-
+			System.out.println(re.getMessage());
         } catch (PersistenceException pe) {
             this.entityManager.getTransaction().rollback();
         } catch (Throwable th) {

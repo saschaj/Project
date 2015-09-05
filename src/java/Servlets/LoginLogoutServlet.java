@@ -65,10 +65,10 @@ public class LoginLogoutServlet extends HttpServlet {
 	protected void processRequest(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-        //Zeichensatz des Request-Objektes auf "UTF-8" setzen
+		//Zeichensatz des Request-Objektes auf "UTF-8" setzen
 		//Ermöglicht die korrekte Verwendung von Umlauten
 		request.setCharacterEncoding("UTF-8");
-		
+
 		//Prüfung ob Session abgelaufen ist
 		if (!request.isRequestedSessionIdValid()) {
 			//Session abgelaufen
@@ -102,22 +102,22 @@ public class LoginLogoutServlet extends HttpServlet {
 		} else if (getPassword != null) {
 			if (email != null && !email.equals("")) {
 				DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
-		if (dao.isEmailAvailable(email)) {
-			String info = "Ihnen wird ein Bestätigungslink zugesandt mit dem Sie ein neues Passwort anfordern können.";
-			request.setAttribute("info", info);
-			request.getRequestDispatcher("/confirmation.jsp")
-					.forward(request, response);
-			passwortZuruecksetzen(email, request.getRequestURL().toString());
-		} else {
-			String fehler[] = {"Diese E-Mail-Adresse ist nicht registriert"};
-			request.setAttribute("error", fehler);
-			request.getRequestDispatcher("/login_register.jsp")
-					.forward(request, response);
-		}
+				if (dao.isEmailAvailable(email)) {
+					String info = "Ihnen wird ein Bestätigungslink zugesandt mit dem Sie ein neues Passwort anfordern können.";
+					request.setAttribute("info", info);
+					request.getRequestDispatcher("/confirmation.jsp")
+							.forward(request, response);
+					passwortZuruecksetzen(email, request.getRequestURL().toString());
+				} else {
+					String fehler[] = {"Diese E-Mail-Adresse ist nicht registriert"};
+					request.setAttribute("error", fehler);
+					request.getRequestDispatcher("/login_register.jsp")
+							.forward(request, response);
+				}
 			} else {
 				String fehler[] = {"Geben Sie ihre E-Mail-Adresse an."};
 				request.setAttribute("error", fehler);
-                // Da es Fehler im Formular gibt stellt man dem Besucher seine
+				// Da es Fehler im Formular gibt stellt man dem Besucher seine
 				// eingegebenen Daten zur Verfügung, damit er sie
 				// überarbeiten bzw. ergänzen kann.                
 				request.getRequestDispatcher("/login_register.jsp")
@@ -129,7 +129,6 @@ public class LoginLogoutServlet extends HttpServlet {
 		} else {
 			ausgabe = "Irgendwas wurde nicht richtig programmiert!";
 		}
-		
 
 //		// Automatisch generiert
 //		response.setContentType("text/html;charset=UTF-8");
@@ -147,7 +146,6 @@ public class LoginLogoutServlet extends HttpServlet {
 //			out.println("</body>");
 //			out.println("</html>");
 //		}
-
 	}
 
 	private void registrierungsBestaetigung(String email, String pfad, String password) {
@@ -181,7 +179,7 @@ public class LoginLogoutServlet extends HttpServlet {
 		String ausgabe = "", meta = "", vname, name, email1, email2, pw1, pw2;
 		boolean vnameIsTrue = false, nameIsTrue = false, isRegister = false,
 				emailIsTrue = false, pwIsTrue = false, eMailIsAvailable = false;
-        // Benutzerregistrierung
+		// Benutzerregistrierung
 		// Formulardaten in Variablen speichern
 		vname = request.getParameter("reg_vname");
 		name = request.getParameter("reg_name");
@@ -221,7 +219,7 @@ public class LoginLogoutServlet extends HttpServlet {
 				ausgabe = ausgabe
 						+ "\n E-Mail-Adresse ist nicht konform!}";
 			} else {
-                // E-Mail-Adressen stimmen überein 
+				// E-Mail-Adressen stimmen überein 
 				// und werden als true gespeichert
 				emailIsTrue = true;
 			}
@@ -242,7 +240,7 @@ public class LoginLogoutServlet extends HttpServlet {
 				ausgabe = ausgabe
 						+ "\n Das Passwort muss länger als 6 Zeichen sein!}";
 			} else {
-                // Passwörter stimmen überein 
+				// Passwörter stimmen überein 
 				// und werden als true gespeichert
 				pwIsTrue = true;
 			}
@@ -252,7 +250,7 @@ public class LoginLogoutServlet extends HttpServlet {
 		if (vnameIsTrue && nameIsTrue && emailIsTrue && pwIsTrue) {
 			eMailIsAvailable = dao.isEmailAvailable(email1);
 			if (eMailIsAvailable) {
-                // Registrierung wird durchgeführt
+				// Registrierung wird durchgeführt
 				// Boolscher Rückgabewert wird in isRegister gespeichert
 				isRegister = dao.register(vname, name, email1, pw1);
 				// Überprüfung, ob die Registrierung erfolgreich war
@@ -266,12 +264,12 @@ public class LoginLogoutServlet extends HttpServlet {
 				}
 			} else {
 				ausgabe = "Ihre E-Mail-Adresse ist schon vorhanden!}";
-                // Fehlermeldung wird gesplittet und im Array gespeichert
+				// Fehlermeldung wird gesplittet und im Array gespeichert
 				// und auf der login_register.jsp ausgegeben.
 				fehler = ausgabe.split("}");
 				// Setzen der Fehler in den Request                    
 				request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehler);
-                // Da es Fehler im Formular gibt stellt man dem Besucher seine
+				// Da es Fehler im Formular gibt stellt man dem Besucher seine
 				// eingegebenen Daten zur Verfügung, damit er sie
 				// überarbeiten bzw. ergänzen kann.                
 				request.getRequestDispatcher("/login_register.jsp")
@@ -280,12 +278,12 @@ public class LoginLogoutServlet extends HttpServlet {
 			// DAO-Verbindung wird geschlossen
 			dao.close();
 		} else {
-            // Fehlermeldung wird gesplittet und im Array gespeichert
+			// Fehlermeldung wird gesplittet und im Array gespeichert
 			// und auf der login_register.jsp ausgegeben.
 			fehler = ausgabe.split("}");
 			// Setzen der Fehler in den Request
 			request.setAttribute(Konstanten.URL_PARAM_FEHLER, fehler);
-            // Da es Fehler im Formular gibt stellt man dem Besucher seine
+			// Da es Fehler im Formular gibt stellt man dem Besucher seine
 			// eingegebenen Daten zur Verfügung, damit er sie
 			// überarbeiten bzw. ergänzen kann.
 			request.getRequestDispatcher("/login_register.jsp")
@@ -294,9 +292,12 @@ public class LoginLogoutServlet extends HttpServlet {
 	}
 
 	/**
-	 * Ersteller:	René Kanzenbach Datum:	02.06.2015 Methode:	logIn Version:	1.0
-	 * -1.1 René Kanzenbach 20.08.2015 Wenn sich ein Admin einloggt, wird er
-	 * jetzt direkt auf die "admin.jsp" weitergeleitet
+	 * Ersteller:	René Kanzenbach 
+	 * Datum:		02.06.2015 
+	 * Methode:		logIn 
+	 * Version:		1.0
+	 *				-1.1 René Kanzenbach 20.08.2015 Wenn sich ein Admin einloggt, wird er
+	 *				jetzt direkt auf die "admin.jsp" weitergeleitet
 	 *
 	 * @param request
 	 * @param response
@@ -330,7 +331,7 @@ public class LoginLogoutServlet extends HttpServlet {
 			switch (benutzer.getStatus().getBenutzerStatusId()) {
 
 				case Konstanten.ID_BEN_STATUS_AKTIV:
-		    //Benutzer ist Aktiv. Login war erfolgreich
+				//Benutzer ist Aktiv. Login war erfolgreich
 
 					//BenutzerObjekt in Session laden
 					session.setAttribute(Konstanten.SESSION_ATTR_BENUTZER, benutzer);
@@ -338,13 +339,13 @@ public class LoginLogoutServlet extends HttpServlet {
 					//Prüfen ob Benutzer ein Kunde oder Admin ist.
 					if (benutzer.besitztRecht(
 							Konstanten.ID_BEN_RECHT_BENUTZER_ANSICHT)) {
-			//Benutzer besitzt Benutzerrechte.
+						//Benutzer besitzt Benutzerrechte.
 						//Weiterleitung auf Benutzerstartseite
 						request.getRequestDispatcher("/user.jsp")
 								.forward(request, response);
 					} else if (benutzer.besitztRecht(
 							Konstanten.ID_BEN_RECHT_ADMIN_ANSICHT)) {
-			//Benutzer besitzt Adminrechte.
+						//Benutzer besitzt Adminrechte.
 						//Weiterleitung auf Adminstartseite.
 						request.getRequestDispatcher("/admin.jsp")
 								.forward(request, response);
@@ -352,9 +353,9 @@ public class LoginLogoutServlet extends HttpServlet {
 					break;
 
 				case Konstanten.ID_BEN_STATUS_UNBESTAETIGT:
-		//Benutzer hat die Bestätigungsemail noch nicht bearbeitet
+				//Benutzer hat die Bestätigungsemail noch nicht bearbeitet
 
-		    //Übergabe des entsprechenden Fehlertextes an 
+					//Übergabe des entsprechenden Fehlertextes an 
 					//das "login_register.jsp"
 					fehlerText = new String[1];
 					fehlerText[0] = this.FEHLER_ACCOUNT_NICHT_AKTIVIERT;
@@ -366,9 +367,9 @@ public class LoginLogoutServlet extends HttpServlet {
 					break;
 
 				case Konstanten.ID_BEN_STATUS_GELOESCHT:
-		//Benutzeraccount besitzt den Status gelöscht
+				//Benutzeraccount besitzt den Status gelöscht
 
-		    //Benutzer hat die Bestätigungsemail noch nicht bearbeitet
+					//Benutzer hat die Bestätigungsemail noch nicht bearbeitet
 					//Übergabe des entsprechenden Fehlertextes an 
 					//das "login_register.jsp"
 					fehlerText = new String[1];
