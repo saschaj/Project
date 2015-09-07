@@ -36,6 +36,15 @@ public class DatenZugriffsObjekt {
         initializeDB();
     }
 
+    /**
+	 * Ersteller:	Mladen Sikiric
+	 * Datum:		25.08.2015 
+     * 
+     *  Diese Funktion wird jedesmal beim Aufruf des DatenZugriffsObjekt ge-
+     *  startet. Sie prüft Anhand vorhandener Benutzer ob die Datenbank schon
+     * für die erste Inbetriebnahme initialisiert wurde.
+     * 
+     */
     public void initializeDB() {
          /* 
              Es gibt keinen Benutzer, keinen Admin, das heißt es wird ange-
@@ -162,8 +171,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: Julie Kenfack Erstelldatum: 20.08.2015 Methode:
-     * updateAdresseDaten Version: 1.0
+     * Ersteller: Julie Kenfack 
+     * Erstelldatum: 20.08.2015 
+     * Methode: updateAdresseDaten Version: 1.0
      *
      * Die Methode soll den in der Datenbank,bestehenden Kunden mit den
      * übergebenen Adresse aktualisieren.
@@ -795,10 +805,12 @@ public class DatenZugriffsObjekt {
     /**
      * Ersteller: René Kanzenbach 
      * Datum:	28.07.2015 
-     * Version:	1.0 1.1 René Kanzenbach 01.09.2015 
+     * Version:	1.0 1.1 
+     * René Kanzenbach 01.09.2015 
      *          - Die verschiedenen Status bekommen jetzt immer
      *              eine feste Farbe zugewiesen. 
-     *              1.2 René Kanzenbach 03.09.2015 - Benutzer
+     *              1.2 
+     * René Kanzenbach 03.09.2015 - Benutzer
      *  die Adminrechte haben werden der Statistik nicht mehr hinzugefügt.
      *
      * Erzeugt ein Tortendiagramm, welches anzeigt, wie viele Benutzer im System
@@ -990,7 +1002,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach Erstelldatum: 28.07.2015 Version: 1.0
+     * Ersteller: René Kanzenbach 
+     * Erstelldatum: 28.07.2015 
+     * Version: 1.0
      * Veränderungen: -
      *
      * Gibt alle Vertraege zurück, die sich in der Datenbank befinden.
@@ -1013,7 +1027,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach Erstelldatum: 04.08.2015 Version: 1.0
+     * Ersteller: René Kanzenbach 
+     * Erstelldatum: 04.08.2015 
+     * Version: 1.0
      * Veränderungen: -
      *
      * Sucht Benutzer mit Hilfe der eingegebenen Suche und gibt diese in einer
@@ -1043,7 +1059,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller: René Kanzenbach Datum:	19.08.2015 Version:	1.0
+     * Ersteller: René Kanzenbach 
+     * Datum:	19.08.2015 
+     * Version:	1.0
      *
      * Ändert den Status des übergebenen Benutzers auf den Status, mit der
      * übergebenen Id.
@@ -1076,7 +1094,9 @@ public class DatenZugriffsObjekt {
     }
 
     /**
-     * Ersteller:	René Kanzenbach Datum:	20.08.2015 Version:	1.0
+     * Ersteller:	René Kanzenbach 
+     * Datum:	20.08.2015 
+     * Version:	1.0
      *
      * Änder das Passwort des übergebenen Benutzers, innerhalb einer
      * Transaktion.
@@ -1110,15 +1130,28 @@ public class DatenZugriffsObjekt {
         }
     }
 
+     /**
+     * Ersteller:	Mladen Sikiric
+     * Datum:		01.09.2015
+     * 
+     * Führt ein Update des übergebenen Benutzers in der Datenbank durch.
+     * 
+     * @param b
+     * @return 
+     */
     public Benutzer updateBenutzer(Benutzer b) {
         this.entityManager.getTransaction().begin();
-        b = this.entityManager.merge(b);
+        
+        this.entityManager.merge(b);
         this.entityManager.getTransaction().commit();
+        
         return b;
     }
 
     /**
-     * Ersteller: René Kanzenbach Datum:	24.08.2015 Version:	1.0
+     * Ersteller: René Kanzenbach 
+     * Datum:	24.08.2015 
+     * Version:	1.0
      *
      * Erstellt einen neuen Adminaccount und fügt ihn in die Datenbank ein. Der
      * neu erzeugte Admin erhält sofort den Status "aktiv".
@@ -1167,12 +1200,23 @@ public class DatenZugriffsObjekt {
         return istAdminAngelegt;
     }
 
+    /**
+     * Ersteller:	Mladen Sikiric
+     * Datum:		01.09.2015
+     * 
+     *  Liefert zur übergebenen id den Status.
+     * 
+     * @param id
+     * @return 
+     */
     public Benutzer_Status getStatusByID(int id) {
         return this.entityManager.find(Benutzer_Status.class, id);
     }
 
     /**
-     * Ersteller: René Kanzenbach Datum:	29.08.2015 Version:	1.0
+     * Ersteller: René Kanzenbach 
+     * Datum:	29.08.2015 
+     * Version:	1.0
      *
      * Gibt das Benutzerrecht mit der übergebenen Id zurück. Existiert kein
      * Benutzerrecht mit der gesuchten Id wird NULL zurückgegeben.

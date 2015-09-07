@@ -34,7 +34,7 @@ public class SystemManager {
 	 * Einmal Täglich wird zu
 	 * jedem Vertrag geprüft ob eine Benachrichtigung verschickt werden muss.
 	 */
-	@Schedule(hour = "0")
+	@Schedule(minute = "*/0")
 	private void pruefeAufAblaufendeFristen() {
 		Calendar now;
 		DatenZugriffsObjekt dao;

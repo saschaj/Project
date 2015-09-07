@@ -42,7 +42,8 @@ public class EmailHandler {
 	private Session session;
 
 	/**
-	 * Kunde k = v.getKu
+	 * Ersteller:	Mladen Sikiric
+	 * Datum:		05.08.2015
 	 * Konstruktor des EmailHandler. Hier werden die benötigten Daten für die
 	 * Session, anhand der in der JavaMailSession hinterlegten Daten, belegt.
 	 */
@@ -98,6 +99,9 @@ public class EmailHandler {
 	}
 
 	/**
+	 * Ersteller:	Mladen Sikiric
+	 * Datum:		06.08.2015
+         * 
 	 * sendInfoMail sendet eine E-Mail an die eigene E-Mail-Adresse und belegt
 	 * den Absender mit der vom Kontaktierenden hinterlegten E-Mail-Adresse.
 	 *
@@ -131,6 +135,9 @@ public class EmailHandler {
 	}
 
 	/**
+	 * Ersteller:	Mladen Sikiric
+	 * Datum:		06.08.2015
+         * 
 	 * sendPasswortMail sendet eine E-Mail an die übergebene E-Mail-Adresse in
 	 * der ein neuerzeugtes Passwort für den Benutzeraccount eben dieser steht.
 	 *
@@ -163,6 +170,9 @@ public class EmailHandler {
 	}
 
 	/**
+	 * Ersteller:	Mladen Sikiric
+	 * Datum:		06.08.2015
+         * 
 	 * Diese Methode versendet eine E-Mail. Der Inhalt sind alle in kürze ab-
 	 * laufenden Vertäge eines Kunden.
 	 *
@@ -205,6 +215,17 @@ public class EmailHandler {
 		}
 	}
 
+        /**
+	 * Ersteller:	Mladen Sikiric
+	 * Datum:		26.08.2015
+         * 
+         * Es wird eine Passwort ändern Bestätigungsemail an den übergebenen 
+         * Empfänger versendet.
+         * 
+         * @param recipient Empfängeradresse
+         * @param ref 30-stelliger Code zum überpfüfen der Linkgültigkeit
+         * @param pfad Vollständiger URLPfad
+         */
 	public void sendePasswortBestaetigung(String recipient, String ref, String pfad) {
 		try {
 			Message msg = new MimeMessage(session);
@@ -236,6 +257,19 @@ public class EmailHandler {
 		}
 	}
 
+         /**
+	 * Ersteller:	Mladen Sikiric
+	 * Datum:		25.08.2015 
+         * 
+         * Nach erfolgter Registrierung wird eine Bestätigungsemail versand.
+         * Inhalt dieser E-Mail sind die Login-Daten und eine Bestätigungslink
+         * 
+         * @param subject Betreff
+         * @param recipient Empfänger
+         * @param ref 30-stelliger Code zum überpfüfen der Linkgültigkeit
+         * @param pfad Vollständiger URLPfad
+         * @param passwort 
+         */
 	public void sendeRegistrierungsBestaetigung(String subject, String recipient, String ref,
 			String pfad, String passwort) {
 		try {

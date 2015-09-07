@@ -21,14 +21,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- *
- * @author Mladko
+ * 
+ * 
  */
 public class ConfirmationServlet extends HttpServlet {
 
 	/**
-	 * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-	 * methods.
+	 * Ersteller:	Mladen Sikiric
+	 * Datum:		25.08.2015
 	 *
 	 * @param request servlet request
 	 * @param response servlet response
@@ -89,12 +89,31 @@ public class ConfirmationServlet extends HttpServlet {
 		request.getRequestDispatcher("/confirmation.jsp").forward(request, response);
 	}
 
+	/**
+	 * Ersteller:	Mladen Sikiric
+	 * Datum:		25.08.2015
+	 *
+         * Die Methode sende an den übergebenen Benutzer eine E-Mail mit 
+         * dem übergebenen Passwort als Inhalt.
+         * 
+         * @param b Benutzer
+         * @param password Passwort
+         */
 	private void sendeNeuesPasswort(Benutzer b, String password) {
 
 		EmailHandler e = new EmailHandler();
 		e.sendPasswortMail(b, password);
 	}
 
+       /**
+	 * Ersteller:	Mladen Sikiric
+	 * Datum:		25.08.2015
+	 *
+         * Die Methode sende an den übergebenen Kunden eine E-Mail zur  
+         * Bestätigung der abgeschlossenen Registrierung.
+         * 
+         * @param k Kunde
+         */
 	private void sendeRegistrierungsMail(Kunde k) {
 		EmailHandler e = new EmailHandler();
 		e.sendRegisterMail("Registrierung für " + k.getVorname() + " "
@@ -140,6 +159,18 @@ public class ConfirmationServlet extends HttpServlet {
 		return "Short description";
 	}// </editor-fold>
 
+        /**
+	 * Ersteller:	Mladen Sikiric
+	 * Datum:		25.08.2015
+         * 
+         * Diese Methode zerlegt eine URL in Tokens. Trenner sind ? und =
+         * Auf diese Weise können in der URL eingebette Parameter gefunden
+         * werden.
+         * 
+         * @param urlParameter Vollständige URL
+         * @param feldname Parametername
+         * @return null oder Parameterstring
+         */
 	private String belegeParameter(String urlParameter, String feldname) {
 		String parameter = null;
 		if (urlParameter != null) {

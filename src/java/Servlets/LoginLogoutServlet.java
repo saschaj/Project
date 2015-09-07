@@ -148,6 +148,15 @@ public class LoginLogoutServlet extends HttpServlet {
 //		}
 	}
 
+        /**
+	 * Ersteller:	Mladen Sikiric
+	 * Datum:		25.08.2015
+         * 
+         * 
+         * @param email
+         * @param pfad
+         * @param password 
+         */
 	private void registrierungsBestaetigung(String email, String pfad, String password) {
 		DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
 		ZufallsStringErzeuger p = new ZufallsStringErzeuger();
@@ -422,9 +431,15 @@ public class LoginLogoutServlet extends HttpServlet {
 	}
 
 	/**
-	 * 
+	 * Ersteller:	Mladen Sikiric
+	 * Datum:		06.08.2015
+         * 
+         * Die Methode erzeugt für den Benutzer welcher der übergebenen E-Mail
+         * zugeordnet werden kann ein neues Passwort.
+         * 
+         * 
 	 * @param email
-	 * @param pfad 
+	 * @param pfad vollständiger URL Pfad im Browser
 	 */
 	private void passwortZuruecksetzen(String email, String pfad) {
 		DatenZugriffsObjekt dao = new DatenZugriffsObjekt();
